@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b1220">
+<meta name="description" content="PocketHost Studio — GitHub ব্যবহার না জানা ব্যবহারকারীদের জন্য সম্পূর্ণ বাংলা Setup ও User Guide সহ Mobile-Friendly GitHub Hosting Engine।">
+<title>PocketHost Studio — Complete User Guide</title>
+<style>
+:root{
+  --bg:#f6f8fc;--surface:#fff;--surface2:#eef3ff;--text:#172033;--muted:#61708a;
+  --primary:#2563eb;--primary2:#1d4ed8;--border:#dce3ef;--code:#111827;
+  --success:#0f766e;--warning:#a16207;--danger:#b91c1c;--shadow:0 14px 45px rgba(20,35,65,.08);
+}
+*{box-sizing:border-box;scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Bengali",sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{width:min(1120px,92%);margin:auto}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+.nav{height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:850;font-size:18px;color:var(--text)}
+.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#7c3aed);display:grid;place-items:center;color:#fff;font-weight:900;box-shadow:0 8px 20px rgba(37,99,235,.25)}
+.navlinks{display:flex;gap:18px;align-items:center}
+.navlinks a{font-size:14px;color:var(--muted);font-weight:650}
+.menu{display:none;border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:8px 10px}
+.hero{padding:85px 0 65px;background:
+radial-gradient(circle at 10% 10%,rgba(37,99,235,.12),transparent 32%),
+radial-gradient(circle at 90% 20%,rgba(124,58,237,.10),transparent 30%),var(--bg)}
+.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:50px;align-items:center}
+.badge{display:inline-flex;padding:7px 12px;border:1px solid #cbd8f7;background:#edf3ff;color:#2451b8;border-radius:999px;font-size:13px;font-weight:750}
+h1{font-size:clamp(38px,6vw,66px);line-height:1.08;letter-spacing:-2px;margin:18px 0}
+.gradient{background:linear-gradient(90deg,#1d4ed8,#7c3aed);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:18px;color:var(--muted);max-width:700px}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 17px;border-radius:12px;font-weight:800;border:1px solid var(--border);background:#fff;color:var(--text);box-shadow:0 5px 18px rgba(20,35,65,.05)}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn:hover{text-decoration:none;transform:translateY(-1px)}
+.hero-card{background:linear-gradient(145deg,#0b1220,#172554);border-radius:26px;padding:26px;color:#fff;box-shadow:0 25px 70px rgba(15,23,42,.22)}
+.terminal{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.9;color:#dbeafe}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#60a5fa;margin-right:5px}
+section{padding:72px 0}
+.section-head{max-width:750px;margin-bottom:30px}
+.kicker{text-transform:uppercase;letter-spacing:1.5px;color:var(--primary);font-size:12px;font-weight:850}
+h2{font-size:clamp(28px,4vw,42px);line-height:1.2;margin:8px 0 12px}
+h3{line-height:1.3;margin-top:0}
+.muted{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:23px;box-shadow:var(--shadow)}
+.card .icon{font-size:27px;margin-bottom:9px}
+.step{display:grid;grid-template-columns:52px 1fr;gap:18px;margin:18px 0}
+.num{width:44px;height:44px;border-radius:14px;background:#e8efff;color:var(--primary);display:grid;place-items:center;font-weight:900}
+.note{padding:16px 18px;border-radius:14px;background:#eef6ff;border-left:4px solid var(--primary);margin:18px 0}
+.warning{background:#fff8e7;border-left-color:#d97706}
+.danger{background:#fff1f2;border-left-color:#e11d48}
+.success{background:#ecfdf5;border-left-color:#059669}
+code{background:#edf1f7;padding:2px 6px;border-radius:6px;font-size:.92em}
+pre{background:var(--code);color:#e5e7eb;padding:18px;border-radius:14px;overflow:auto;font-size:13px;line-height:1.7}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:15px}
+table{width:100%;border-collapse:collapse;background:#fff;min-width:650px}
+th,td{text-align:left;padding:13px 15px;border-bottom:1px solid var(--border)}
+th{background:#f0f4fa}
+.toc{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.toc a{background:#fff;border:1px solid var(--border);padding:13px 15px;border-radius:12px;font-weight:650}
+.flow{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:25px 0}
+.flow span{background:#fff;border:1px solid var(--border);padding:10px 13px;border-radius:11px;font-weight:750}
+.arrow{color:var(--primary);font-weight:900}
+.download{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border-radius:24px;padding:38px}
+.download h2{color:#fff}
+.download p{color:#dbeafe}
+.download .btn{background:#fff;border-color:#fff;color:#172033}
+details{background:#fff;border:1px solid var(--border);border-radius:13px;margin:10px 0;padding:0 16px}
+summary{cursor:pointer;font-weight:750;padding:15px 0}
+footer{padding:45px 0;background:#0b1220;color:#cbd5e1}
+footer a{color:#bfdbfe}
+.small{font-size:13px}
+hr{border:0;border-top:1px solid var(--border);margin:35px 0}
+@media(max-width:800px){
+ .hero-grid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.toc{grid-template-columns:1fr}
+ .navlinks{display:none}.menu{display:block}.navlinks.open{display:flex;position:absolute;left:4%;right:4%;top:60px;background:#fff;padding:15px;border:1px solid var(--border);border-radius:14px;flex-direction:column;align-items:flex-start;box-shadow:var(--shadow)}
+ section{padding:55px 0}.hero{padding:60px 0 45px}h1{letter-spacing:-1px}
+}
+
+.floating-download{
+  position:fixed;right:18px;bottom:18px;z-index:100;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 16px;border-radius:999px;
+  background:#2563eb;color:#fff;font-weight:850;font-size:14px;
+  box-shadow:0 14px 35px rgba(37,99,235,.28);
+  border:1px solid rgba(255,255,255,.35);
+}
+.floating-download:hover{color:#fff;text-decoration:none;transform:translateY(-2px)}
+.hero .actions .btn.primary{
+  padding:14px 20px;font-size:15px;
+  box-shadow:0 10px 25px rgba(37,99,235,.22);
+}
+@media(max-width:800px){
+  .floating-download{right:14px;bottom:14px;padding:11px 14px;font-size:13px}
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a class="brand" href="#top"><span class="logo">PH</span> PocketHost Studio</a>
+    <button class="menu" onclick="document.querySelector('.navlinks').classList.toggle('open')" aria-label="Menu">☰</button>
+    <nav class="navlinks">
+      <a href="#start">শুরু করুন</a>
+      <a href="#github">GitHub Setup</a>
+      <a href="#guide">ব্যবহারবিধি</a>
+      <a href="#terms">শর্তাবলী</a>
+      <a href="#download">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<a class="floating-download" href="https://github.com/HalalCodes/pockethost-a/releases/download/V1.0.0/PocketHost.apk" aria-label="Download PocketHost APK">
+  <span>📱</span><span>Download APK</span>
+</a>
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="badge">🚀 Mobile-Friendly GitHub Hosting Engine</span>
+      <h1>GitHub না জেনেও <span class="gradient">নিজের Hosting</span> চালান।</h1>
+      <p class="lead">
+        PocketHost Studio হলো GitHub REST API ও GitHub Pages-ভিত্তিক একটি সহজ Hosting Panel।
+        এই গাইড এমনভাবে তৈরি করা হয়েছে যেন আপনি জীবনে প্রথমবার GitHub ব্যবহার করলেও ধাপে ধাপে
+        Account তৈরি থেকে শুরু করে File, Image ও HTML Website Host করতে পারেন।
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/HalalCodes/pockethost-a/releases/download/V1.0.0/PocketHost.apk">📱 Download APK</a>
+        <a class="btn" href="https://github.com/HalalCodes/pockethost-a/releases/download/V1.0.0/PocketHost.apk">📱 Download APK</a>
+        <a class="btn" href="https://halalcodes.github.io/pockethost" target="_blank" rel="noopener">🌐 Live Demo</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div><span class="dot"></span> PocketHost workflow</div>
+      <div class="terminal">
+        <br>① Create GitHub account<br>
+        ② Create Repository<br>
+        ③ Create Pages<br>
+        ④ Generate Token<br>
+        ⑤ Connect PocketHost<br>
+        ⑥ Create Folder<br>
+        ⑦ Upload File / Image<br>
+        ⑧ Get Live URL<br><br>
+        <strong>✓ No separate hosting server required</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="start">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Start here</div>
+    <h2>একদম নতুন হলে এখান থেকেই শুরু করুন</h2>
+    <p class="muted">GitHub কী, Repository কী, Token কী—কিছুই না জানলেও সমস্যা নেই। নিচের ধাপগুলো ক্রমানুসারে অনুসরণ করুন।</p>
+  </div>
+  <div class="toc">
+    <a href="#github">01 · GitHub Account তৈরি</a>
+    <a href="#repo">02 · Repository তৈরি</a>
+    <a href="#pages">03 · GitHub Pages চালু</a>
+    <a href="#token">04 · Personal Access Token</a>
+    <a href="#connect">05 · PocketHost Connect</a>
+    <a href="#folder">06 · Folder তৈরি</a>
+    <a href="#upload">07 · File/Image Upload</a>
+    <a href="#live">08 · Live Link ব্যবহার</a>
+  </div>
+</div>
+</section>
+
+<section id="github">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Step 01</div>
+    <h2>GitHub Account তৈরি করুন</h2>
+    <p class="muted">GitHub হলো এমন একটি platform যেখানে আপনার code, file এবং project repository আকারে রাখা যায়। PocketHost Studio আপনার GitHub account-কে hosting storage হিসেবে ব্যবহার করবে।</p>
+  </div>
+
+  <div class="step"><div class="num">1</div><div><h3>GitHub খুলুন</h3><p><a href="https://github.com/" target="_blank" rel="noopener">GitHub.com</a> এ যান এবং <b>Sign up</b> চাপুন।</p></div></div>
+  <div class="step"><div class="num">2</div><div><h3>Email ও Password দিন</h3><p>আপনার নিজের email address ব্যবহার করুন এবং একটি শক্তিশালী password সেট করুন।</p></div></div>
+  <div class="step"><div class="num">3</div><div><h3>Verification সম্পন্ন করুন</h3><p>GitHub যে verification/email confirmation চাইবে তা সম্পন্ন করুন।</p></div></div>
+
+  <div class="note success"><b>💡 Username মনে রাখুন:</b> আপনার GitHub username পরে Live URL তৈরিতে প্রয়োজন হবে। যেমন <code>halalcodes</code>।</div>
+</div>
+</section>
+
+<section id="repo">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Step 02</div>
+    <h2>Hosting-এর জন্য Repository তৈরি করুন</h2>
+    <p class="muted">Repository হলো আপনার hosting storage-এর মতো। এখানে PocketHost আপনার File, Image এবং HTML content রাখবে।</p>
+  </div>
+
+  <div class="step"><div class="num">1</div><div><h3>New Repository চাপুন</h3><p>GitHub profile → <b>Repositories</b> → <b>New</b> নির্বাচন করুন।</p></div></div>
+  <div class="step"><div class="num">2</div><div><h3>একটি নাম দিন</h3><p>যেমন <code>my-host</code> বা <code>pockethost-files</code>।</p></div></div>
+  <div class="step"><div class="num">3</div><div><h3>Public নির্বাচন করুন</h3><p>GitHub Pages দিয়ে সরাসরি public content serve করতে চাইলে Repository-টি Public রাখা সবচেয়ে সহজ পদ্ধতি।</p></div></div>
+  <div class="step"><div class="num">4</div><div><h3>Create Repository</h3><p>সবশেষে <b>Create repository</b> চাপুন।</p></div></div>
+
+  <div class="note warning"><b>⚠️ গুরুত্বপূর্ণ:</b> এই Repository-তে এমন কোনো ব্যক্তিগত বা গোপন তথ্য রাখবেন না যা public হয়ে গেলে সমস্যা হতে পারে।</div>
+</div>
+</section>
+
+<section id="pages">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Step 03</div>
+    <h2>GitHub Pages চালু করুন</h2>
+    <p class="muted">GitHub Pages আপনার Repository-এর static file-কে একটি Live Website URL-এ প্রকাশ করে।</p>
+  </div>
+
+  <div class="step"><div class="num">1</div><div><p>আপনার Repository খুলুন।</p></div></div>
+  <div class="step"><div class="num">2</div><div><p><b>Settings</b> → <b>Pages</b> এ যান।</p></div></div>
+  <div class="step"><div class="num">3</div><div><p><b>Build and deployment</b>-এর Source হিসেবে <b>Deploy from a branch</b> নির্বাচন করুন।</p></div></div>
+  <div class="step"><div class="num">4</div><div><p>Branch হিসেবে সাধারণত <code>main</code> এবং Folder হিসেবে <code>/ (root)</code> নির্বাচন করুন।</p></div></div>
+  <div class="step"><div class="num">5</div><div><p><b>Save</b> চাপুন। GitHub কিছু সময়ের মধ্যে আপনার Pages URL তৈরি করবে।</p></div></div>
+
+  <div class="note">🌐 সাধারণ URL pattern: <code>https://USERNAME.github.io/REPOSITORY/</code></div>
+</div>
+</section>
+
+<section id="token">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Step 04</div>
+    <h2>Personal Access Token তৈরি করুন</h2>
+    <p class="muted">PocketHost Studio আপনার হয়ে Repository-তে File তৈরি, পরিবর্তন ও মুছে ফেলার জন্য GitHub API ব্যবহার করে। এজন্য একটি access token প্রয়োজন।</p>
+  </div>
+
+  <div class="step"><div class="num">1</div><div><p>GitHub → আপনার Profile Picture → <b>Settings</b> এ যান।</p></div></div>
+  <div class="step"><div class="num">2</div><div><p><b>Developer settings</b> খুলুন।</p></div></div>
+  <div class="step"><div class="num">3</div><div><p><b>Personal access tokens</b> → <b>Tokens (classic)</b> নির্বাচন করুন।</p></div></div>
+  <div class="step"><div class="num">4</div><div><p><b>Generate new token (classic)</b> নির্বাচন করুন।</p></div></div>
+  <div class="step"><div class="num">5</div><div><p>Token-এর একটি Note দিন এবং প্রয়োজন অনুযায়ী expiration নির্বাচন করুন।</p></div></div>
+  <div class="step"><div class="num">6</div><div><p><b>repo</b> scope নির্বাচন করুন।</p></div></div>
+  <div class="step"><div class="num">7</div><div><p><b>Generate token</b> চাপুন এবং Token একবারই দেখানো অবস্থায় নিরাপদ জায়গায় রাখুন।</p></div></div>
+
+  <div class="note danger">
+    <b>🔐 সবচেয়ে গুরুত্বপূর্ণ নিরাপত্তা নিয়ম:</b><br>
+    Token কখনো কাউকে পাঠাবেন না, GitHub Repository-তে লিখবেন না, HTML/JS source code-এর ভিতরে স্থায়ীভাবে রাখবেন না এবং Screenshot-এ প্রকাশ করবেন না।
+    Token ফাঁস হয়ে গেলে GitHub Settings থেকে সেটি revoke/delete করে নতুন token তৈরি করুন।
+  </div>
+</div>
+</section>
+
+<section id="connect">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Step 05</div>
+    <h2>PocketHost Studio-এর সঙ্গে GitHub Connect করুন</h2>
+  </div>
+
+  <div class="step"><div class="num">1</div><div><p><a href="https://halalcodes.github.io/pockethost" target="_blank" rel="noopener">PocketHost Studio</a> খুলুন।</p></div></div>
+  <div class="step"><div class="num">2</div><div><p><b>Settings</b> Section-এ যান।</p></div></div>
+  <div class="step"><div class="num">3</div><div><p>আপনার GitHub <b>Username</b> লিখুন।</p></div></div>
+  <div class="step"><div class="num">4</div><div><p>আপনার তৈরি করা <b>Personal Access Token</b> দিন।</p></div></div>
+  <div class="step"><div class="num">5</div><div><p>Save/Connect করুন।</p></div></div>
+
+  <div class="note warning">
+    <b>ℹ️ Local Storage সম্পর্কে:</b>
+    PocketHost-এর client-side architecture অনুযায়ী configuration browser-এর Local Storage-এ রাখা হতে পারে।
+    Shared/public device-এ Token সংরক্ষণ না করাই নিরাপদ।
+  </div>
+</div>
+</section>
+
+<section id="folder">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Step 06</div>
+    <h2>Folder তৈরি করুন</h2>
+    <p class="muted">File সুন্দরভাবে সাজিয়ে রাখার জন্য আলাদা Folder ব্যবহার করুন।</p>
+  </div>
+
+  <div class="step"><div class="num">1</div><div><p><b>Folders</b> Section খুলুন।</p></div></div>
+  <div class="step"><div class="num">2</div><div><p>যেমন <code>picture</code>, <code>website</code>, <code>assets</code> নাম দিন।</p></div></div>
+  <div class="step"><div class="num">3</div><div><p><b>Create Folder</b> চাপুন।</p></div></div>
+
+  <pre>Repository
+├── picture/
+├── website/
+├── assets/
+└── projects/</pre>
+
+  <div class="note success"><b>✨ Automatic cleanup:</b> কোনো Folder-এ Upload করার সময় প্রয়োজন হলে PocketHost সেই Folder-এর <code>.gitkeep</code> File স্বয়ংক্রিয়ভাবে সরিয়ে দিতে পারে।</div>
+</div>
+</section>
+
+<section id="upload">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Step 07</div>
+    <h2>File ও Image Upload করুন</h2>
+  </div>
+
+  <div class="grid">
+    <div class="card"><div class="icon">🖼️</div><h3>Image</h3><p>JPG, PNG, WebP ইত্যাদি Image নির্দিষ্ট Folder-এ Upload করুন।</p></div>
+    <div class="card"><div class="icon">🌐</div><h3>HTML</h3><p>HTML File Upload করে GitHub Pages-এর মাধ্যমে Live Website বানান।</p></div>
+    <div class="card"><div class="icon">📄</div><h3>Static File</h3><p>আপনার প্রয়োজনীয় অন্যান্য static asset নির্দিষ্ট Folder-এ রাখতে পারেন।</p></div>
+  </div>
+
+  <div class="step"><div class="num">1</div><div><p><b>Deploy</b> বা <b>Image</b> Section নির্বাচন করুন।</p></div></div>
+  <div class="step"><div class="num">2</div><div><p>Repository ও Folder নির্বাচন করুন।</p></div></div>
+  <div class="step"><div class="num">3</div><div><p>File নির্বাচন করুন এবং প্রয়োজন হলে File Name নির্ধারণ করুন।</p></div></div>
+  <div class="step"><div class="num">4</div><div><p><b>Upload/Deploy</b> করুন।</p></div></div>
+</div>
+</section>
+
+<section id="live">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Step 08</div>
+    <h2>Live Link কীভাবে ব্যবহার করবেন?</h2>
+  </div>
+
+  <h3>🖼️ Image Example</h3>
+  <pre>https://USERNAME.github.io/REPOSITORY/picture/myphoto.jpg</pre>
+
+  <h3>🌐 HTML Example</h3>
+  <pre>https://USERNAME.github.io/REPOSITORY/website/index.html</pre>
+
+  <h3>📁 Folder Website Example</h3>
+  <pre>https://USERNAME.github.io/REPOSITORY/website/</pre>
+
+  <div class="note">⏳ নতুন Upload-এর পর GitHub Pages update হতে কিছুটা সময় লাগতে পারে। প্রথমবার বা বড় পরিবর্তনের ক্ষেত্রে কয়েক মুহূর্ত অপেক্ষা করে Live URL Reload করুন।</div>
+</div>
+</section>
+
+<section>
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Features</div>
+    <h2>এক নজরে PocketHost Studio</h2>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="icon">📦</div><h3>Multi-Repo</h3><p>একাধিক Repository ব্যবহার করে Hosting storage আলাদা করতে পারবেন।</p></div>
+    <div class="card"><div class="icon">📂</div><h3>Dynamic Folders</h3><p>নিজের মতো Folder তৈরি করে content organize করুন।</p></div>
+    <div class="card"><div class="icon">🗑️</div><h3>5-Second Delete</h3><p>ভুল Delete ঠেকাতে Countdown ও Cancel ব্যবস্থা।</p></div>
+    <div class="card"><div class="icon">🖼️</div><h3>Direct Image URL</h3><p>Image Upload করে সরাসরি Web-ready URL পান।</p></div>
+    <div class="card"><div class="icon">🌐</div><h3>HTML Hosting</h3><p>Static HTML Project GitHub Pages-এ প্রকাশ করুন।</p></div>
+    <div class="card"><div class="icon">📱</div><h3>Mobile First</h3><p>মোবাইল Browser থেকেই পুরো workflow পরিচালনা করুন।</p></div>
+  </div>
+</div>
+</section>
+
+<section>
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Architecture</div>
+    <h2>পুরো System কীভাবে কাজ করে?</h2>
+  </div>
+  <div class="flow">
+    <span>📱 PocketHost</span><b class="arrow">→</b>
+    <span>🔑 GitHub Token</span><b class="arrow">→</b>
+    <span>⚙️ GitHub REST API</span><b class="arrow">→</b>
+    <span>📦 Repository</span><b class="arrow">→</b>
+    <span>🌐 GitHub Pages</span><b class="arrow">→</b>
+    <span>🔗 Live URL</span>
+  </div>
+  <p class="muted">এখানে PocketHost মূলত একটি সহজ User Interface। আপনার File-এর মূল storage থাকে আপনার GitHub Repository-তে এবং Website প্রকাশ করে GitHub Pages।</p>
+</div>
+</section>
+
+<section id="terms">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Terms of Use</div>
+    <h2>ব্যবহারের শর্তাবলী</h2>
+  </div>
+
+  <div class="card">
+    <h3>📜 Copyright-Free</h3>
+    <p>PocketHost Studio-এর Source Code Copyright-Free হিসেবে প্রকাশ করা হয়েছে। যে কেউ নিজের প্রয়োজন অনুযায়ী এটি ব্যবহার, পরিবর্তন ও Redistribute করতে পারবেন।</p>
+
+    <hr>
+
+    <h3>🤲 মানবিক দানের শর্ত</h3>
+    <p>এই Project ব্যবহার করার আগে যেকোনো মসজিদ, মাদ্রাসা অথবা কোনো অসহায়/ক্ষুধার্ত মানুষকে <b>সর্বনিম্ন ৫০ টাকা (৳50) বা তার বেশি</b> দান করার শর্ত রাখা হয়েছে।</p>
+    <p>৫০ টাকার বেশি দান করলে কোনো বাধা নেই। এই শর্ত পূরণ না করে কেউ Source Code ব্যবহার করলে তার নৈতিক দায়ভার তার নিজের।</p>
+
+    <div class="note success">
+      ❤️ <b>আমাদের ছোট্ট অনুরোধ:</b> কোড ব্যবহার করার আগে একটি ভালো কাজ করুন। একটি মানুষের খাবার, একটি শিশুর শিক্ষা বা একটি ভালো প্রতিষ্ঠানে আপনার সামান্য সহায়তাও মূল্যবান হতে পারে।
+    </div>
+
+    <h3>⚠️ GitHub ও Token Safety</h3>
+    <ul>
+      <li>Personal Access Token কারও সঙ্গে শেয়ার করবেন না।</li>
+      <li>Public source code-এ Token লিখবেন না।</li>
+      <li>অন্যের Private বা sensitive content অনুমতি ছাড়া Host করবেন না।</li>
+      <li>Copyright বা আইন ভঙ্গ করে এমন content Host করবেন না।</li>
+      <li>GitHub-এর Terms ও Policies মেনে ব্যবহার করুন।</li>
+      <li>নিজের Account ও Token-এর নিরাপত্তার দায়িত্ব ব্যবহারকারীর নিজের।</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="faq">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">FAQ</div>
+    <h2>সাধারণ প্রশ্ন</h2>
+  </div>
+
+  <details><summary>GitHub একদম না জানলে কি PocketHost ব্যবহার করতে পারব?</summary><p>হ্যাঁ। এই Landing Page-এর Beginner Guide অনুসরণ করে প্রথমবার Account, Repository, Pages এবং Token সেটআপ করা যাবে।</p></details>
+  <details><summary>আমার কি আলাদা Hosting কিনতে হবে?</summary><p>PocketHost-এর মূল hosting workflow GitHub Repository ও GitHub Pages ব্যবহার করে, তাই আলাদা hosting server প্রয়োজন হয় না। GitHub-এর নিজস্ব limits, policies ও availability প্রযোজ্য।</p></details>
+  <details><summary>মোবাইল ফোন দিয়ে কি সবকিছু করা যাবে?</summary><p>হ্যাঁ, PocketHost Studio mobile-friendly এবং GitHub-এর mobile web interface ব্যবহার করেও প্রয়োজনীয় setup করা যায়।</p></details>
+  <details><summary>একাধিক Repository কেন ব্যবহার করব?</summary><p>বিভিন্ন project বা hosting content আলাদা রাখতে এবং আপনার GitHub usage পরিকল্পনা অনুযায়ী একাধিক Repository ব্যবহার করতে পারেন।</p></details>
+  <details><summary>Token কোথায় রাখব?</summary><p>PocketHost-এর Settings-এ প্রয়োজন অনুযায়ী Token ব্যবহার করুন। Shared/public device-এ Token save না করাই নিরাপদ। Token কখনো source code-এ লিখবেন না।</p></details>
+  <details><summary>Upload করার পর সঙ্গে সঙ্গে Link কাজ না করলে?</summary><p>GitHub API commit সম্পন্ন হওয়া এবং GitHub Pages update হওয়ার জন্য কিছু সময় লাগতে পারে। কিছুক্ষণ অপেক্ষা করে Reload করুন।</p></details>
+  <details><summary>আমি কি যেকোনো File Host করতে পারব?</summary><p>PocketHost মূলত static hosting ও GitHub Repository content management-এর জন্য। GitHub-এর file size, repository, Pages এবং policy limitations প্রযোজ্য।</p></details>
+</div>
+</section>
+
+<section id="download">
+<div class="container">
+  <div class="download">
+    <div class="kicker" style="color:#93c5fd">Download & Links</div>
+    <h2>আজই PocketHost Studio ব্যবহার শুরু করুন 🚀</h2>
+    <p>নিচের বাটন থেকে সরাসরি PocketHost Studio APK ডাউনলোড করুন অথবা Live Demo ব্যবহার করুন।</p>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/HalalCodes/pockethost-a/releases/download/V1.0.0/PocketHost.apk">📱 Download APK</a>
+      <a class="btn" href="https://halalcodes.github.io/pockethost" target="_blank" rel="noopener">🌐 Open Live Demo</a>
+      <a class="btn" href="https://github.com/HalalCodes/pockethost" target="_blank" rel="noopener">⭐ GitHub Repository</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<section>
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Developer</div>
+    <h2>Muhammed Omor</h2>
+    <p class="muted">PocketHost Studio-এর Developer</p>
+  </div>
+  <div class="grid">
+    <div class="card"><h3>👨‍💻 GitHub</h3><p><a href="https://github.com/halalcodes" target="_blank" rel="noopener">github.com/halalcodes</a></p></div>
+    <div class="card"><h3>📧 Email</h3><p><a href="mailto:muhammedomor.studio@gmail.com">muhammedomor.studio@gmail.com</a></p></div>
+    <div class="card"><h3>🌐 Official Demo</h3><p><a href="https://halalcodes.github.io/pockethost" target="_blank" rel="noopener">halalcodes.github.io/pockethost</a></p></div>
+  </div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="container">
+  <h3 style="color:#fff">🚀 PocketHost Studio</h3>
+  <p>Multi-Repo GitHub Hosting Engine — আপনার GitHub Repository-কে সহজ Hosting Panel-এ পরিণত করুন।</p>
+  <p class="small">
+    Developed with ❤️ by <a href="https://github.com/halalcodes">Muhammed Omor</a>.
+    Source Code: <a href="https://github.com/HalalCodes/pockethost">GitHub</a>.
+  </p>
+  <p class="small">এই পেজের তথ্য GitHub-এর নিজস্ব interface, policies বা limits পরিবর্তিত হলে আপডেট করা প্রয়োজন হতে পারে।</p>
+</div>
+</footer>
+
+</body>
+</html>
