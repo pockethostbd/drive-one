@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আলটিমেট ভেরিফাইড ব্যাজ স্টুডিও PRO — Ultimate Verified Badge Studio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Hind Siliguri', 'system-ui', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts for Bengali and English -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Transparency grid patterns for preview */
+        .preview-grid-dark {
+            background-size: 16px 16px;
+            background-image: linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+        }
+        .preview-grid-light {
+            background-size: 16px 16px;
+            background-image: linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+        }
+
+        /* Master CSS Animations Engine */
+        @keyframes custom-pulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(0,0,0,0)); }
+            50% { transform: scale(1.08); filter: drop-shadow(0 4px 12px rgba(0,0,0,0.18)); }
+        }
+        .anim-pulse { animation: custom-pulse 2s infinite ease-in-out; transform-origin: center; }
+
+        @keyframes custom-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .anim-float { animation: custom-float 3s infinite ease-in-out; transform-origin: center; }
+
+        @keyframes custom-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .anim-spin-slow { animation: custom-spin 15s infinite linear; transform-origin: center; }
+
+        @keyframes custom-heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.12); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.12); }
+            70% { transform: scale(1); }
+        }
+        .anim-heartbeat { animation: custom-heartbeat 1.6s infinite ease-in-out; transform-origin: center; }
+
+        @keyframes custom-flip {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(180deg); filter: brightness(1.15); }
+            100% { transform: rotateY(360deg); }
+        }
+        .anim-flip { animation: custom-flip 4.5s infinite ease-in-out; transform-origin: center; }
+
+        @keyframes custom-wobble {
+            0%, 100% { transform: rotate(0deg); }
+            15% { transform: rotate(-6deg); }
+            30% { transform: rotate(5deg); }
+            45% { transform: rotate(-4deg); }
+            60% { transform: rotate(3deg); }
+            75% { transform: rotate(-1.5deg); }
+        }
+        .anim-wobble { animation: custom-wobble 2s infinite ease-in-out; transform-origin: center; }
+
+        @keyframes custom-bounce {
+            0%, 100% { transform: translateY(0) scaleY(1); }
+            40% { transform: translateY(-15px) scaleY(1.05); }
+            60% { transform: translateY(0) scaleY(0.95); }
+        }
+        .anim-bounce { animation: custom-bounce 1.6s infinite ease-in-out; transform-origin: center; }
+
+        @keyframes neon-glow {
+            0%, 100% { filter: drop-shadow(0 0 3px var(--glow-color, #1877F2)) drop-shadow(0 0 6px var(--glow-color, #1877F2)); }
+            50% { filter: drop-shadow(0 0 10px var(--glow-color, #1877F2)) drop-shadow(0 0 18px var(--glow-color, #1877F2)); }
+        }
+        .anim-glow { animation: neon-glow 2.2s infinite ease-in-out; transform-origin: center; }
+
+        /* Global pause utility targeting animations */
+        .animation-paused, .animation-paused * {
+            animation-play-state: paused !important;
+        }
+
+        /* Custom scrollbar aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 999px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen selection:bg-blue-600 selection:text-white transition-colors duration-300">
+
+    <!-- Header Section -->
+    <header class="border-b border-slate-200/85 dark:border-slate-800/80 bg-white/70 dark:bg-slate-950/70 backdrop-blur-md py-5 px-4 sticky top-0 z-50 shadow-sm transition-colors duration-300">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-blue-100/60 dark:bg-blue-950/40 rounded-2xl border border-blue-500/20 dark:border-blue-500/30">
+                    <svg class="w-8 h-8 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.152-.435.248-.9.248-1.4 0-2.21-1.79-4-4-4-.5 0-.965.1-1.4.248C14.55 2.475 13.18 1.6 11.6 1.6c-1.58 0-2.95.875-3.6 2.148-.435-.152-.9-.248-1.4-.248-2.21 0-4 1.79-4 4 0 .5.1.965.248 1.4C1.475 9.55.6 10.92.6 12.5c0 1.58.875 2.95 2.148 3.6-.152.435-.248.9-.248 1.4 0 2.21 1.79 4 4 4 .5 0 .965-.1 1.4-.248.65 1.273 2.02 2.148 3.6 2.148 1.58 0 2.95-.875 3.6-2.148.435.152.9.248 1.4.248 2.21 0 4-1.79 4-4 0-.5-.1-.965-.248-1.4 1.273-.65 2.148-2.02 2.148-3.6zm-12.8 3.7L5.5 12l1.4-1.4 2.8 2.8 7.2-7.2 1.4 1.4-8.6 8.6z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent tracking-wide">
+                        আলটিমেট ভেরিফাইড ব্যাজ স্টুডিও PRO
+                    </h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                        Vector Path Customizer & Importer Engine • v3.0 Professional
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- Theme Toggler Button -->
+                <button onclick="AppEngine.toggleTheme()" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-850 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all text-slate-500 dark:text-slate-400" title="থিম পরিবর্তন করুন">
+                    <!-- Light Icon -->
+                    <svg id="theme-light-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <!-- Dark Icon -->
+                    <svg id="theme-dark-icon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <div class="hidden md:flex items-center gap-2 text-xs bg-emerald-100/70 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 px-4 py-2 rounded-xl font-semibold">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                    সরাসরি SVG ও PNG এক্সপোর্ট সমর্থিত
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Main Interactive Workspace Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Side controls - 5 Columns wide -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- Shape Vector Path Selector -->
+                <div class="bg-white/70 dark:bg-slate-900/60 backdrop-blur-md p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-md space-y-4">
+                    <h3 class="text-md font-bold text-slate-800 dark:text-white border-b border-slate-200 dark:border-slate-800/60 pb-3 flex items-center gap-2">
+                        🔰 ১. আকৃতি কাস্টমাইজেশন (Shape Engine)
+                    </h3>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">ব্যাজের ভেক্টর ডিজাইন সিলেক্ট করুন:</label>
+                        <select id="shape-selector" onchange="AppEngine.changeShape(this.value)" class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="scalloped" selected>ক্লাসিক স্কেলাপড (Scalloped 16-point)</option>
+                            <option value="circle">মসৃণ বৃত্ত (Perfect Circle)</option>
+                            <option value="hexagon">মডার্ন হেক্সাগন (Hexagon)</option>
+                            <option value="star">রয়্যাল স্টার (Beautiful Star Badge)</option>
+                            <option value="custom">কাস্টম পাথ (Custom Vector Path / SVG Import)</option>
+                        </select>
+                    </div>
+
+                    <!-- SVG Importer Block, appears only when custom path is requested -->
+                    <div id="svg-import-block" class="hidden animate-fadeIn space-y-3 pt-2">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-xs font-bold text-blue-600 dark:text-blue-400">কাস্টম SVG কোড বা Path ইমপোর্ট:</label>
+                            <span class="text-[10px] text-slate-400">viewBox="0 0 24 24" স্ট্যান্ডার্ড</span>
+                        </div>
+                        <textarea id="svg-import-textarea" placeholder='যেমন: M12 2L2 22h20L12 2z অথবা <svg><path d="..."/></svg>' class="w-full h-24 p-3 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs code-font text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" oninput="AppEngine.handlePathImport()"></textarea>
+                        <div id="import-feedback" class="text-[11px] hidden font-semibold"></div>
+                    </div>
+                </div>
+
+                <!-- Color Configurator -->
+                <div class="bg-white/70 dark:bg-slate-900/60 backdrop-blur-md p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-md space-y-6">
+                    <h3 class="text-md font-bold text-slate-800 dark:text-white border-b border-slate-200 dark:border-slate-800/60 pb-3 flex items-center gap-2">
+                        🎨 ২. কালার ও স্কিন ইন্জিন (Skin & Colors)
+                    </h3>
+                    
+                    <!-- Color Tabs selector -->
+                    <div class="flex bg-slate-100 dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800/80">
+                        <button onclick="AppEngine.switchColorTab('solid')" id="tab-solid" class="flex-1 text-xs py-2 rounded-lg font-bold transition-all bg-white dark:bg-slate-900 text-blue-600 dark:text-white shadow-sm">
+                            সলিড কালার (Solid)
+                        </button>
+                        <button onclick="AppEngine.switchColorTab('gradient')" id="tab-gradient" class="flex-1 text-xs py-2 rounded-lg font-bold transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white">
+                            গ্রেডিয়েন্ট (Gradient)
+                        </button>
+                    </div>
+
+                    <!-- Solid Presets -->
+                    <div id="solid-color-section" class="space-y-3">
+                        <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400">১৬টি ব্র্যান্ডেড সলিড কালার প্রিসেট:</label>
+                        <div class="grid grid-cols-4 gap-2">
+                            <button onclick="AppEngine.setSolidColor('#1877F2', 'Facebook Blue')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="Facebook">
+                                <span class="w-5 h-5 rounded-full bg-[#1877F2] mb-1"></span>
+                                FB Blue
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#1D9BF0', 'Twitter Blue')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="Twitter/X">
+                                <span class="w-5 h-5 rounded-full bg-[#1D9BF0] mb-1"></span>
+                                Twitter
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#5865F2', 'Discord Purple')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="Discord">
+                                <span class="w-5 h-5 rounded-full bg-[#5865F2] mb-1"></span>
+                                Discord
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#0A66C2', 'LinkedIn Blue')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="LinkedIn">
+                                <span class="w-5 h-5 rounded-full bg-[#0A66C2] mb-1"></span>
+                                LinkedIn
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#26A5E4', 'Telegram Sky')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="Telegram">
+                                <span class="w-5 h-5 rounded-full bg-[#26A5E4] mb-1"></span>
+                                Telegram
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#FF0000', 'YouTube Red')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="YouTube">
+                                <span class="w-5 h-5 rounded-full bg-[#FF0000] mb-1"></span>
+                                YouTube
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#FF0050', 'TikTok Pink')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="TikTok">
+                                <span class="w-5 h-5 rounded-full bg-[#FF0050] mb-1"></span>
+                                TikTok
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#9146FF', 'Twitch Purple')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="Twitch">
+                                <span class="w-5 h-5 rounded-full bg-[#9146FF] mb-1"></span>
+                                Twitch
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#1DB954', 'Spotify Green')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="Spotify">
+                                <span class="w-5 h-5 rounded-full bg-[#1DB954] mb-1"></span>
+                                Spotify
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#00A884', 'WhatsApp Green')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="WhatsApp">
+                                <span class="w-5 h-5 rounded-full bg-[#00A884] mb-1"></span>
+                                WhatsApp
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#FF4500', 'Reddit Orange')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="Reddit">
+                                <span class="w-5 h-5 rounded-full bg-[#FF4500] mb-1"></span>
+                                Reddit
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#BD081C', 'Pinterest Red')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="Pinterest">
+                                <span class="w-5 h-5 rounded-full bg-[#BD081C] mb-1"></span>
+                                Pinterest
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#111827', 'GitHub Dark')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="GitHub">
+                                <span class="w-5 h-5 rounded-full bg-[#111827] mb-1 border border-slate-700/30"></span>
+                                GitHub
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#4B5563', 'Epic Grey')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="Epic Gray">
+                                <span class="w-5 h-5 rounded-full bg-[#4B5563] mb-1"></span>
+                                Slate
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#FFD700', 'Royal Gold')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="Royal Gold">
+                                <span class="w-5 h-5 rounded-full bg-[#FFD700] mb-1"></span>
+                                Gold
+                            </button>
+                            <button onclick="AppEngine.setSolidColor('#FFFFFF', 'Pure White')" class="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-blue-500 transition text-[10px]" title="White">
+                                <span class="w-5 h-5 rounded-full bg-[#FFFFFF] border border-slate-300 dark:border-slate-700 mb-1"></span>
+                                White
+                            </button>
+                        </div>
+
+                        <!-- Solid Manual Color Picker -->
+                        <div class="pt-2 flex items-center justify-between bg-slate-100 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-850">
+                            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">কাস্টম সলিড কালার সিলেক্টর:</span>
+                            <div class="flex items-center gap-2">
+                                <input type="color" id="solid-picker" value="#1877F2" oninput="AppEngine.handleSolidPicker(this.value)" class="w-8 h-8 rounded border border-slate-300 dark:border-slate-700 cursor-pointer bg-transparent">
+                                <span id="solid-hex-lbl" class="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">#1877F2</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gradient Presets -->
+                    <div id="gradient-color-section" class="space-y-4 hidden">
+                        <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400">৮টি প্রিমিয়াম রেডিমেড গ্রেডিয়েন্ট প্রিসেট:</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="AppEngine.setGradientColor('#FF8A00', '#DA1B60', 'Sunset Glow')" class="flex items-center gap-2.5 p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-indigo-500 transition text-left text-xs">
+                                <span class="w-5 h-5 rounded-full bg-gradient-to-r from-[#FF8A00] to-[#DA1B60]"></span>
+                                <span>Sunset Glow</span>
+                            </button>
+                            <button onclick="AppEngine.setGradientColor('#00C6FF', '#0072FF', 'Ocean Wave')" class="flex items-center gap-2.5 p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-indigo-500 transition text-left text-xs">
+                                <span class="w-5 h-5 rounded-full bg-gradient-to-r from-[#00C6FF] to-[#0072FF]"></span>
+                                <span>Ocean Wave</span>
+                            </button>
+                            <button onclick="AppEngine.setGradientColor('#F355DA', '#7000FF', 'Cyberpunk')" class="flex items-center gap-2.5 p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-indigo-500 transition text-left text-xs">
+                                <span class="w-5 h-5 rounded-full bg-gradient-to-r from-[#F355DA] to-[#7000FF]"></span>
+                                <span>Cyberpunk</span>
+                            </button>
+                            <button onclick="AppEngine.setGradientColor('#11998E', '#38EF7D', 'Aurora Green')" class="flex items-center gap-2.5 p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-indigo-500 transition text-left text-xs">
+                                <span class="w-5 h-5 rounded-full bg-gradient-to-r from-[#11998E] to-[#38EF7D]"></span>
+                                <span>Aurora Green</span>
+                            </button>
+                            <button onclick="AppEngine.setGradientColor('#F2C94C', '#F2994A', 'Gold Crown')" class="flex items-center gap-2.5 p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-indigo-500 transition text-left text-xs">
+                                <span class="w-5 h-5 rounded-full bg-gradient-to-r from-[#F2C94C] to-[#F2994A]"></span>
+                                <span>Gold Crown</span>
+                            </button>
+                            <button onclick="AppEngine.setGradientColor('#F09433', '#BC1888', 'Insta Pop')" class="flex items-center gap-2.5 p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-indigo-500 transition text-left text-xs">
+                                <span class="w-5 h-5 rounded-full bg-gradient-to-r from-[#F09433] to-[#BC1888]"></span>
+                                <span>Insta Pop</span>
+                            </button>
+                            <button onclick="AppEngine.setGradientColor('#232526', '#414345', 'Slate Charcoal')" class="flex items-center gap-2.5 p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-indigo-500 transition text-left text-xs">
+                                <span class="w-5 h-5 rounded-full bg-gradient-to-r from-[#232526] to-[#414345]"></span>
+                                <span>Charcoal</span>
+                            </button>
+                            <button onclick="AppEngine.setGradientColor('#DA22FF', '#9733EE', 'Grape Punch')" class="flex items-center gap-2.5 p-2 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 hover:border-indigo-500 transition text-left text-xs">
+                                <span class="w-5 h-5 rounded-full bg-gradient-to-r from-[#DA22FF] to-[#9733EE]"></span>
+                                <span>Grape Punch</span>
+                            </button>
+                        </div>
+
+                        <!-- Gradient Custom Dual Mixer -->
+                        <div class="bg-slate-100 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-850 space-y-3">
+                            <span class="block text-xs font-semibold text-slate-500 dark:text-slate-400">কাস্টম ডুয়াল-কালার মিক্সার:</span>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[10px] text-slate-400 mb-1">শুরু কালার (Color 1)</label>
+                                    <div class="flex items-center gap-2 bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800">
+                                        <input type="color" id="grad-color1" value="#FF8A00" oninput="AppEngine.handleGradientChange()" class="w-7 h-7 bg-transparent border-0 cursor-pointer">
+                                        <span id="grad-hex1" class="text-xs font-mono text-slate-700 dark:text-slate-300">#FF8A00</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] text-slate-400 mb-1">শেষ কালার (Color 2)</label>
+                                    <div class="flex items-center gap-2 bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800">
+                                        <input type="color" id="grad-color2" value="#DA1B60" oninput="AppEngine.handleGradientChange()" class="w-7 h-7 bg-transparent border-0 cursor-pointer">
+                                        <span id="grad-hex2" class="text-xs font-mono text-slate-700 dark:text-slate-300">#DA1B60</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customizations: Size, Thickness, Tickmarks -->
+                <div class="bg-white/70 dark:bg-slate-900/60 backdrop-blur-md p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-md space-y-5">
+                    <h3 class="text-md font-bold text-slate-800 dark:text-white border-b border-slate-200 dark:border-slate-800/60 pb-3 flex items-center gap-2">
+                        📐 ৩. সাইজ ও কাস্টমাইজেশন (Structure & Sizing)
+                    </h3>
+                    
+                    <!-- Diameter slider -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">
+                            <span>ব্যাজের আকার (Width/Height):</span>
+                            <span id="size-indicator" class="font-mono text-blue-500 dark:text-blue-400 font-bold">80px</span>
+                        </div>
+                        <input type="range" id="size-slider" min="10" max="250" step="5" value="80" oninput="AppEngine.changeSize(this.value)" class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                        <div class="flex justify-between text-[9px] text-slate-400 font-mono mt-1">
+                            <span>10px</span>
+                            <span>80px</span>
+                            <span>150px</span>
+                            <span>250px</span>
+                        </div>
+                    </div>
+
+                    <!-- Tick Profiles -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2.5">টিকমার্কের প্রোফাইল (Checkmark Thickness):</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-pointer text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-900">
+                                <span class="text-slate-700 dark:text-slate-300">ক্লাসিক স্ট্যান্ডার্ড</span>
+                                <input type="radio" name="check-profile" value="standard" checked onclick="AppEngine.toggleCheckProfile('standard')" class="w-4 h-4 text-blue-600 accent-blue-500">
+                            </label>
+                            <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-pointer text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-900">
+                                <span class="text-slate-700 dark:text-slate-300">রয়্যাল বোল্ড</span>
+                                <input type="radio" name="check-profile" value="bold" onclick="AppEngine.toggleCheckProfile('bold')" class="w-4 h-4 text-blue-600 accent-blue-500">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live CSS Animations Engine -->
+                <div class="bg-white/70 dark:bg-slate-900/60 backdrop-blur-md p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-md space-y-4">
+                    <h3 class="text-md font-bold text-slate-800 dark:text-white border-b border-slate-200 dark:border-slate-800/60 pb-3 flex items-center gap-2">
+                        🎬 ৪. ডাইনামিক মোশন এনিমেশন (Physics Motion)
+                    </h3>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">এনিমেশন স্টাইল সিলেক্ট করুন:</label>
+                        <select id="animation-selector" onchange="AppEngine.applyAnimation(this.value)" class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="none">কোনো মোশন নেই (Static Badge)</option>
+                            <option value="anim-pulse" selected>ধীরে পালস আভা (Soft Heartbeat Glow)</option>
+                            <option value="anim-float">শূন্যে ভাসমান ৩ডি (3D Floating Motion)</option>
+                            <option value="anim-spin-slow">ধীর ঘূর্ণন চক্র (Slow Axis Spin)</option>
+                            <option value="anim-heartbeat">হৃদস্পন্দন রিদম (Double Heartbeat)</option>
+                            <option value="anim-flip">৩ডি কার্ড ফ্লিপ (3D Card Flip Loop)</option>
+                            <option value="anim-wobble">প্লেফুল জেলি ঝাঁকুনি (Fun Wobble)</option>
+                            <option value="anim-bounce">ইলাস্টিক বাউন্স (Elastic Bounce Jump)</option>
+                            <option value="anim-glow">নিওন পালস গ্লো (Neon Aura Pulsing)</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right side: Vector Canvas, Realtime controls & Code Generator - 7 Columns wide -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- Live Display Arena (Responsive Canvas) -->
+                <div class="bg-white dark:bg-slate-900/40 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl flex flex-col items-center justify-center min-h-[460px] relative overflow-hidden transition-all duration-300">
+                    
+                    <!-- Background Style Controls inside Preview -->
+                    <div class="absolute top-4 left-5 right-5 flex flex-wrap items-center justify-between gap-3 select-none z-10">
+                        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span> 
+                            ভেক্টর ক্যানভাস (Vector Canvas)
+                        </div>
+                        
+                        <!-- Mini Background Selector inside Canvas -->
+                        <div class="flex items-center bg-slate-100/80 dark:bg-slate-950/80 p-0.5 rounded-lg border border-slate-200/50 dark:border-slate-800/80">
+                            <button onclick="AppEngine.setCanvasBackground('grid')" id="bg-btn-grid" class="px-2 py-1 text-[10px] font-bold rounded bg-white dark:bg-slate-900 shadow-sm transition">Grid</button>
+                            <button onclick="AppEngine.setCanvasBackground('dark')" id="bg-btn-dark" class="px-2 py-1 text-[10px] font-bold rounded text-slate-500 hover:text-slate-800 dark:hover:text-white transition">Dark</button>
+                            <button onclick="AppEngine.setCanvasBackground('light')" id="bg-btn-light" class="px-2 py-1 text-[10px] font-bold rounded text-slate-500 hover:text-slate-800 dark:hover:text-white transition">Light</button>
+                        </div>
+                    </div>
+
+                    <!-- Main Vector Box -->
+                    <div id="preview-grid-container" class="w-full h-80 preview-grid-dark rounded-2xl flex items-center justify-center relative transition-all duration-300 border-b border-slate-100 dark:border-slate-800/20">
+                        
+                        <!-- Motion Pause Trigger Overlay -->
+                        <div class="absolute bottom-4 left-4 z-10">
+                            <button id="playback-btn" onclick="AppEngine.togglePlayback()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-slate-950/90 hover:bg-slate-100 dark:hover:bg-slate-900 text-xs font-semibold shadow-md border border-slate-200 dark:border-slate-850 transition active:scale-95 text-slate-700 dark:text-slate-200">
+                                <span id="playback-icon" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                                <span id="playback-text">এনিমেশন চলছে (Running)</span>
+                            </button>
+                        </div>
+
+                        <!-- THE RENDERED ENGINE WRAPPER -->
+                        <div id="badge-wrapper-element" class="anim-pulse transition-all duration-300">
+                            
+                            <!-- Master SVG Element -->
+                            <svg id="master-svg" class="transition-all duration-300" viewBox="0 0 24 24" width="80" height="80" xmlns="http://www.w3.org/2000/svg">
+                                <title>Verified Badge</title>
+                                <defs id="svg-defs">
+                                    <!-- Gradients populated inside programmatically -->
+                                </defs>
+                                
+                                <!-- Core Badge Shape Path -->
+                                <path id="svg-badge-path" d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.152-.435.248-.9.248-1.4 0-2.21-1.79-4-4-4-.5 0-.965.1-1.4.248C14.55 2.475 13.18 1.6 11.6 1.6c-1.58 0-2.95.875-3.6 2.148-.435-.152-.9-.248-1.4-.248-2.21 0-4 1.79-4 4 0 .5.1.965.248 1.4C1.475 9.55.6 10.92.6 12.5c0 1.58.875 2.95 2.148 3.6-.152.435-.248.9-.248 1.4 0 2.21 1.79 4 4 4 .5 0 .965-.1 1.4-.248.65 1.273 2.02 2.148 3.6 2.148 1.58 0 2.95-.875 3.6-2.148.435.152.9.248 1.4.248 2.21 0 4-1.79 4-4 0-.5-.1-.965-.248-1.4 1.273-.65 2.148-2.02 2.148-3.6z" fill="#1877F2"/>
+                                
+                                <!-- Centered Checkmark Path -->
+                                <path id="svg-check-path" fill-rule="evenodd" clip-rule="evenodd" d="M9.7 16.2L5.5 12l1.4-1.4 2.8 2.8L17.1 6l1.4 1.4-8.8 8.8z" fill="#ffffff"/>
+                            </svg>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Meta details & Actions panel -->
+                    <div class="w-full p-4 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="flex flex-wrap gap-2 items-center justify-center sm:justify-start">
+                            <span class="bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-lg text-xs font-semibold">
+                                টাইপ: <span id="meta-type" class="text-blue-600 dark:text-blue-400 font-bold">সলিড কালার (Facebook Blue)</span>
+                            </span>
+                            <span class="bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-lg text-xs font-semibold">
+                                মাত্রা: <span id="meta-size" class="text-blue-600 dark:text-blue-400 font-bold">80x80px</span>
+                            </span>
+                        </div>
+
+                        <!-- EXPORT / DOWNLOAD TRIGGERS -->
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <button onclick="AppEngine.downloadSVG()" class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-slate-800 dark:bg-slate-950 hover:bg-slate-900 dark:hover:bg-slate-900 text-white dark:text-slate-100 border border-slate-700/80 text-xs px-4 py-2.5 rounded-xl font-bold shadow transition active:scale-95">
+                                📥 Download SVG
+                            </button>
+                            <button onclick="AppEngine.downloadPNG()" class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-lg transition active:scale-95">
+                                🖼️ Download PNG
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Terminal Exporter Block -->
+                <div class="bg-slate-900 text-slate-100 rounded-3xl p-6 border border-slate-800 shadow-2xl space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-ping"></span>
+                            <span class="text-xs uppercase tracking-wider font-bold text-slate-400">কোড জেনারেটর টার্মিনাল (Code Exporter)</span>
+                        </div>
+                        
+                        <!-- Code format button switch -->
+                        <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800/80 self-start">
+                            <button onclick="AppEngine.switchExportFormat('svg')" id="exp-svg" class="text-[11px] px-3 py-1.5 rounded-lg font-bold transition text-slate-400 hover:text-white">
+                                Pure SVG
+                            </button>
+                            <button onclick="AppEngine.switchExportFormat('html')" id="exp-html" class="text-[11px] px-3 py-1.5 rounded-lg font-bold transition bg-indigo-600 text-white shadow-md">
+                                HTML/CSS Block
+                            </button>
+                            <button onclick="AppEngine.switchExportFormat('react')" id="exp-react" class="text-[11px] px-3 py-1.5 rounded-lg font-bold transition text-slate-400 hover:text-white">
+                                React Component
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Code block -->
+                    <div class="relative group">
+                        <button onclick="AppEngine.copyGeneratedCode()" class="absolute top-3 right-3 bg-blue-600 hover:bg-blue-500 text-white text-[10px] px-3.5 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition shadow-lg active:scale-95 z-10">
+                            📎 কপি কোড (Copy Code)
+                        </button>
+                        <pre class="overflow-x-auto text-xs code-font bg-slate-950 p-5 rounded-2xl border border-slate-850 leading-relaxed text-indigo-300 max-h-60 scrollbar-thin" id="terminal-code-view"></pre>
+                    </div>
+
+                    <!-- Success Toast -->
+                    <div id="copy-toast" class="hidden text-center text-xs bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-2.5 rounded-xl font-semibold animate-pulse tracking-wide shadow-md">
+                        🎉 কোডটি ক্লিপবোর্ডে কপি করা হয়েছে! সরাসরি আপনার প্রজেক্টে ব্যবহার করুন।
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Professional Teacher's Lounge - Micro-Component Engineering -->
+        <section class="mt-12 bg-white/70 dark:bg-slate-900/40 rounded-3xl border border-slate-200 dark:border-slate-800/80 p-8 shadow-md space-y-6">
+            <div class="flex items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
+                <div class="text-4xl">🎓</div>
+                <div>
+                    <h3 class="text-lg md:text-xl font-bold text-slate-800 dark:text-white tracking-wide">Developer's Engineering & Vector Concepts</h3>
+                    <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400">এই আপগ্রেডেড প্রজেক্টে ব্যবহৃত প্রফেশনাল আর্কিটেকচারাল মেকানিজম</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-600 dark:text-slate-300 text-sm">
+                
+                <!-- Lesson 1 -->
+                <div class="space-y-3 bg-slate-100/50 dark:bg-slate-900/20 p-5 rounded-2xl border border-slate-200 dark:border-slate-800/30">
+                    <h4 class="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                        <span class="bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900 px-2 py-0.5 rounded-md text-xs font-mono">Concept 1</span>
+                        ডাইনামিক ভেক্টর পাথ ম্যানিপুলেশন (Dynamic SVG Path Swapping)
+                    </h4>
+                    <p class="leading-relaxed text-xs text-slate-500 dark:text-slate-400">
+                        আমাদের এই সিস্টেমে সম্পূর্ণ কাস্টমাইজড জ্যামিতিক ক্যালকুলেশনের মাধ্যমে ব্যাজের মূল ভেক্টর পাথটি ডাইনামিকালি ডোম (<code class="text-rose-500 font-mono bg-slate-200 dark:bg-slate-950 px-1 rounded">svg-badge-path</code>)-এ ইনজেক্ট করা হয়। ইউজার কাস্টম SVG-এর জন্য বাইরের কোনো লাইব্রেরি ছাড়া ব্রাউজারের নিজস্ব XMLParser দিয়ে পার্সিং সম্পন্ন করা হয়।
+                    </p>
+                </div>
+
+                <!-- Lesson 2 -->
+                <div class="space-y-3 bg-slate-100/50 dark:bg-slate-900/20 p-5 rounded-2xl border border-slate-200 dark:border-slate-800/30">
+                    <h4 class="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                        <span class="bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900 px-2 py-0.5 rounded-md text-xs font-mono">Concept 2</span>
+                        হাই-ডেফিনিশন ক্যানভাস এক্সপোর্ট (High-Density Canvas Rendering)
+                    </h4>
+                    <p class="leading-relaxed text-xs text-slate-500 dark:text-slate-400">
+                        PNG এক্সপোর্টের সময় সাধারণ ইমেজের মতন ঝাপসা (blurry) আবছা ভাব এড়াতে আমরা একটি হাই-ডেফিনিশন ৫১২x৫১২ পিক্সেল রেশিও মডেলে ব্যাকগ্রাউন্ড ক্যানভাস ড্রইং করেছি। এতে SVG নোডটিকে প্রথমে বেস৬৪ ইউআরএলে রূপান্তর করা হয় এবং পরে ক্যানভাস রেন্ডারিং সম্পন্ন করা হয়।
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Master Web Application JavaScript Engine -->
+    <script>
+        // Closed Path Shapes Database
+        const BadgeShapes = {
+            scalloped: "M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.152-.435.248-.9.248-1.4 0-2.21-1.79-4-4-4-.5 0-.965.1-1.4.248C14.55 2.475 13.18 1.6 11.6 1.6c-1.58 0-2.95.875-3.6 2.148-.435-.152-.9-.248-1.4-.248-2.21 0-4 1.79-4 4 0 .5.1.965.248 1.4C1.475 9.55.6 10.92.6 12.5c0 1.58.875 2.95 2.148 3.6-.152.435-.248.9-.248 1.4 0 2.21 1.79 4 4 4 .5 0 .965-.1 1.4-.248.65 1.273 2.02 2.148 3.6 2.148 1.58 0 2.95-.875 3.6-2.148.435.152.9.248 1.4.248 2.21 0 4-1.79 4-4 0-.5-.1-.965-.248-1.4 1.273-.65 2.148-2.02 2.148-3.6z",
+            circle: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z", // Transparent ring circle to retain badge aesthetic
+            hexagon: "M12 2L22 7.5v11L12 22 2 16.5v-11z",
+            star: "M12 2l2.6 5.3 5.9.9-4.3 4.2 1 5.9-5.2-2.7-5.2 2.7 1-5.9-4.3-4.2 5.9-.9z"
+        };
+
+        // Closed Checkmarks Database
+        const CheckmarkPaths = {
+            standard: "M9.7 16.2L5.5 12l1.4-1.4 2.8 2.8L17.1 6l1.4 1.4-8.8 8.8z",
+            bold: "M9.86 15.17L6.69 12c-0.39-0.39-1.02-0.39-1.41 0c-0.39 0.39-0.39 1.02 0 1.41l3.88 3.88c0.39 0.39 1.02 0.39 1.41 0l7.78-7.78c0.39-0.39 0.39-1.02 0-1.41c-0.39-0.39-1.02-0.39-1.41 0L9.86 15.17z"
+        };
+
+        // Main Web Application Controller Module
+        const AppEngine = {
+            // Internal Reactive State Engine
+            state: {
+                theme: 'dark',
+                colorType: 'solid',
+                primaryColor: '#1877F2',
+                gradientStart: '#FF8A00',
+                gradientEnd: '#DA1B60',
+                colorLabel: 'Facebook Blue',
+                shape: 'scalloped',
+                customImportedPath: '',
+                size: 80,
+                checkStyle: 'standard',
+                animation: 'anim-pulse',
+                playbackRunning: true,
+                canvasBg: 'grid',
+                exportFormat: 'html'
+            },
+
+            // Bootstrap Initiation Method
+            init() {
+                this.syncThemeDom();
+                this.render();
+            },
+
+            // UI State Sync & Execution Engine
+            render() {
+                const svgBadgePath = document.getElementById('svg-badge-path');
+                const svgCheckPath = document.getElementById('svg-check-path');
+                const svgDefs = document.getElementById('svg-defs');
+                const masterSvg = document.getElementById('master-svg');
+                const badgeWrapper = document.getElementById('badge-wrapper-element');
+                
+                // 1. Resolve and set Badge Vector Path Shape
+                if (this.state.shape === 'custom') {
+                    if (this.state.customImportedPath) {
+                        svgBadgePath.setAttribute('d', this.state.customImportedPath);
+                    } else {
+                        svgBadgePath.setAttribute('d', BadgeShapes.scalloped);
+                    }
+                } else {
+                    svgBadgePath.setAttribute('d', BadgeShapes[this.state.shape]);
+                }
+
+                // 2. Resolve Checkmark Thickness profile
+                svgCheckPath.setAttribute('d', CheckmarkPaths[this.state.checkStyle]);
+
+                // 3. Resolve Colors Engine
+                if (this.state.colorType === 'solid') {
+                    svgDefs.innerHTML = '';
+                    svgBadgePath.setAttribute('fill', this.state.primaryColor);
+                    document.documentElement.style.setProperty('--glow-color', this.state.primaryColor);
+                    document.getElementById('meta-type').textContent = `সলিড কালার (${this.state.colorLabel})`;
+                } else {
+                    const gradientId = 'badge-active-gradient';
+                    svgDefs.innerHTML = `
+                        <linearGradient id="${gradientId}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="${this.state.gradientStart}" />
+                            <stop offset="100%" stop-color="${this.state.gradientEnd}" />
+                        </linearGradient>
+                    `;
+                    svgBadgePath.setAttribute('fill', `url(#${gradientId})`);
+                    document.documentElement.style.setProperty('--glow-color', this.state.gradientStart);
+                    document.getElementById('meta-type').textContent = `গ্রেডিয়েন্ট (${this.state.colorLabel})`;
+                }
+
+                // 4. Dimensions setup
+                masterSvg.setAttribute('width', this.state.size);
+                masterSvg.setAttribute('height', this.state.size);
+                document.getElementById('size-indicator').textContent = `${this.state.size}px`;
+                document.getElementById('meta-size').textContent = `${this.state.size}x${this.state.size}px`;
+
+                // 5. Physics Animation Handling
+                badgeWrapper.className = 'transition-all duration-300';
+                if (this.state.animation !== 'none') {
+                    badgeWrapper.classList.add(this.state.animation);
+                }
+                if (!this.state.playbackRunning) {
+                    badgeWrapper.classList.add('animation-paused');
+                }
+
+                // Sync terminal and triggers
+                this.updateCodeExportTerminal();
+            },
+
+            // Theme switching controllers
+            toggleTheme() {
+                this.state.theme = this.state.theme === 'dark' ? 'light' : 'dark';
+                this.syncThemeDom();
+            },
+
+            syncThemeDom() {
+                const root = document.documentElement;
+                const lightIcon = document.getElementById('theme-light-icon');
+                const darkIcon = document.getElementById('theme-dark-icon');
+                
+                if (this.state.theme === 'dark') {
+                    root.classList.add('dark');
+                    lightIcon.classList.add('hidden');
+                    darkIcon.classList.remove('hidden');
+                } else {
+                    root.classList.remove('dark');
+                    lightIcon.classList.remove('hidden');
+                    darkIcon.classList.add('hidden');
+                }
+            },
+
+            // Canvas Background Control Toggle
+            setCanvasBackground(styleKey) {
+                const container = document.getElementById('preview-grid-container');
+                const btnGrid = document.getElementById('bg-btn-grid');
+                const btnDark = document.getElementById('bg-btn-dark');
+                const btnLight = document.getElementById('bg-btn-light');
+
+                // Clear formatting
+                container.className = "w-full h-80 rounded-2xl flex items-center justify-center relative transition-all duration-300 border-b border-slate-100 dark:border-slate-850";
+                [btnGrid, btnDark, btnLight].forEach(btn => {
+                    btn.className = "px-2 py-1 text-[10px] font-bold rounded text-slate-500 hover:text-slate-800 dark:hover:text-white transition";
+                });
+
+                this.state.canvasBg = styleKey;
+                
+                if (styleKey === 'grid') {
+                    container.classList.add('preview-grid-dark');
+                    btnGrid.className = "px-2 py-1 text-[10px] font-bold rounded bg-white dark:bg-slate-900 text-blue-600 dark:text-white shadow-sm transition";
+                } else if (styleKey === 'dark') {
+                    container.classList.add('bg-slate-950');
+                    btnDark.className = "px-2 py-1 text-[10px] font-bold rounded bg-white dark:bg-slate-900 text-blue-600 dark:text-white shadow-sm transition";
+                } else {
+                    container.classList.add('bg-white', 'preview-grid-light');
+                    btnLight.className = "px-2 py-1 text-[10px] font-bold rounded bg-slate-100 text-blue-600 transition";
+                }
+            },
+
+            // Set shape type and toggle dynamic custom block visibility
+            changeShape(shapeKey) {
+                this.state.shape = shapeKey;
+                const block = document.getElementById('svg-import-block');
+                if (shapeKey === 'custom') {
+                    block.classList.remove('hidden');
+                } else {
+                    block.classList.add('hidden');
+                }
+                this.render();
+            },
+
+            // Raw Custom Vector Path Parser/Importer Engine
+            handlePathImport() {
+                const input = document.getElementById('svg-import-textarea').value.trim();
+                const feedback = document.getElementById('import-feedback');
+                
+                if (!input) {
+                    feedback.className = "text-[11px] font-semibold text-slate-400";
+                    feedback.textContent = "পাথ দেখার অপেক্ষায়...";
+                    feedback.classList.remove('hidden');
+                    return;
+                }
+
+                try {
+                    let pathData = '';
+                    if (input.includes('<svg') || input.includes('<path')) {
+                        // XML parsing
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(input, 'image/svg+xml');
+                        const pathElem = doc.querySelector('path');
+                        if (pathElem && pathElem.getAttribute('d')) {
+                            pathData = pathElem.getAttribute('d');
+                        } else {
+                            throw new Error("SVG কোডের মধ্যে কোনো বৈধ <path d='...' /> উপাদান পাওয়া যায়নি!");
+                        }
+                    } else {
+                        // Raw coordinate path string direct pass-through
+                        pathData = input;
+                    }
+
+                    this.state.customImportedPath = pathData;
+                    feedback.className = "text-[11px] font-semibold text-emerald-500 dark:text-emerald-400";
+                    feedback.textContent = "✓ ভেক্টর পাথ সফলভাবে ইমপোর্ট সম্পন্ন হয়েছে!";
+                    feedback.classList.remove('hidden');
+                    this.render();
+                } catch (err) {
+                    feedback.className = "text-[11px] font-semibold text-rose-500 dark:text-rose-400";
+                    feedback.textContent = `ত্রুটি: ${err.message}`;
+                    feedback.classList.remove('hidden');
+                }
+            },
+
+            // Colors setup controls
+            switchColorTab(tabName) {
+                this.state.colorType = tabName;
+                const btnSolid = document.getElementById('tab-solid');
+                const btnGrad = document.getElementById('tab-gradient');
+                const solidSec = document.getElementById('solid-color-section');
+                const gradSec = document.getElementById('gradient-color-section');
+
+                if (tabName === 'solid') {
+                    btnSolid.className = "flex-1 text-xs py-2 rounded-lg font-bold transition-all bg-white dark:bg-slate-900 text-blue-600 dark:text-white shadow-sm";
+                    btnGrad.className = "flex-1 text-xs py-2 rounded-lg font-bold transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white";
+                    solidSec.classList.remove('hidden');
+                    gradSec.classList.add('hidden');
+                } else {
+                    btnGrad.className = "flex-1 text-xs py-2 rounded-lg font-bold transition-all bg-white dark:bg-slate-900 text-blue-600 dark:text-white shadow-sm";
+                    btnSolid.className = "flex-1 text-xs py-2 rounded-lg font-bold transition-all text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white";
+                    gradSec.classList.remove('hidden');
+                    solidSec.classList.add('hidden');
+                }
+                this.render();
+            },
+
+            setSolidColor(hex, label) {
+                this.state.colorType = 'solid';
+                this.state.primaryColor = hex;
+                this.state.colorLabel = label;
+                document.getElementById('solid-picker').value = hex;
+                document.getElementById('solid-hex-lbl').textContent = hex.toUpperCase();
+                this.render();
+            },
+
+            handleSolidPicker(val) {
+                this.setSolidColor(val, 'Custom Solid');
+            },
+
+            setGradientColor(c1, c2, label) {
+                this.state.colorType = 'gradient';
+                this.state.gradientStart = c1;
+                this.state.gradientEnd = c2;
+                this.state.colorLabel = label;
+
+                document.getElementById('grad-color1').value = c1;
+                document.getElementById('grad-color2').value = c2;
+                document.getElementById('grad-hex1').textContent = c1.toUpperCase();
+                document.getElementById('grad-hex2').textContent = c2.toUpperCase();
+                this.render();
+            },
+
+            handleGradientChange() {
+                const c1 = document.getElementById('grad-color1').value;
+                const c2 = document.getElementById('grad-color2').value;
+                document.getElementById('grad-hex1').textContent = c1.toUpperCase();
+                document.getElementById('grad-hex2').textContent = c2.toUpperCase();
+                this.setGradientColor(c1, c2, 'Custom Gradient');
+            },
+
+            // Sizings
+            changeSize(val) {
+                this.state.size = parseInt(val, 10);
+                this.render();
+            },
+
+            toggleCheckProfile(styleKey) {
+                this.state.checkStyle = styleKey;
+                this.render();
+            },
+
+            applyAnimation(animName) {
+                this.state.animation = animName;
+                this.render();
+            },
+
+            // Playback controls trigger
+            togglePlayback() {
+                this.state.playbackRunning = !this.state.playbackRunning;
+                const icon = document.getElementById('playback-icon');
+                const text = document.getElementById('playback-text');
+                
+                if (this.state.playbackRunning) {
+                    icon.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
+                    text.textContent = "এনিমেশন চলছে (Running)";
+                } else {
+                    icon.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
+                    text.textContent = "এনিমেশন বন্ধ (Paused)";
+                }
+                this.render();
+            },
+
+            // Export tabs controller
+            switchExportFormat(formatKey) {
+                this.state.exportFormat = formatKey;
+                const btnSvg = document.getElementById('exp-svg');
+                const btnHtml = document.getElementById('exp-html');
+                const btnReact = document.getElementById('exp-react');
+
+                [btnSvg, btnHtml, btnReact].forEach(b => {
+                    b.className = "text-[11px] px-3 py-1.5 rounded-lg font-bold transition text-slate-400 hover:text-white";
+                });
+
+                document.getElementById(`exp-${formatKey}`).className = "text-[11px] px-3 py-1.5 rounded-lg font-bold transition bg-indigo-600 text-white shadow-md";
+                this.updateCodeExportTerminal();
+            },
+
+            // Formulate terminal code output
+            updateCodeExportTerminal() {
+                const terminal = document.getElementById('terminal-code-view');
+                let codeString = '';
+
+                let defsString = '';
+                if (this.state.colorType === 'gradient') {
+                    defsString = `\n    <defs>\n      <linearGradient id="studio-grad" x1="0%" y1="0%" x2="100%" y2="100%">\n        <stop offset="0%" stop-color="${this.state.gradientStart}" />\n        <stop offset="100%" stop-color="${this.state.gradientEnd}" />\n      </linearGradient>\n    </defs>`;
+                }
+                
+                const fillValue = this.state.colorType === 'solid' ? this.state.primaryColor : 'url(#studio-grad)';
+                const resolvedShapePath = this.state.shape === 'custom' ? (this.state.customImportedPath || BadgeShapes.scalloped) : BadgeShapes[this.state.shape];
+                
+                const innerSvg = `  <path d="${resolvedShapePath}" fill="${fillValue}"/>\n  <path fill-rule="evenodd" clip-rule="evenodd" d="${CheckmarkPaths[this.state.checkStyle]}" fill="#ffffff"/>`;
+
+                if (this.state.exportFormat === 'svg') {
+                    codeString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${this.state.size}" height="${this.state.size}">${defsString}\n${innerSvg}\n</svg>`;
+                } 
+                else if (this.state.exportFormat === 'html') {
+                    let animationStyle = '';
+                    let wrapperClass = '';
+                    
+                    if (this.state.animation !== 'none') {
+                        wrapperClass = ` class="${this.state.animation}"`;
+                        animationStyle = `
+<style>
+  .${this.state.animation} {
+    transform-origin: center;
+    ${this.state.animation === 'anim-pulse' ? 'animation: pulse-effect 2s infinite ease-in-out;' : ''}
+    ${this.state.animation === 'anim-float' ? 'animation: float-effect 3s infinite ease-in-out;' : ''}
+    ${this.state.animation === 'anim-spin-slow' ? 'animation: spin-effect 15s infinite linear;' : ''}
+    ${this.state.animation === 'anim-heartbeat' ? 'animation: heartbeat-effect 1.6s infinite ease-in-out;' : ''}
+    ${this.state.animation === 'anim-flip' ? 'animation: flip-effect 4.5s infinite ease-in-out;' : ''}
+    ${this.state.animation === 'anim-wobble' ? 'animation: wobble-effect 2s infinite ease-in-out;' : ''}
+    ${this.state.animation === 'anim-bounce' ? 'animation: bounce-effect 1.6s infinite ease-in-out;' : ''}
+    ${this.state.animation === 'anim-glow' ? 'animation: glow-effect 2.2s infinite ease-in-out;' : ''}
+  }
+
+  ${this.state.animation === 'anim-pulse' ? '@keyframes pulse-effect { 0%,100%{transform:scale(1);} 50%{transform:scale(1.08);} }' : ''}
+  ${this.state.animation === 'anim-float' ? '@keyframes float-effect { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }' : ''}
+  ${this.state.animation === 'anim-spin-slow' ? '@keyframes spin-effect { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }' : ''}
+  ${this.state.animation === 'anim-heartbeat' ? '@keyframes heartbeat-effect { 0%{transform:scale(1);} 14%{transform:scale(1.12);} 28%{transform:scale(1);} 42%{transform:scale(1.12);} 70%{transform:scale(1);} }' : ''}
+  ${this.state.animation === 'anim-flip' ? '@keyframes flip-effect { 0%{transform:rotateY(0deg);} 50%{transform:rotateY(180deg);} 100%{transform:rotateY(360deg);} }' : ''}
+  ${this.state.animation === 'anim-wobble' ? '@keyframes wobble-effect { 0%,100%{transform:rotate(0deg);} 15%{transform:rotate(-6deg);} 30%{transform:rotate(5deg);} 45%{transform:rotate(-4deg);} 60%{transform:rotate(3deg);} 75%{transform:rotate(-1.5deg);} }' : ''}
+  ${this.state.animation === 'anim-bounce' ? '@keyframes bounce-effect { 0%,100%{transform:translateY(0);} 40%{transform:translateY(-15px);} 60%{transform:translateY(0);} }' : ''}
+  ${this.state.animation === 'anim-glow' ? `@keyframes glow-effect { 0%,100%{filter:drop-shadow(0 0 3px ${this.state.colorType === 'solid' ? this.state.primaryColor : this.state.gradientStart});} 50%{filter:drop-shadow(0 0 10px ${this.state.colorType === 'solid' ? this.state.primaryColor : this.state.gradientStart});} }` : ''}
+</style>`;
+                    }
+
+                    codeString = `<!-- Ultimate Verified Badge Block -->\n<div style="display:inline-block; vertical-align:middle;">\n  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${this.state.size}" height="${this.state.size}"${wrapperClass}>${defsString}\n  ${innerSvg}\n  </svg>\n</div>\n${animationStyle}`;
+                } 
+                else if (this.state.exportFormat === 'react') {
+                    const reactClass = this.state.animation !== 'none' ? ` className="${this.state.animation}" style={{ transformOrigin: "center" }}` : '';
+                    codeString = `import React from 'react';\n\nexport default function VerifiedBadge() {\n  return (\n    <div className="inline-block align-middle">\n      <svg \n        xmlns="http://www.w3.org/2000/svg" \n        viewBox="0 0 24 24" \n        width="${this.state.size}" \n        height="${this.state.size}"\n       ${reactClass}\n      >${defsString.replace(/stop-color/g, 'stopColor').replace(/x1/g, 'x1').replace(/y1/g, 'y1').replace(/x2/g, 'x2').replace(/y2/g, 'y2')}\n        <path \n          d="${resolvedShapePath}" \n          fill="${fillValue.replace('studio-grad', 'studio-react-grad')}"\n        />\n        <path \n          fillRule="evenodd" \n          clipRule="evenodd" \n          d="${CheckmarkPaths[this.state.checkStyle]}" \n          fill="#ffffff"\n        />\n      </svg>\n    </div>\n  );\n}`;
+                    
+                    codeString = codeString.replace('id="studio-grad"', 'id="studio-react-grad"');
+                }
+
+                terminal.textContent = codeString;
+            },
+
+            // Clipboard Manager with Toast Dialog callback
+            copyGeneratedCode() {
+                const code = document.getElementById('terminal-code-view').textContent;
+                
+                const dummyTextarea = document.createElement('textarea');
+                dummyTextarea.value = code;
+                document.body.appendChild(dummyTextarea);
+                dummyTextarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(dummyTextarea);
+
+                const toast = document.getElementById('copy-toast');
+                toast.classList.remove('hidden');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 3000);
+            },
+
+            // High-Resolution SVG Downloader using local XML serialization and blobs
+            downloadSVG() {
+                const masterSvg = document.getElementById('master-svg');
+                const serializer = new XMLSerializer();
+                let source = serializer.serializeToString(masterSvg);
+
+                // Strip system-level responsive wrappers if they are in SVG
+                if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+                    source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+                }
+                if(!source.match(/^<svg[^>]+xmlns\:xlink="http\:\/\/www\.w3\.org\/1999\/xlink"/)){
+                    source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+                }
+
+                const svgBlob = new Blob([source], {type: "image/svg+xml;charset=utf-8"});
+                const svgUrl = URL.createObjectURL(svgBlob);
+                const downloadLink = document.createElement("a");
+                downloadLink.href = svgUrl;
+                downloadLink.download = `verified-badge-${this.state.shape}-${this.state.size}px.svg`;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(svgUrl);
+            },
+
+            // High-Definition PNG Canvas Renderer
+            downloadPNG() {
+                const masterSvg = document.getElementById('master-svg');
+                const serializer = new XMLSerializer();
+                const svgString = serializer.serializeToString(masterSvg);
+                const svgBlob = new Blob([svgString], {type: 'image/svg+xml;charset=utf-8'});
+                
+                const canvas = document.createElement('canvas');
+                // Render at high definition 512x512 resolution for crisp results
+                canvas.width = 512;
+                canvas.height = 512;
+                const ctx = canvas.getContext('2d');
+
+                const img = new Image();
+                const url = URL.createObjectURL(svgBlob);
+                
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, 512, 512);
+                    
+                    const pngUrl = canvas.toDataURL('image/png');
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = pngUrl;
+                    downloadLink.download = `verified-badge-${this.state.shape}-hd.png`;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                    
+                    URL.revokeObjectURL(url);
+                };
+
+                img.src = url;
+            }
+        };
+
+        // Fire-up application instances
+        window.onload = function() {
+            AppEngine.init();
+        }
+    </script>
+</body>
+</html>
