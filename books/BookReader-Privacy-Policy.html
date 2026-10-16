@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BookReader অ্যাপের গোপনীয়তা নীতি — বাংলা ও ইংরেজি সংস্করণ।">
+  <meta name="theme-color" content="#f4f7fb">
+  <title>গোপনীয়তা নীতি | BookReader</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      line-height: 1.85;
+      color: #1f2937;
+      background: #f4f7fb;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1d4ed8;
+    }
+
+    .language-switch {
+      display: flex;
+      gap: 8px;
+    }
+
+    .language-switch button {
+      min-height: 42px;
+      padding: 9px 17px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      background: white;
+      color: #374151;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .language-switch button.active {
+      color: white;
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    main {
+      padding: clamp(20px, 5vw, 40px);
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #172554;
+      font-size: clamp(26px, 5vw, 36px);
+      line-height: 1.35;
+    }
+
+    h2 {
+      margin-top: 30px;
+      margin-bottom: 8px;
+      color: #1d4ed8;
+      font-size: 19px;
+    }
+
+    p {
+      margin-top: 8px;
+      margin-bottom: 12px;
+    }
+
+    .effective-date {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    a {
+      color: #2563eb;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      padding: 22px 8px 8px;
+      text-align: center;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 12px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .brand {
+        font-size: 18px;
+      }
+
+      main {
+        padding: 20px 17px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <header class="topbar">
+    <div class="brand">BookReader</div>
+
+    <div class="language-switch" aria-label="Language selection">
+      <button type="button"
+              id="bnBtn"
+              class="active"
+              aria-pressed="true"
+              onclick="setLanguage('bn')">
+        বাংলা
+      </button>
+
+      <button type="button"
+              id="enBtn"
+              aria-pressed="false"
+              onclick="setLanguage('en')">
+        English
+      </button>
+    </div>
+  </header>
+
+  <!-- BANGLA VERSION: DEFAULT -->
+  <main id="bnPolicy" lang="bn">
+    <h1>গোপনীয়তা নীতি</h1>
+    <p class="effective-date">
+      কার্যকর তারিখ: ১৬ অক্টোবর ২০২৬
+    </p>
+
+    <p>
+      BookReader-এ স্বাগতম। এই গোপনীয়তা নীতিতে ব্যাখ্যা করা হয়েছে,
+      অ্যাপটি কীভাবে তথ্য সংরক্ষণ ও ব্যবহার করে এবং আপনার তথ্যের
+      গোপনীয়তা কীভাবে পরিচালিত হয়। অ্যাপ ব্যবহার করার আগে
+      অনুগ্রহ করে নীতিটি পড়ুন।
+    </p>
+
+    <h2>১. অ্যাপ সম্পর্কে</h2>
+    <p>
+      BookReader একটি ডিজিটাল বই পড়ার অ্যাপ। এর মাধ্যমে আপনি PDF
+      বই পরিচালনা, ক্যাটাগরি তৈরি, বুকমার্ক ও নোট সংরক্ষণ এবং
+      পড়ার অগ্রগতি বজায় রাখতে পারেন। অ্যাপটির ঐচ্ছিক কমিউনিটি
+      অংশে অ্যাকাউন্ট তৈরি করে বইয়ের লিংক ও পাঠ-আলোচনা শেয়ার
+      করা যায়।
+    </p>
+
+    <h2>২. ডিভাইসে সংরক্ষিত তথ্য</h2>
+    <p>
+      অ্যাপের মূল লাইব্রেরির বই, বইয়ের তথ্য, ক্যাটাগরি, বুকমার্ক,
+      নোট এবং কাস্টম অডিও আপনার ডিভাইসের IndexedDB-তে সংরক্ষিত হয়।
+      কিছু সেটিংস ও পড়ার ধারাবাহিকতার তথ্য ব্রাউজারের localStorage-এ
+      রাখা হয়।
+    </p>
+    <p>
+      এই তথ্য স্থানীয়ভাবে সংরক্ষণ করা হয়। বর্তমান সংস্করণে
+      এই ডেটার স্বয়ংক্রিয় ক্লাউড ব্যাকআপ বা ডিভাইসের মধ্যে
+      সিঙ্ক নিশ্চিত করা হয় না। ব্রাউজার ডেটা মুছে ফেললে,
+      অ্যাপের ডেটা পরিষ্কার করলে বা ডিভাইস হারালে তথ্য হারাতে পারেন।
+    </p>
+
+    <h2>৩. অ্যাকাউন্ট ও কমিউনিটির তথ্য</h2>
+    <p>
+      কমিউনিটি ব্যবহার করতে Firebase Authentication-এর মাধ্যমে
+      অ্যাকাউন্ট তৈরি বা লগইন করা হয়। এতে আপনার ইমেইল ঠিকানা,
+      অ্যাকাউন্টের পরিচয় এবং আপনার দেওয়া পাসওয়ার্ড ব্যবহৃত হয়।
+      পাসওয়ার্ড ব্যবস্থাপনা Firebase Authentication-এর মাধ্যমে হয়।
+    </p>
+    <p>
+      কমিউনিটিতে আপনি প্রদর্শিত নাম, সংক্ষিপ্ত পরিচিতি, পোস্টের লেখা,
+      বইয়ের নাম, বিবরণ এবং বইয়ের URL দিতে পারেন। বর্তমান অ্যাপের
+      বাস্তবায়ন অনুযায়ী প্রোফাইল ও পোস্টের তথ্য Firebase Cloud
+      Firestore-এ সংরক্ষিত হয়।
+    </p>
+
+    <h2>৪. প্রকাশ্য প্রোফাইল ও পোস্ট</h2>
+    <p>
+      বর্তমান Firestore Rules-এ কমিউনিটির প্রোফাইল ও পোস্ট পড়ার
+      অনুমতি সবার জন্য উন্মুক্ত। তাই প্রোফাইলে সংরক্ষিত ইমেইল
+      ঠিকানাসহ প্রোফাইলের তথ্য এবং পোস্ট অন্যরা পড়তে পারেন।
+      এই আচরণ পরিবর্তন না করা পর্যন্ত কমিউনিটিতে এমন তথ্য দেবেন না,
+      যা আপনি অন্যদের সঙ্গে প্রকাশ করতে চান না।
+    </p>
+    <p>
+      পোস্টের মালিক নিজের পোস্ট সম্পাদনা বা মুছতে পারেন।
+      নির্ধারিত যাচাইকৃত অ্যাডমিনও পোস্ট সম্পাদনা বা মুছতে পারেন।
+      অ্যাকাউন্ট মুছে ফেললেই সংশ্লিষ্ট পোস্ট ও প্রোফাইল স্বয়ংক্রিয়ভাবে
+      মুছে যাবে—এমন নিশ্চয়তা বর্তমান কোডে নেই।
+    </p>
+
+    <h2>৫. বইয়ের লিংক ও বাহ্যিক ওয়েবসাইট</h2>
+    <p>
+      কমিউনিটিতে ব্যবহারকারীরা HTTP বা HTTPS বইয়ের লিংক শেয়ার
+      করতে পারেন। বাহ্যিক ওয়েবসাইটে গেলে তাদের নিজস্ব গোপনীয়তা নীতি,
+      কুকি ও তথ্য সংগ্রহের নিয়ম প্রযোজ্য হতে পারে। এসব ওয়েবসাইটের
+      নিরাপত্তা, বিষয়বস্তু বা কপিরাইট নীতি BookReader নিয়ন্ত্রণ করে না।
+    </p>
+
+    <h2>৬. তৃতীয় পক্ষের প্রযুক্তি</h2>
+    <p>
+      কমিউনিটি Firebase Authentication ও Cloud Firestore ব্যবহার করে।
+      অ্যাপের বর্তমান সংস্করণে PDF.js, PageFlip এবং Font Awesome-এর
+      মতো কিছু লাইব্রেরি বাহ্যিক CDN থেকে লোড করা হয়।
+    </p>
+    <p>
+      এসব পরিষেবা ব্যবহার করার সময় সংশ্লিষ্ট প্রদানকারীরা তাদের
+      নিজস্ব নীতি অনুযায়ী IP ঠিকানা, ব্রাউজার-সংক্রান্ত তথ্য বা
+      প্রযুক্তিগত লগ প্রক্রিয়াকরণ করতে পারেন। বিস্তারিত জানতে
+      সংশ্লিষ্ট পরিষেবার গোপনীয়তা নীতি পড়ুন।
+    </p>
+
+    <h2>৭. তথ্যের নিরাপত্তা</h2>
+    <p>
+      Firestore Security Rules কমিউনিটির তথ্যের প্রবেশাধিকার
+      নিয়ন্ত্রণে সহায়তা করে। তবে কোনো অনলাইন পরিষেবাকে সম্পূর্ণ
+      নিরাপদ বলে নিশ্চয়তা দেওয়া যায় না। আপনার পাসওয়ার্ড
+      গোপন রাখুন এবং অপ্রয়োজনীয় ব্যক্তিগত তথ্য প্রকাশ করবেন না।
+    </p>
+
+    <h2>৮. তথ্য মুছে ফেলা ও নিয়ন্ত্রণ</h2>
+    <p>
+      ডিভাইসে সংরক্ষিত তথ্য অ্যাপের Clear Data সুবিধা অথবা উপযুক্ত
+      ব্রাউজার ও ডিভাইস স্টোরেজ ব্যবস্থাপনার মাধ্যমে মুছে ফেলা যেতে পারে।
+      এই কাজের ফলে সংশ্লিষ্ট স্থানীয় তথ্য স্থায়ীভাবে হারিয়ে যেতে পারে।
+    </p>
+    <p>
+      কমিউনিটির প্রোফাইল বা পোস্ট মুছে ফেলার অনুরোধের জন্য
+      ডেভেলপারের সঙ্গে যোগাযোগ করুন। অনুরোধ প্রক্রিয়াকরণের আগে
+      অ্যাকাউন্টের মালিকানা যাচাই করা হতে পারে। ব্যাকআপ বা
+      তৃতীয় পক্ষের সিস্টেমে থাকা তথ্য মুছে ফেলার সময়সীমা
+      তাদের নিয়মের ওপর নির্ভর করতে পারে।
+    </p>
+
+    <h2>৯. শিশু ও কিশোর ব্যবহারকারী</h2>
+    <p>
+      অপ্রাপ্তবয়স্ক ব্যবহারকারীদের ক্ষেত্রে প্রযোজ্য আইন ও
+      অভিভাবকের সম্মতি-সংক্রান্ত নিয়ম অনুসরণ করা উচিত।
+      প্রয়োজনীয় অনুমতি ছাড়া ব্যক্তিগত বা সংবেদনশীল তথ্য
+      প্রকাশ করবেন না।
+    </p>
+
+    <h2>১০. নীতির পরিবর্তন</h2>
+    <p>
+      অ্যাপের ফিচার, প্রযুক্তি বা আইনি প্রয়োজন পরিবর্তিত হলে
+      এই গোপনীয়তা নীতি সংশোধন করা হতে পারে। নতুন সংস্করণ প্রকাশিত
+      হলে কার্যকর তারিখ আপডেট করা হবে।
+    </p>
+
+    <h2>১১. যোগাযোগ</h2>
+    <p>
+      ডেভেলপার: Muhammed Omor
+    </p>
+    <p>
+      ইমেইল:
+      <a href="mailto:mdomorfaruk2r@gmail.com">
+        mdomorfaruk2r@gmail.com
+      </a>
+    </p>
+  </main>
+
+  <!-- ENGLISH VERSION -->
+  <main id="enPolicy" lang="en" hidden>
+    <h1>Privacy Policy</h1>
+    <p class="effective-date">
+      Effective date: October 16, 2026
+    </p>
+
+    <p>
+      Welcome to BookReader. This Privacy Policy explains how
+      information is stored and used by the app and how privacy
+      is handled. Please read this policy before using the app.
+    </p>
+
+    <h2>1. About the App</h2>
+    <p>
+      BookReader is a digital reading application. You can manage
+      PDF books, create categories, save bookmarks and notes, and
+      maintain reading progress. Its optional community feature
+      allows users to create accounts and share book links and
+      reading discussions.
+    </p>
+
+    <h2>2. Information Stored on Your Device</h2>
+    <p>
+      The main library stores books, book metadata, categories,
+      bookmarks, notes, and custom audio in IndexedDB on your device.
+      Some settings and reading-streak information are stored in
+      browser localStorage.
+    </p>
+    <p>
+      This information is stored locally. The current version does
+      not guarantee automatic cloud backup or synchronization across
+      devices. Data may be lost if browser data is cleared, app data
+      is erased, or the device is lost.
+    </p>
+
+    <h2>3. Account and Community Information</h2>
+    <p>
+      The community uses Firebase Authentication for account creation
+      and sign-in. This involves your email address, account identity,
+      and chosen password. Password handling is managed through
+      Firebase Authentication.
+    </p>
+    <p>
+      You may provide a display name, short biography, post text,
+      book title, description, and book URL. Under the current
+      implementation, profile and post information is stored in
+      Firebase Cloud Firestore.
+    </p>
+
+    <h2>4. Public Profiles and Posts</h2>
+    <p>
+      The current Firestore Rules allow anyone to read community
+      profiles and posts. Other people may therefore read profile
+      information, including stored email addresses, as well as
+      published posts. Until this behavior is changed, do not submit
+      information that you do not want to share publicly.
+    </p>
+    <p>
+      Post owners can edit or delete their own posts. The designated
+      verified administrator can also edit or delete posts.
+      The current code does not guarantee that deleting an account
+      automatically deletes its associated profile and posts.
+    </p>
+
+    <h2>5. Book Links and External Websites</h2>
+    <p>
+      Users may share HTTP or HTTPS book links in the community.
+      External websites may apply their own privacy policies, cookies,
+      and data collection practices. BookReader does not control
+      the security, content, or copyright practices of those websites.
+    </p>
+
+    <h2>6. Third-Party Technologies</h2>
+    <p>
+      The community uses Firebase Authentication and Cloud Firestore.
+      The current app also loads certain libraries, including PDF.js,
+      PageFlip, and Font Awesome, from external CDNs.
+    </p>
+    <p>
+      When these services are used, their providers may process IP
+      addresses, browser-related information, or technical logs
+      according to their own policies. Please review the privacy
+      policies of the relevant providers for more information.
+    </p>
+
+    <h2>7. Information Security</h2>
+    <p>
+      Firestore Security Rules help control access to community data.
+      However, no online service can be guaranteed to be completely
+      secure. Keep your password confidential and avoid publishing
+      unnecessary personal information.
+    </p>
+
+    <h2>8. Data Deletion and Control</h2>
+    <p>
+      Locally stored information may be deleted using the app's
+      Clear Data feature or appropriate browser and device storage
+      controls. This may permanently remove the relevant local data.
+    </p>
+    <p>
+      To request deletion of a community profile or post, contact
+      the developer. Account ownership may be verified before a
+      request is processed. The timing of deletion from backups or
+      third-party systems may depend on their respective policies.
+    </p>
+
+    <h2>9. Children and Teen Users</h2>
+    <p>
+      Users under the age of majority should follow applicable laws
+      and parental-consent requirements. Do not publish personal
+      or sensitive information without the required permission.
+    </p>
+
+    <h2>10. Changes to This Policy</h2>
+    <p>
+      This Privacy Policy may be revised when app features,
+      technologies, or legal requirements change. The effective
+      date will be updated when a new version is published.
+    </p>
+
+    <h2>11. Contact</h2>
+    <p>
+      Developer: Muhammed Omor
+    </p>
+    <p>
+      Email:
+      <a href="mailto:mdomorfaruk2r@gmail.com">
+        mdomorfaruk2r@gmail.com
+      </a>
+    </p>
+  </main>
+
+  <footer>
+    <span id="footerBn">BookReader — গোপনীয়তা নীতি</span>
+    <span id="footerEn" hidden>BookReader — Privacy Policy</span>
+  </footer>
+</div>
+
+<script>
+  function setLanguage(language) {
+    const isBangla = language === 'bn';
+
+    document.documentElement.lang = language;
+
+    document.getElementById('bnPolicy').hidden = !isBangla;
+    document.getElementById('enPolicy').hidden = isBangla;
+
+    document.getElementById('bnBtn').classList.toggle(
+      'active', isBangla
+    );
+    document.getElementById('enBtn').classList.toggle(
+      'active', !isBangla
+    );
+
+    document.getElementById('bnBtn').setAttribute(
+      'aria-pressed', String(isBangla)
+    );
+    document.getElementById('enBtn').setAttribute(
+      'aria-pressed', String(!isBangla)
+    );
+
+    document.getElementById('footerBn').hidden = !isBangla;
+    document.getElementById('footerEn').hidden = isBangla;
+
+    document.title = isBangla
+      ? 'গোপনীয়তা নীতি | BookReader'
+      : 'Privacy Policy | BookReader';
+  }
+
+  // Default language: Bangla
+  setLanguage('bn');
+</script>
+</body>
+</html>
