@@ -1,0 +1,2477 @@
+
+<!DOCTYPE html>
+<html lang="en" class="h-full select-none">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>BookReader - High-Performance Native PWA eBook Reader</title>
+  
+  <!-- Mobile Native PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0f172a" />
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- PDF.js Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  
+  <!-- PageFlip Engine -->
+  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --amber-main: #f59e0b;
+      --amber-hover: #d97706;
+      --text-light: #f8fafc;
+      --text-muted: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      -webkit-tap-highlight-color: transparent;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      touch-action: pan-y;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Bar Header */
+    header {
+      background-color: rgba(30, 41, 59, 0.95);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 20;
+    }
+
+    /* Pull to Refresh Indicator */
+    #pull-refresh-indicator {
+      position: absolute;
+      top: -50px;
+      left: 0;
+      right: 0;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--amber-main);
+      font-size: 13px;
+      font-weight: bold;
+      gap: 8px;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      z-index: 15;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    /* Main Scroll Viewport */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      padding-bottom: 110px;
+      position: relative;
+    }
+
+    /* Book Cards Grid */
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    @media (min-width: 640px) { .books-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 768px) { .books-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .book-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      content-visibility: auto;
+      contain-intrinsic-size: 1px 260px;
+    }
+
+    .cover-box {
+      position: relative;
+      aspect-ratio: 3/4;
+      background-color: #020617;
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .cover-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.2s ease-in;
+    }
+
+    .category-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background-color: rgba(2, 6, 23, 0.85);
+      color: var(--amber-main);
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      border: 1px solid var(--card-border);
+    }
+
+    .book-details {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .book-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .book-author {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .progress-bar-bg {
+      background-color: #334155;
+      height: 4px;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      background-color: var(--amber-main);
+      height: 100%;
+      border-radius: 9999px;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 6px;
+    }
+
+    .btn-amber {
+      background-color: var(--amber-main);
+      color: #020617;
+      font-weight: bold;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      border: none;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-amber:hover {
+      background-color: var(--amber-hover);
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 6px;
+    }
+
+    .icon-btn:hover {
+      color: #ffffff;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-box {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .form-input, .form-select {
+      background-color: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 10px;
+      color: #ffffff;
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--amber-main);
+    }
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #0d1526;
+      border-top: 1px solid var(--card-border);
+      padding-top: 10px;
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+      padding-left: 16px;
+      padding-right: 16px;
+      z-index: 40;
+      box-shadow: 0 -10px 20px rgba(0,0,0,0.5);
+    }
+
+    .nav-container {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .nav-tab-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 8px;
+      transition: color 0.15s ease-in-out;
+    }
+
+    .nav-tab-btn i {
+      font-size: 18px;
+    }
+
+    .nav-tab-btn.active {
+      color: var(--amber-main);
+      font-weight: bold;
+    }
+
+    .page-wrapper {
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .page-wrapper canvas {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+
+    .reader-header-container {
+      background-color: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid var(--card-border);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      z-index: 30;
+      width: 100%;
+    }
+
+    .reader-title-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .reader-title-area div {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .reader-tools-area {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .filter-sepia canvas { filter: sepia(0.4) contrast(1.08) brightness(0.95); }
+    .filter-night canvas { filter: invert(0.9) hue-rotate(180deg) brightness(0.85); }
+
+    .note-text-wrapper {
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <header id="top-bar">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <i class="fa-solid fa-book-open-reader" style="color: var(--amber-main); font-size: 22px;"></i>
+      <h1 style="font-size: 18px; font-weight: bold; color: white;">BookReader</h1>
+    </div>
+
+    <div style="position: relative; width: 160px;">
+      <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 12px;"></i>
+      <input type="text" id="search-input" placeholder="Search..." class="form-input" style="padding-left: 30px; padding-top: 6px; padding-bottom: 6px; border-radius: 9999px; font-size: 12px;" />
+    </div>
+
+    <button id="open-upload-modal-btn" class="btn-amber">
+      <i class="fa-solid fa-plus" style="font-size: 10px;"></i>
+      <span>Add Book</span>
+    </button>
+  </header>
+
+  <main id="main-scroll-area" class="no-scrollbar">
+    
+    <div id="pull-refresh-indicator">
+      <i class="fa-solid fa-arrows-rotate" id="refresh-icon"></i>
+      <span id="refresh-text">Pull down to refresh...</span>
+    </div>
+
+    <!-- TAB 1: LIBRARY SHELF -->
+    <section id="view-shelf">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 16px; font-weight: bold;">My Library (<span id="book-count-badge" style="color: var(--amber-main);">0</span>)</h2>
+        <div style="font-size: 11px; background: var(--card-bg); border: 1px solid var(--card-border); padding: 4px 10px; border-radius: 9999px; color: var(--amber-main); display: flex; align-items: center; gap: 4px;">
+          <i class="fa-solid fa-fire"></i> <span id="streak-counter-text">Streak: 0 Days</span>
+        </div>
+      </div>
+
+      <div id="empty-shelf-state" class="hidden" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 0; text-align: center; color: var(--text-muted);">
+        <i class="fa-solid fa-book-bookmark" style="font-size: 48px; margin-bottom: 12px;"></i>
+        <p style="font-size: 15px; font-weight: bold;">Your library is empty.</p>
+        <p style="font-size: 12px; margin-top: 4px;">Tap "+ Add Book" above to upload your PDF books.</p>
+      </div>
+
+      <div id="books-grid" class="books-grid"></div>
+    </section>
+
+    <!-- TAB 2: CATEGORIES VIEW -->
+    <section id="view-categories" class="hidden">
+      <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 4px;">Categories</h2>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Organize books inside categories using ▲ ▼ buttons.</p>
+      
+      <div id="category-chips" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;"></div>
+      <div id="category-books-container" style="display: flex; flex-direction: column; gap: 12px;"></div>
+    </section>
+
+    <!-- TAB 3: RECENT, BOOKMARKS & NOTES -->
+    <section id="view-recent" class="hidden">
+      <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 12px;">Continue Reading</h2>
+      <div id="recent-books-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;"></div>
+
+      <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 12px;">Saved Bookmarks</h2>
+      <div id="bookmarks-global-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;"></div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+        <h2 style="font-size: 16px; font-weight: bold;">Saved Notes</h2>
+        <button id="delete-all-notes-btn" style="background-color: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; font-size: 11px; font-weight: bold; padding: 5px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-trash-can"></i>
+          <span id="delete-all-notes-btn-text">Delete All Notes</span>
+        </button>
+      </div>
+      <div id="notes-global-list" style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 100%; overflow: hidden;"></div>
+    </section>
+
+    <!-- TAB 4: SETTINGS VIEW -->
+    <section id="view-settings" class="hidden" style="max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px;">
+      <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">Settings</h2>
+
+      <div style="background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 14px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h3 style="font-size: 13px; font-weight: bold;">Developer Profile</h3>
+          <p style="font-size: 11px; color: var(--text-muted);">Connect with Muhammed Omor</p>
+        </div>
+        <button id="open-dev-profile-btn" style="background-color: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--amber-main); font-size: 12px; font-weight: bold; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          <span>Developer</span>
+          <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i>
+        </button>
+      </div>
+
+      <div style="background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 14px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h3 style="font-size: 13px; font-weight: bold;">Privacy Policy</h3>
+          <p style="font-size: 11px; color: var(--text-muted);">View terms & privacy terms</p>
+        </div>
+        <a href="https://bookreaderprivacypolicy.edgeone.dev" target="_blank" rel="noopener noreferrer" style="background-color: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); color: #818cf8; font-size: 12px; font-weight: bold; padding: 8px 12px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+          <span>View Policy</span>
+          <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i>
+        </a>
+      </div>
+
+      <div style="background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <h3 style="font-size: 13px; font-weight: bold;">Page Flip Sound Effect</h3>
+            <p style="font-size: 11px; color: var(--text-muted);" id="audio-status-text">Default sound active</p>
+          </div>
+          <input type="checkbox" id="setting-sound-toggle" style="width: 20px; height: 20px; accent-color: var(--amber-main);" />
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Upload Custom .MP3 Sound (0.5s):</label>
+          <input type="file" id="custom-audio-input" accept="audio/*" class="form-input" style="font-size: 11px; padding: 6px;" />
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+          <span style="font-size: 11px; color: var(--text-muted); font-weight: bold;">Volume:</span>
+          <input type="range" id="sound-volume-slider" min="0" max="100" value="80" style="flex: 1; accent-color: var(--amber-main); cursor: pointer;" />
+          <span id="volume-val-display" style="font-size: 11px; font-family: monospace; width: 35px; text-align: right;">80%</span>
+        </div>
+      </div>
+
+      <div style="background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 14px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h3 style="font-size: 13px; font-weight: bold;">Storage Usage</h3>
+          <p id="storage-usage-text" style="font-size: 11px; color: var(--text-muted);">Calculating...</p>
+        </div>
+      </div>
+
+      <div style="background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 14px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h3 style="font-size: 13px; font-weight: bold; color: #f87171;">Clear All App Data</h3>
+          <p style="font-size: 11px; color: var(--text-muted);">Deletes saved books and categories</p>
+        </div>
+        <button id="open-clear-timer-btn" style="background-color: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; font-size: 12px; font-weight: bold; padding: 8px 12px; border-radius: 8px; cursor: pointer;">
+          Clear Data
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <nav>
+    <div class="nav-container">
+      <button data-tab="view-shelf" class="nav-tab-btn active">
+        <i class="fa-solid fa-book-open"></i>
+        <span>Shelf</span>
+      </button>
+
+      <button data-tab="view-categories" class="nav-tab-btn">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>Categories</span>
+      </button>
+
+      <button data-tab="view-recent" class="nav-tab-btn">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        <span>Recent</span>
+      </button>
+
+      <button data-tab="view-settings" class="nav-tab-btn">
+        <i class="fa-solid fa-gear"></i>
+        <span>Settings</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- UPLOAD PDF MODAL -->
+  <div id="upload-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <button id="close-upload-modal-btn" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer;">&times;</button>
+      <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 16px;">Add PDF Book</h2>
+
+      <form id="upload-form">
+        <div class="form-group">
+          <label>Select PDF File</label>
+          <input type="file" id="pdf-file-input" accept="application/pdf" required class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label>Book Title</label>
+          <input type="text" id="pdf-title-input" required placeholder="e.g. Himu" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label>Author (Optional)</label>
+          <input type="text" id="pdf-author-input" placeholder="e.g. Humayun Ahmed" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <div style="display: flex; gap: 8px;">
+            <select id="pdf-category-select" class="form-select"></select>
+            <input type="text" id="pdf-new-category-input" placeholder="+ Custom" class="form-input" />
+          </div>
+        </div>
+
+        <div class="form-group" style="border-top: 1px solid var(--card-border); padding-top: 12px; margin-top: 8px;">
+          <label>Book Cover Preference</label>
+          <select id="cover-type-select" class="form-select">
+            <option value="auto">Auto-generate from Page 1</option>
+            <option value="custom_image">Upload Custom Cover Image</option>
+            <option value="color_title">Color Background + Title Text</option>
+          </select>
+        </div>
+
+        <div id="custom-cover-image-group" class="form-group hidden">
+          <label>Upload Cover Image</label>
+          <input type="file" id="custom-cover-file-input" accept="image/*" class="form-input" />
+        </div>
+
+        <div id="color-cover-group" class="form-group hidden">
+          <label>Select Background Color</label>
+          <input type="color" id="cover-bg-color-picker" value="#f59e0b" style="width: 100%; height: 38px; border-radius: 8px; border: none; cursor: pointer; background: none;" />
+        </div>
+
+        <div id="upload-status-container" class="hidden" style="color: var(--amber-main); font-size: 12px; margin-bottom: 12px;">
+          <i class="fa-solid fa-spinner fa-spin"></i> Processing PDF & Cover...
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
+          <button type="button" id="cancel-upload-btn" style="background: none; border: none; color: var(--text-muted); font-size: 12px; font-weight: bold; cursor: pointer; padding: 8px 12px;">Cancel</button>
+          <button type="submit" id="save-book-submit-btn" class="btn-amber">Save Book</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT BOOK MODAL -->
+  <div id="edit-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <button id="close-edit-modal-btn" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer;">&times;</button>
+      <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 16px;">Edit Book & Cover</h2>
+
+      <form id="edit-form">
+        <input type="hidden" id="edit-book-id" />
+        <div class="form-group">
+          <label>Book Title</label>
+          <input type="text" id="edit-title-input" required class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label>Author</label>
+          <input type="text" id="edit-author-input" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select id="edit-category-select" class="form-select"></select>
+        </div>
+
+        <div class="form-group" style="border-top: 1px solid var(--card-border); padding-top: 12px;">
+          <label>Change Cover Style</label>
+          <select id="edit-cover-type-select" class="form-select">
+            <option value="keep">Keep Current Cover</option>
+            <option value="custom_image">Upload New Cover Image</option>
+            <option value="color_title">Color Background + Title</option>
+          </select>
+        </div>
+
+        <div id="edit-custom-cover-image-group" class="form-group hidden">
+          <label>Select New Image</label>
+          <input type="file" id="edit-custom-cover-file-input" accept="image/*" class="form-input" />
+        </div>
+
+        <div id="edit-color-cover-group" class="form-group hidden">
+          <label>Select New Color</label>
+          <input type="color" id="edit-cover-bg-color-picker" value="#f59e0b" style="width: 100%; height: 38px; border-radius: 8px; border: none; cursor: pointer; background: none;" />
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
+          <button type="button" id="cancel-edit-btn" style="background: none; border: none; color: var(--text-muted); font-size: 12px; font-weight: bold; cursor: pointer; padding: 8px 12px;">Cancel</button>
+          <button type="submit" class="btn-amber">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD NOTE MODAL -->
+  <div id="note-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <button id="close-note-modal-btn" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer;">&times;</button>
+      <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 16px;">Add Page Note</h2>
+
+      <div class="form-group">
+        <label>Your Note or Highlight</label>
+        <textarea id="page-note-input" rows="4" class="form-input note-text-wrapper" placeholder="Type your notes for this page..." style="resize: vertical;"></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
+        <button type="button" id="cancel-note-btn" style="background: none; border: none; color: var(--text-muted); font-size: 12px; font-weight: bold; cursor: pointer; padding: 8px 12px;">Cancel</button>
+        <button type="button" id="save-note-submit-btn" class="btn-amber">Save Note</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 15-SECOND DELETE BOOK TIMER MODAL -->
+  <div id="delete-timer-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="text-align: center;">
+      <div style="width: 50px; height: 50px; border-radius: 9999px; background-color: rgba(239, 68, 68, 0.15); color: #f87171; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 12px auto;">
+        <i class="fa-solid fa-trash"></i>
+      </div>
+      <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 4px;">Delete Book Confirmation</h2>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Are you sure you want to delete this book? This action cannot be undone.</p>
+
+      <div style="background-color: #0f172a; border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 16px;">
+        <p style="font-size: 10px; color: var(--text-muted); font-weight: bold;">Safety Delay</p>
+        <div id="delete-countdown-display" style="font-size: 28px; font-family: monospace; font-weight: bold; color: var(--amber-main);">15s</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button id="confirm-single-delete-btn" disabled style="background-color: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; font-weight: bold; font-size: 12px; padding: 12px; border-radius: 10px; cursor: not-allowed; opacity: 0.5;">
+          Confirm Delete
+        </button>
+        <button id="cancel-single-delete-btn" style="background-color: #334155; border: none; color: white; font-weight: bold; font-size: 12px; padding: 12px; border-radius: 10px; cursor: pointer;">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3-MINUTE CLEAR DATA SAFETY TIMER MODAL -->
+  <div id="clear-timer-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="text-align: center;">
+      <div style="width: 50px; height: 50px; border-radius: 9999px; background-color: rgba(239, 68, 68, 0.15); color: #f87171; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 12px auto;">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 4px;">Reset All App Storage</h2>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">All saved books, categories, progress, and bookmarks will be erased.</p>
+
+      <div style="background-color: #0f172a; border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 16px;">
+        <p style="font-size: 10px; color: var(--text-muted); font-weight: bold;">Safety Lock Delay</p>
+        <div id="timer-countdown-display" style="font-size: 28px; font-family: monospace; font-weight: bold; color: var(--amber-main);">03:00</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button id="confirm-delete-data-btn" disabled style="background-color: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; font-weight: bold; font-size: 12px; padding: 12px; border-radius: 10px; cursor: not-allowed; opacity: 0.5;">
+          Confirm & Reset All
+        </button>
+        <button id="cancel-clear-timer-btn" style="background-color: #334155; border: none; color: white; font-weight: bold; font-size: 12px; padding: 12px; border-radius: 10px; cursor: pointer;">
+          Cancel & Go Back
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING PREV/NEXT BUTTONS IN CLEAN MODE -->
+  <div id="zen-nav-bar" class="hidden" style="position: fixed; top: 16px; left: 16px; right: 16px; z-index: 50; pointer-events: none; display: flex; justify-content: space-between;">
+    <button id="zen-prev-btn" style="pointer-events: auto; background-color: rgba(15, 23, 42, 0.9); border: 1px solid var(--card-border); color: var(--amber-main); font-weight: bold; font-size: 12px; padding: 8px 16px; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+      <i class="fa-solid fa-chevron-left"></i> <span>Prev</span>
+    </button>
+    <button id="zen-next-btn" style="pointer-events: auto; background-color: rgba(15, 23, 42, 0.9); border: 1px solid var(--card-border); color: var(--amber-main); font-weight: bold; font-size: 12px; padding: 8px 16px; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+      <span>Next</span> <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <!-- FULLSCREEN READER -->
+  <div id="reader-modal" class="hidden" style="position: fixed; inset: 0; z-index: 40; background-color: #020617; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;">
+    
+    <div id="reader-top-bar" class="reader-header-container toolbar-transition">
+      <div class="reader-title-area">
+        <button id="close-reader-btn" class="icon-btn" style="font-size: 16px;"><i class="fa-solid fa-arrow-left"></i></button>
+        <div>
+          <h2 id="reader-book-title" style="font-size: 12px; font-weight: bold; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Title</h2>
+          <p id="reader-book-author" style="font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Author</p>
+        </div>
+      </div>
+
+      <div class="reader-tools-area">
+        <button id="open-note-modal-btn" class="icon-btn" title="Add Note"><i class="fa-solid fa-note-sticky"></i></button>
+        <button id="reader-rotate-btn" class="icon-btn" title="Rotate Page"><i class="fa-solid fa-rotate-right"></i></button>
+        <button id="reader-sound-toggle-btn" class="icon-btn" title="Toggle Sound"><i class="fa-solid fa-volume-xmark" id="reader-sound-icon" style="color: #f87171;"></i></button>
+        <button id="reader-filter-cycle-btn" class="icon-btn" title="Color Mode"><i class="fa-solid fa-circle-half-stroke"></i></button>
+        <button id="reader-bookmark-btn" class="icon-btn"><i class="fa-regular fa-bookmark" id="reader-bookmark-icon"></i></button>
+        <button id="reader-zen-btn" style="background-color: var(--card-bg); border: 1px solid var(--card-border); color: #ffffff; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+          <i class="fa-solid fa-eye-slash"></i> <span>Clean</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="reader-stage" style="flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+      <div id="left-tap-area" style="position: absolute; left: 0; top: 0; bottom: 0; width: 25%; z-index: 20; cursor: pointer;"></div>
+      <div id="right-tap-area" style="position: absolute; right: 0; top: 0; bottom: 0; width: 25%; z-index: 20; cursor: pointer;"></div>
+
+      <div id="reader-loading" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--amber-main); background-color: #020617; z-index: 10;">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 28px; margin-bottom: 8px;"></i>
+        <span style="font-size: 12px; color: var(--text-light);">Loading document...</span>
+      </div>
+
+      <div id="flipbook-mount-point" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"></div>
+    </div>
+
+    <div id="reader-bottom-bar" class="toolbar-transition" style="background-color: rgba(15, 23, 42, 0.95); border-top: 1px solid var(--card-border); padding: 10px 16px; z-index: 30; display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin: 0 auto; width: 100%; font-size: 11px; font-family: monospace;">
+        <span id="reader-page-indicator">Page 1 of 1</span>
+        
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--amber-main); font-size: 10px;" title="Text Clarity Boost"></i>
+          <input type="range" id="clarity-slider" min="100" max="180" value="110" style="width: 70px; accent-color: var(--amber-main);" title="Clarity Boost" />
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 6px; background-color: var(--card-bg); padding: 2px 8px; border-radius: 6px; border: 1px solid var(--card-border);">
+          <button id="zoom-out-btn" class="icon-btn" style="padding: 2px;"><i class="fa-solid fa-minus" style="font-size: 10px;"></i></button>
+          <span id="zoom-level-text" style="font-size: 10px;">100%</span>
+          <button id="zoom-in-btn" class="icon-btn" style="padding: 2px;"><i class="fa-solid fa-plus" style="font-size: 10px;"></i></button>
+        </div>
+      </div>
+
+      <div style="max-width: 500px; margin: 0 auto; width: 100%;">
+        <input type="range" id="reader-page-slider" min="1" max="100" value="1" style="width: 100%; accent-color: var(--amber-main); cursor: pointer;" />
+      </div>
+    </div>
+  </div>
+
+  <canvas id="offscreen-cover-canvas" class="hidden"></canvas>
+
+  <script>
+    try {
+      if (typeof pdfjsLib !== 'undefined') {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+    } catch (e) {}
+
+    /* 1. SERVICE WORKER & PWA MANIFEST REGISTRATION */
+    function registerServiceWorkerAndManifest() {
+      // Dynamic Web App Manifest
+      try {
+        const manifest = {
+          name: "BookReader PWA",
+          short_name: "BookReader",
+          start_url: "./",
+          display: "standalone",
+          background_color: "#0f172a",
+          theme_color: "#0f172a",
+          icons: [{
+            src: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23f59e0b' d='M256 32C141.1 32 48 125.1 48 240c0 43.1 13 83.2 35.3 116.6L32 480l128.8-43.2c31.4 19.3 68.3 30.4 108 30.4 114.9 0 208-93.1 208-208S370.9 32 256 32z'/></svg>",
+            sizes: "512x512",
+            type: "image/svg+xml"
+          }]
+        };
+        const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+        const manifestUrl = URL.createObjectURL(blob);
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = manifestUrl;
+        document.head.appendChild(link);
+      } catch (e) {}
+
+      // Cache-First Service Worker
+      if ('serviceWorker' in navigator) {
+        const swScript = `
+          const CACHE_NAME = 'bookreader-pwa-v1';
+          const ASSETS = [
+            './',
+            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
+            'https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js'
+          ];
+
+          self.addEventListener('install', (e) => {
+            e.waitUntil(
+              caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)).catch(() => {})
+            );
+            self.skipWaiting();
+          });
+
+          self.addEventListener('activate', (e) => {
+            e.waitUntil(
+              caches.keys().then((keys) => {
+                return Promise.all(
+                  keys.map((key) => { if (key !== CACHE_NAME) return caches.delete(key); })
+                );
+              })
+            );
+            self.clients.claim();
+          });
+
+          self.addEventListener('fetch', (e) => {
+            if (e.request.method !== 'GET') return;
+            e.respondWith(
+              caches.match(e.request).then((cached) => {
+                if (cached) return cached;
+                return fetch(e.request).then((response) => {
+                  if (!response || response.status !== 200) return response;
+                  const copy = response.clone();
+                  caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy));
+                  return response;
+                }).catch(() => caches.match('./'));
+              })
+            );
+          });
+        `;
+
+        try {
+          const blob = new Blob([swScript], { type: 'application/javascript' });
+          const blobUrl = URL.createObjectURL(blob);
+          navigator.serviceWorker.register(blobUrl).catch(() => {});
+        } catch (e) {}
+      }
+    }
+
+    /* 2. INDEXEDDB DATABASE ENGINE */
+    class BookReaderDB {
+      constructor() {
+        this.dbName = 'BookReaderDB';
+        this.version = 4;
+        this.db = null;
+      }
+
+      async init() {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open(this.dbName, this.version);
+
+          request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains('books')) {
+              const bookStore = db.createObjectStore('books', { keyPath: 'id', autoIncrement: true });
+              bookStore.createIndex('title', 'title', { unique: false });
+              bookStore.createIndex('category', 'category', { unique: false });
+            }
+            if (!db.objectStoreNames.contains('categories')) {
+              db.createObjectStore('categories', { keyPath: 'name' });
+            }
+            if (!db.objectStoreNames.contains('app_audio')) {
+              db.createObjectStore('app_audio', { keyPath: 'id' });
+            }
+            if (!db.objectStoreNames.contains('user_notes')) {
+              db.createObjectStore('user_notes', { keyPath: 'id', autoIncrement: true });
+            }
+          };
+
+          request.onsuccess = (event) => {
+            this.db = event.target.result;
+            this.seedDefaultCategories();
+            resolve(this.db);
+          };
+
+          request.onerror = (event) => reject(event.target.errorCode);
+        });
+      }
+
+      async seedDefaultCategories() {
+        const defaultCats = ['General', 'Novels', 'Physics', 'Math'];
+        for (let name of defaultCats) {
+          await this.saveCategory(name);
+        }
+      }
+
+      async saveCategory(name) {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['categories'], 'readwrite');
+          const store = tx.objectStore('categories');
+          store.put({ name: name }).onsuccess = () => resolve();
+        });
+      }
+
+      async getAllCategories() {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['categories'], 'readonly');
+          const store = tx.objectStore('categories');
+          store.getAll().onsuccess = (e) => resolve(e.target.result.map(c => c.name));
+        });
+      }
+
+      async saveCustomAudio(audioBlob) {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['app_audio'], 'readwrite');
+          const store = tx.objectStore('app_audio');
+          store.put({ id: 'flip_sound', blob: audioBlob }).onsuccess = () => resolve();
+        });
+      }
+
+      async getCustomAudio() {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['app_audio'], 'readonly');
+          const store = tx.objectStore('app_audio');
+          store.get('flip_sound').onsuccess = (e) => resolve(e.target.result ? e.target.result.blob : null);
+        });
+      }
+
+      async saveNote(bookId, bookTitle, pageNum, noteText) {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['user_notes'], 'readwrite');
+          const store = tx.objectStore('user_notes');
+          store.add({ bookId, bookTitle, pageNum, noteText, timestamp: Date.now() }).onsuccess = () => resolve();
+        });
+      }
+
+      async getAllNotes() {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['user_notes'], 'readonly');
+          const store = tx.objectStore('user_notes');
+          store.getAll().onsuccess = (e) => resolve(e.target.result);
+        });
+      }
+
+      async deleteNote(id) {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['user_notes'], 'readwrite');
+          const store = tx.objectStore('user_notes');
+          store.delete(id).onsuccess = () => resolve(true);
+        });
+      }
+
+      async clearAllNotes() {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['user_notes'], 'readwrite');
+          const store = tx.objectStore('user_notes');
+          store.clear().onsuccess = () => resolve(true);
+        });
+      }
+
+      async saveBook(bookData) {
+        return new Promise((resolve, reject) => {
+          const tx = this.db.transaction(['books'], 'readwrite');
+          const req = tx.objectStore('books').add(bookData);
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async updateBookAndCover(id, newTitle, newAuthor, newCategory, coverDataUrl = null, coverType = null, coverBgColor = null) {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['books'], 'readwrite');
+          const store = tx.objectStore('books');
+          const getReq = store.get(id);
+
+          getReq.onsuccess = () => {
+            const book = getReq.result;
+            if (book) {
+              book.title = newTitle;
+              book.author = newAuthor;
+              book.category = newCategory;
+              if (coverDataUrl) book.coverDataUrl = coverDataUrl;
+              if (coverType) book.coverType = coverType;
+              if (coverBgColor) book.coverBgColor = coverBgColor;
+              store.put(book);
+              resolve();
+            }
+          };
+        });
+      }
+
+      async getAllBooks() {
+        return new Promise((resolve, reject) => {
+          const tx = this.db.transaction(['books'], 'readonly');
+          const req = tx.objectStore('books').getAll();
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async getBook(id) {
+        return new Promise((resolve, reject) => {
+          const tx = this.db.transaction(['books'], 'readonly');
+          const req = tx.objectStore('books').get(id);
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async updateBookSortOrder(id, newOrder) {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['books'], 'readwrite');
+          const store = tx.objectStore('books');
+          const getReq = store.get(id);
+
+          getReq.onsuccess = () => {
+            const book = getReq.result;
+            if (book) {
+              book.sortOrder = newOrder;
+              store.put(book);
+              resolve();
+            }
+          };
+        });
+      }
+
+      async updateProgress(id, currentPage, totalPages) {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['books'], 'readwrite');
+          const store = tx.objectStore('books');
+          const getReq = store.get(id);
+
+          getReq.onsuccess = () => {
+            const book = getReq.result;
+            if (book) {
+              book.currentPage = currentPage;
+              book.totalPages = totalPages;
+              book.lastRead = Date.now();
+              store.put(book);
+              resolve();
+            }
+          };
+        });
+      }
+
+      async toggleBookmark(id, pageNum) {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['books'], 'readwrite');
+          const store = tx.objectStore('books');
+          const getReq = store.get(id);
+
+          getReq.onsuccess = () => {
+            const book = getReq.result;
+            if (book) {
+              book.bookmarks = book.bookmarks || [];
+              const idx = book.bookmarks.indexOf(pageNum);
+              if (idx > -1) {
+                book.bookmarks.splice(idx, 1);
+              } else {
+                book.bookmarks.push(pageNum);
+                book.bookmarks.sort((a, b) => a - b);
+              }
+              store.put(book);
+              resolve(book.bookmarks);
+            }
+          };
+        });
+      }
+
+      async deleteBook(id) {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['books'], 'readwrite');
+          const req = tx.objectStore('books').delete(id);
+          req.onsuccess = () => resolve(true);
+        });
+      }
+
+      async clearAll() {
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(['books', 'categories', 'app_audio', 'user_notes'], 'readwrite');
+          tx.objectStore('books').clear();
+          tx.objectStore('categories').clear();
+          tx.objectStore('app_audio').clear();
+          tx.objectStore('user_notes').clear().onsuccess = () => resolve(true);
+        });
+      }
+    }
+
+    /* 3. DUAL AUDIO SYNTH & CUSTOM AUDIO ENGINE */
+    class SoftPaperSoundEngine {
+      constructor() {
+        this.audioCtx = null;
+        this.customAudioUrl = null;
+      }
+
+      setCustomAudioUrl(url) {
+        this.customAudioUrl = url;
+      }
+
+      playFlipSound() {
+        if (!appState.settings.soundEnabled) return;
+        const volumeRatio = (appState.settings.soundVolume || 80) / 100;
+
+        if (this.customAudioUrl) {
+          try {
+            const audio = new Audio(this.customAudioUrl);
+            audio.volume = volumeRatio;
+            audio.play().catch(() => {});
+            return;
+          } catch(e) {}
+        }
+
+        try {
+          if (!this.audioCtx) {
+            this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          }
+          if (this.audioCtx.state === 'suspended') {
+            this.audioCtx.resume();
+          }
+
+          const duration = 0.12;
+          const bufferSize = this.audioCtx.sampleRate * duration;
+          const buffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
+          const data = buffer.getChannelData(0);
+
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3));
+          }
+
+          const noise = this.audioCtx.createBufferSource();
+          noise.buffer = buffer;
+
+          const filter = this.audioCtx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(500, this.audioCtx.currentTime);
+
+          const gain = this.audioCtx.createGain();
+          gain.gain.setValueAtTime(0.12 * volumeRatio, this.audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + duration);
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.audioCtx.destination);
+
+          noise.start();
+        } catch (e) {}
+      }
+    }
+
+    /* 4. GLOBAL APP STATE */
+    const db = new BookReaderDB();
+    const soundEngine = new SoftPaperSoundEngine();
+
+    const activeNoteTimers = {};
+    let deleteAllNotesTimer = null;
+
+    const appState = {
+      books: [],
+      categories: [],
+      activeFilterCategory: 'All',
+      currentReaderBook: null,
+      pdfDocument: null,
+      pageFlipInstance: null,
+      renderScale: 1.8,
+      controlsVisible: true,
+      currentFilterMode: 'normal',
+      manualRotationDegrees: 0,
+      wakeLock: null,
+      clearTimerInterval: null,
+      deleteSingleTimerInterval: null,
+      pendingDeleteBookId: null,
+      lazyObserver: null,
+      settings: {
+        soundEnabled: false,
+        soundVolume: 80
+      }
+    };
+
+    /* 5. RELIABLE CALENDAR STREAK COUNTER LOGIC (YYYY-MM-DD) */
+    function getTodayDateString() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function getYesterdayDateString() {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function checkStreakOnLoad() {
+      const today = getTodayDateString();
+      const yesterday = getYesterdayDateString();
+      let streak = parseInt(localStorage.getItem('reader_streak_count') || '0', 10);
+      let lastDate = localStorage.getItem('reader_last_streak_date') || '';
+
+      if (!lastDate) {
+        streak = 0;
+      } else if (lastDate !== today && lastDate !== yesterday) {
+        streak = 0;
+        localStorage.setItem('reader_streak_count', '0');
+      }
+
+      const streakEl = document.getElementById('streak-counter-text');
+      if (streakEl) {
+        streakEl.textContent = `Streak: ${streak} Day${streak !== 1 ? 's' : ''}`;
+      }
+    }
+
+    function recordReadingSession() {
+      const today = getTodayDateString();
+      const yesterday = getYesterdayDateString();
+      let streak = parseInt(localStorage.getItem('reader_streak_count') || '0', 10);
+      let lastDate = localStorage.getItem('reader_last_streak_date') || '';
+
+      if (lastDate === today) return;
+
+      if (lastDate === yesterday) {
+        streak += 1;
+      } else {
+        streak = 1;
+      }
+
+      localStorage.setItem('reader_streak_count', streak.toString());
+      localStorage.setItem('reader_last_streak_date', today);
+
+      const streakEl = document.getElementById('streak-counter-text');
+      if (streakEl) {
+        streakEl.textContent = `Streak: ${streak} Day${streak !== 1 ? 's' : ''}`;
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      await db.init();
+      registerServiceWorkerAndManifest();
+      setupLazyObserver();
+      setupEventListeners();
+      setupHardwareBackButtonSupport();
+      setupPullToRefresh();
+      checkStreakOnLoad();
+      await loadCustomAudioFromDB();
+      await populateCategoryDropdowns();
+      await loadBooksFromDB();
+      updateStorageUsageDisplay();
+    });
+
+    function setupLazyObserver() {
+      if ('IntersectionObserver' in window) {
+        appState.lazyObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              if (img.dataset.src) {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+              }
+              observer.unobserve(img);
+            }
+          });
+        }, { rootMargin: '100px' });
+      }
+    }
+
+    async function loadCustomAudioFromDB() {
+      const audioBlob = await db.getCustomAudio();
+      if (audioBlob) {
+        const url = URL.createObjectURL(audioBlob);
+        soundEngine.setCustomAudioUrl(url);
+        const statusText = document.getElementById('audio-status-text');
+        if (statusText) statusText.textContent = "Custom MP3 audio active";
+      }
+    }
+
+    function setupPullToRefresh() {
+      const scrollArea = document.getElementById('main-scroll-area');
+      const indicator = document.getElementById('pull-refresh-indicator');
+      const refreshText = document.getElementById('refresh-text');
+      const refreshIcon = document.getElementById('refresh-icon');
+
+      let startY = 0;
+      let currentY = 0;
+      let isDragging = false;
+      const threshold = 160;
+
+      scrollArea.addEventListener('touchstart', (e) => {
+        const readerModal = document.getElementById('reader-modal');
+        if (readerModal && !readerModal.classList.contains('hidden')) return;
+
+        if (scrollArea.scrollTop === 0) {
+          startY = e.touches[0].pageY;
+          isDragging = true;
+        }
+      }, { passive: true });
+
+      scrollArea.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        currentY = e.touches[0].pageY;
+        const diff = currentY - startY;
+
+        if (diff > 0 && scrollArea.scrollTop === 0) {
+          const pullDistance = Math.min(diff * 0.5, 180);
+          indicator.style.opacity = (pullDistance / threshold).toString();
+          indicator.style.transform = `translateY(${pullDistance}px)`;
+
+          if (diff >= threshold) {
+            refreshText.textContent = "Release to refresh...";
+            refreshIcon.classList.add('fa-spin');
+          } else {
+            refreshText.textContent = "Pull down to refresh...";
+            refreshIcon.classList.remove('fa-spin');
+          }
+        }
+      }, { passive: true });
+
+      scrollArea.addEventListener('touchend', async () => {
+        if (!isDragging) return;
+        isDragging = false;
+        const diff = currentY - startY;
+
+        if (diff >= threshold && scrollArea.scrollTop === 0) {
+          refreshText.textContent = "Refreshing...";
+          indicator.style.transform = `translateY(60px)`;
+          indicator.style.opacity = "1";
+
+          await loadBooksFromDB();
+          updateStorageUsageDisplay();
+
+          setTimeout(() => {
+            indicator.style.transform = `translateY(0px)`;
+            indicator.style.opacity = "0";
+            refreshText.textContent = "Pull down to refresh...";
+          }, 800);
+        } else {
+          indicator.style.transform = `translateY(0px)`;
+          indicator.style.opacity = "0";
+        }
+        startY = 0;
+        currentY = 0;
+      });
+    }
+
+    function setupHardwareBackButtonSupport() {
+      window.addEventListener('popstate', () => {
+        const modal = document.getElementById('reader-modal');
+        if (!modal.classList.contains('hidden')) {
+          closeReaderModal();
+        }
+      });
+    }
+
+    async function requestWakeLock() {
+      try {
+        if ('wakeLock' in navigator) {
+          appState.wakeLock = await navigator.wakeLock.request('screen');
+        }
+      } catch (err) {}
+    }
+
+    function releaseWakeLock() {
+      if (appState.wakeLock !== null) {
+        appState.wakeLock.release().then(() => {
+          appState.wakeLock = null;
+        });
+      }
+    }
+
+    document.addEventListener('visibilitychange', async () => {
+      const modal = document.getElementById('reader-modal');
+      if (document.visibilityState === 'visible' && modal && !modal.classList.contains('hidden')) {
+        await requestWakeLock();
+      }
+    });
+
+    async function populateCategoryDropdowns() {
+      appState.categories = await db.getAllCategories();
+      const select = document.getElementById('pdf-category-select');
+      const editSelect = document.getElementById('edit-category-select');
+      
+      const optionsHtml = appState.categories.map(c => `<option value="${c}">${c}</option>`).join('');
+      select.innerHTML = optionsHtml;
+      editSelect.innerHTML = optionsHtml;
+    }
+
+    async function loadBooksFromDB() {
+      appState.books = await db.getAllBooks();
+      renderShelfView();
+      renderCategoriesView();
+      renderRecentView();
+    }
+
+    function renderShelfView() {
+      const grid = document.getElementById('books-grid');
+      const emptyState = document.getElementById('empty-shelf-state');
+      const badge = document.getElementById('book-count-badge');
+      const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+
+      const filteredBooks = appState.books.filter(b => 
+        b.title.toLowerCase().includes(searchQuery) || 
+        (b.author && b.author.toLowerCase().includes(searchQuery))
+      );
+
+      badge.textContent = filteredBooks.length;
+
+      if (filteredBooks.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        emptyState.style.display = 'flex';
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = filteredBooks.map(book => {
+        const percent = book.totalPages > 0 ? Math.round((book.currentPage / book.totalPages) * 100) : 0;
+        
+        let coverContent = `<img data-src="${book.coverDataUrl}" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'></svg>" class="lazy-cover" alt="${book.title}" />`;
+        if (book.coverType === 'color_title') {
+          coverContent = `<div style="width:100%; height:100%; background-color:${book.coverBgColor || '#f59e0b'}; display:flex; align-items:center; justify-content:center; padding:12px; color:#0f172a; font-weight:bold; font-size:14px; text-align:center;">${book.title}</div>`;
+        }
+
+        return `
+          <div class="book-card">
+            <div class="cover-box" onclick="openBookReader(${book.id})">
+              ${coverContent}
+              <div class="category-badge">${book.category}</div>
+            </div>
+            
+            <div class="book-details">
+              <div>
+                <h3 class="book-title" title="${book.title}">${book.title}</h3>
+                <p class="book-author">${book.author || 'Unknown'}</p>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-family: monospace;">
+                  <span>${book.currentPage || 1}/${book.totalPages} pgs</span>
+                  <span style="color: var(--amber-main); font-weight: bold;">${percent}%</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" style="width: ${percent}%"></div>
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <button onclick="openBookReader(${book.id})" style="background: none; border: none; color: var(--amber-main); font-weight: bold; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                  <i class="fa-solid fa-book-open" style="font-size: 10px;"></i>
+                  <span>Read</span>
+                </button>
+                <div style="display: flex; gap: 4px;">
+                  <button onclick="openEditBookModal(${book.id})" class="icon-btn" title="Edit Book & Cover">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+                  <button onclick="startSingleBookDeleteTimer(${book.id})" class="icon-btn" style="color: #f87171;" title="Delete Book">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Observe images for lazy loading
+      if (appState.lazyObserver) {
+        document.querySelectorAll('img.lazy-cover').forEach(img => appState.lazyObserver.observe(img));
+      } else {
+        document.querySelectorAll('img.lazy-cover').forEach(img => {
+          if (img.dataset.src) img.src = img.dataset.src;
+        });
+      }
+    }
+
+    function renderCategoriesView() {
+      const chipsContainer = document.getElementById('category-chips');
+      const booksContainer = document.getElementById('category-books-container');
+
+      const allCats = ['All', ...appState.categories];
+
+      chipsContainer.innerHTML = allCats.map(cat => `
+        <button onclick="filterByCategory('${cat}')" 
+          style="padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: bold; border: 1px solid var(--card-border); cursor: pointer; ${appState.activeFilterCategory === cat ? 'background-color: var(--amber-main); color: #0f172a; border-color: var(--amber-main);' : 'background-color: var(--card-bg); color: var(--text-light);'}">
+          ${cat}
+        </button>
+      `).join('');
+
+      let filtered = appState.activeFilterCategory === 'All' 
+        ? [...appState.books] 
+        : appState.books.filter(b => b.category === appState.activeFilterCategory);
+
+      filtered.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+
+      if (filtered.length === 0) {
+        booksContainer.innerHTML = `<p style="font-size: 12px; color: var(--text-muted); padding: 12px 0;">No books in "${appState.activeFilterCategory}".</p>`;
+        return;
+      }
+
+      booksContainer.innerHTML = filtered.map((book, index) => `
+        <div style="background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px; display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 12px; cursor: pointer; flex: 1; overflow: hidden;" onclick="openBookReader(${book.id})">
+            <span style="font-size: 12px; font-family: monospace; font-weight: bold; color: var(--text-muted);">${index + 1}.</span>
+            <img data-src="${book.coverDataUrl}" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'></svg>" class="lazy-cover" style="width: 40px; height: 56px; object-fit: cover; border-radius: 6px;" />
+            <div style="overflow: hidden;">
+              <h4 style="font-size: 12px; font-weight: bold; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${book.title}</h4>
+              <p style="font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${book.author || 'Unknown'}</p>
+              <span style="font-size: 9px; color: var(--amber-main); background-color: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 9999px; display: inline-block; margin-top: 2px;">${book.category}</span>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 6px; margin-left: 8px;">
+            <button onclick="moveBookOrder(${book.id}, -1)" ${index === 0 ? 'disabled style="opacity: 0.3; padding: 4px; color: var(--text-muted);"' : 'style="padding: 4px; color: var(--amber-main); cursor: pointer; background: none; border: none;"'} title="Move Up">
+              <i class="fa-solid fa-chevron-up" style="font-size: 12px;"></i>
+            </button>
+            <button onclick="moveBookOrder(${book.id}, 1)" ${index === filtered.length - 1 ? 'disabled style="opacity: 0.3; padding: 4px; color: var(--text-muted);"' : 'style="padding: 4px; color: var(--amber-main); cursor: pointer; background: none; border: none;"'} title="Move Down">
+              <i class="fa-solid fa-chevron-down" style="font-size: 12px;"></i>
+            </button>
+            <button onclick="openEditBookModal(${book.id})" class="icon-btn" title="Edit Book">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button onclick="openBookReader(${book.id})" style="background-color: #334155; color: var(--amber-main); font-size: 12px; padding: 4px 10px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer;">Read</button>
+          </div>
+        </div>
+      `).join('');
+
+      if (appState.lazyObserver) {
+        document.querySelectorAll('img.lazy-cover').forEach(img => appState.lazyObserver.observe(img));
+      } else {
+        document.querySelectorAll('img.lazy-cover').forEach(img => {
+          if (img.dataset.src) img.src = img.dataset.src;
+        });
+      }
+    }
+
+    async function moveBookOrder(bookId, direction) {
+      let filtered = appState.activeFilterCategory === 'All' 
+        ? [...appState.books] 
+        : appState.books.filter(b => b.category === appState.activeFilterCategory);
+
+      filtered.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+
+      const currentIndex = filtered.findIndex(b => b.id === bookId);
+      if (currentIndex === -1) return;
+
+      const targetIndex = currentIndex + direction;
+      if (targetIndex < 0 || targetIndex >= filtered.length) return;
+
+      const currentBook = filtered[currentIndex];
+      const targetBook = filtered[targetIndex];
+
+      const tempOrder = currentBook.sortOrder || currentIndex;
+      currentBook.sortOrder = targetBook.sortOrder || targetIndex;
+      targetBook.sortOrder = tempOrder;
+
+      if (currentBook.sortOrder === targetBook.sortOrder) {
+        currentBook.sortOrder = targetIndex;
+        targetBook.sortOrder = currentIndex;
+      }
+
+      await db.updateBookSortOrder(currentBook.id, currentBook.sortOrder);
+      await db.updateBookSortOrder(targetBook.id, targetBook.sortOrder);
+
+      await loadBooksFromDB();
+    }
+
+    function filterByCategory(cat) {
+      appState.activeFilterCategory = cat;
+      renderCategoriesView();
+    }
+
+    async function renderRecentView() {
+      const recentList = document.getElementById('recent-books-list');
+      const bookmarksList = document.getElementById('bookmarks-global-list');
+      const notesList = document.getElementById('notes-global-list');
+
+      const sortedByRead = [...appState.books].sort((a, b) => (b.lastRead || 0) - (a.lastRead || 0));
+
+      if (sortedByRead.length === 0) {
+        recentList.innerHTML = `<p style="font-size: 12px; color: var(--text-muted);">No recent activity.</p>`;
+      } else {
+        recentList.innerHTML = sortedByRead.slice(0, 3).map(book => `
+          <div style="background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px; cursor: pointer;" onclick="openBookReader(${book.id})">
+              <img src="${book.coverDataUrl}" style="width: 36px; height: 48px; object-fit: cover; border-radius: 4px;" />
+              <div>
+                <h4 style="font-size: 12px; font-weight: bold; color: white;">${book.title}</h4>
+                <p style="font-size: 10px; color: var(--text-muted);">Page ${book.currentPage || 1} of ${book.totalPages}</p>
+              </div>
+            </div>
+            <button onclick="openBookReader(${book.id})" style="background: none; border: none; color: var(--amber-main); font-size: 12px; font-weight: bold; cursor: pointer;">Resume</button>
+          </div>
+        `).join('');
+      }
+
+      let allBookmarks = [];
+      appState.books.forEach(b => {
+        if (b.bookmarks && b.bookmarks.length > 0) {
+          b.bookmarks.forEach(p => allBookmarks.push({ bookId: b.id, bookTitle: b.title, page: p }));
+        }
+      });
+
+      if (allBookmarks.length === 0) {
+        bookmarksList.innerHTML = `<p style="font-size: 12px; color: var(--text-muted);">No bookmarks.</p>`;
+      } else {
+        bookmarksList.innerHTML = allBookmarks.map(bm => `
+          <div style="background-color: rgba(30, 41, 59, 0.5); border: 1px solid var(--card-border); border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; font-size: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-bookmark" style="color: var(--amber-main); font-size: 12px;"></i>
+              <span style="font-weight: 500; color: white;">${bm.bookTitle}</span>
+              <span style="color: var(--text-muted);">— Page ${bm.page}</span>
+            </div>
+            <button onclick="openBookReader(${bm.bookId}, ${bm.page})" style="background: none; border: none; color: var(--amber-main); font-size: 11px; font-weight: bold; cursor: pointer;">Jump</button>
+          </div>
+        `).join('');
+      }
+
+      const notes = await db.getAllNotes();
+      if (!notes || notes.length === 0) {
+        notesList.innerHTML = `<p style="font-size: 12px; color: var(--text-muted);">No saved page notes.</p>`;
+      } else {
+        notesList.innerHTML = notes.map(n => {
+          const isTimerActive = activeNoteTimers[n.id] !== undefined;
+          const secondsLeft = isTimerActive ? activeNoteTimers[n.id].secondsLeft : 5;
+
+          return `
+            <div id="note-card-${n.id}" style="background-color: rgba(30, 41, 59, 0.5); border: 1px solid var(--card-border); border-radius: 10px; padding: 10px; font-size: 12px; width: 100%; max-width: 100%; box-sizing: border-box; word-break: break-word; overflow-wrap: anywhere; overflow: hidden;">
+              <div style="display: flex; justify-content: space-between; align-items: center; color: var(--amber-main); font-weight: bold; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
+                <span style="max-width: 65%; word-break: break-word; overflow-wrap: anywhere;">${n.bookTitle} (Page ${n.pageNum})</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <button onclick="openBookReader(${n.bookId}, ${n.pageNum})" style="background: none; border: none; color: var(--amber-main); font-size: 10px; font-weight: bold; cursor: pointer;">Jump</button>
+                  <button id="note-del-btn-${n.id}" onclick="triggerSingleNoteDelete(${n.id})" style="background-color: ${isTimerActive ? '#ef4444' : 'rgba(239, 68, 68, 0.15)'}; border: 1px solid rgba(239, 68, 68, 0.3); color: ${isTimerActive ? '#ffffff' : '#f87171'}; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 6px; cursor: pointer;">
+                    ${isTimerActive ? `Cancel (${secondsLeft}s)` : '<i class="fa-solid fa-trash"></i> Delete'}
+                  </button>
+                </div>
+              </div>
+              <p class="note-text-wrapper" style="color: var(--text-light); font-size: 11px; margin: 0; max-width: 100%; box-sizing: border-box;">${n.noteText}</p>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function triggerSingleNoteDelete(noteId) {
+      if (activeNoteTimers[noteId]) {
+        clearInterval(activeNoteTimers[noteId].intervalId);
+        delete activeNoteTimers[noteId];
+        renderRecentView();
+      } else {
+        let secondsLeft = 5;
+        activeNoteTimers[noteId] = {
+          secondsLeft: secondsLeft,
+          intervalId: setInterval(async () => {
+            secondsLeft--;
+            if (activeNoteTimers[noteId]) {
+              activeNoteTimers[noteId].secondsLeft = secondsLeft;
+            }
+
+            const btn = document.getElementById(`note-del-btn-${noteId}`);
+            if (btn) {
+              btn.innerHTML = `Cancel (${secondsLeft}s)`;
+              btn.style.backgroundColor = '#ef4444';
+              btn.style.color = '#ffffff';
+            }
+
+            if (secondsLeft <= 0) {
+              clearInterval(activeNoteTimers[noteId].intervalId);
+              delete activeNoteTimers[noteId];
+              await db.deleteNote(noteId);
+              renderRecentView();
+            }
+          }, 1000)
+        };
+        renderRecentView();
+      }
+    }
+
+    function triggerDeleteAllNotes() {
+      const btnText = document.getElementById('delete-all-notes-btn-text');
+      const btn = document.getElementById('delete-all-notes-btn');
+      if (!btnText || !btn) return;
+
+      if (deleteAllNotesTimer) {
+        clearInterval(deleteAllNotesTimer);
+        deleteAllNotesTimer = null;
+        btnText.textContent = "Delete All Notes";
+        btn.style.backgroundColor = "rgba(239, 68, 68, 0.15)";
+        btn.style.color = "#f87171";
+      } else {
+        let secondsLeft = 15;
+        btnText.textContent = `Cancel Delete All (${secondsLeft}s)`;
+        btn.style.backgroundColor = "#ef4444";
+        btn.style.color = "#ffffff";
+
+        deleteAllNotesTimer = setInterval(async () => {
+          secondsLeft--;
+          if (btnText) {
+            btnText.textContent = `Cancel Delete All (${secondsLeft}s)`;
+          }
+
+          if (secondsLeft <= 0) {
+            clearInterval(deleteAllNotesTimer);
+            deleteAllNotesTimer = null;
+            await db.clearAllNotes();
+            btnText.textContent = "Delete All Notes";
+            btn.style.backgroundColor = "rgba(239, 68, 68, 0.15)";
+            btn.style.color = "#f87171";
+            renderRecentView();
+          }
+        }, 1000);
+      }
+    }
+
+    async function openEditBookModal(bookId) {
+      const book = await db.getBook(bookId);
+      if (!book) return;
+
+      document.getElementById('edit-book-id').value = book.id;
+      document.getElementById('edit-title-input').value = book.title;
+      document.getElementById('edit-author-input').value = book.author || '';
+      document.getElementById('edit-category-select').value = book.category || 'General';
+      document.getElementById('edit-cover-type-select').value = 'keep';
+
+      document.getElementById('edit-custom-cover-image-group').classList.add('hidden');
+      document.getElementById('edit-color-cover-group').classList.add('hidden');
+
+      document.getElementById('edit-modal').classList.remove('hidden');
+    }
+
+    async function handleEditFormSubmit(e) {
+      e.preventDefault();
+      const id = parseInt(document.getElementById('edit-book-id').value, 10);
+      const title = document.getElementById('edit-title-input').value.trim();
+      const author = document.getElementById('edit-author-input').value.trim();
+      const category = document.getElementById('edit-category-select').value;
+      const coverTypeChoice = document.getElementById('edit-cover-type-select').value;
+
+      let newCoverUrl = null;
+      let coverType = null;
+      let bgColor = null;
+
+      if (coverTypeChoice === 'custom_image') {
+        const fileInput = document.getElementById('edit-custom-cover-file-input');
+        if (fileInput.files && fileInput.files.length > 0) {
+          newCoverUrl = await new Promise((res) => {
+            const reader = new FileReader();
+            reader.onload = (ev) => res(ev.target.result);
+            reader.readAsDataURL(fileInput.files[0]);
+          });
+          coverType = 'custom_image';
+        }
+      } else if (coverTypeChoice === 'color_title') {
+        bgColor = document.getElementById('edit-cover-bg-color-picker').value;
+        const canvas = document.createElement('canvas');
+        canvas.width = 300;
+        canvas.height = 400;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, 300, 400);
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 20px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(title, 150, 200, 260);
+        newCoverUrl = canvas.toDataURL('image/jpeg', 0.8);
+        coverType = 'color_title';
+      }
+
+      await db.updateBookAndCover(id, title, author, category, newCoverUrl, coverType, bgColor);
+      document.getElementById('edit-modal').classList.add('hidden');
+      await loadBooksFromDB();
+    }
+
+    function startSingleBookDeleteTimer(bookId) {
+      appState.pendingDeleteBookId = bookId;
+      const modal = document.getElementById('delete-timer-modal');
+      const display = document.getElementById('delete-countdown-display');
+      const confirmBtn = document.getElementById('confirm-single-delete-btn');
+
+      modal.classList.remove('hidden');
+      confirmBtn.disabled = true;
+      confirmBtn.style.opacity = '0.5';
+      confirmBtn.style.cursor = 'not-allowed';
+
+      let timeLeft = 15;
+      display.textContent = `${timeLeft}s`;
+
+      if (appState.deleteSingleTimerInterval) clearInterval(appState.deleteSingleTimerInterval);
+
+      appState.deleteSingleTimerInterval = setInterval(() => {
+        timeLeft--;
+        display.textContent = `${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+          clearInterval(appState.deleteSingleTimerInterval);
+          display.textContent = "Ready";
+          confirmBtn.disabled = false;
+          confirmBtn.style.opacity = '1';
+          confirmBtn.style.cursor = 'pointer';
+          confirmBtn.style.backgroundColor = '#ef4444';
+          confirmBtn.style.color = '#ffffff';
+        }
+      }, 1000);
+    }
+
+    function cancelSingleBookDeleteTimer() {
+      if (appState.deleteSingleTimerInterval) clearInterval(appState.deleteSingleTimerInterval);
+      document.getElementById('delete-timer-modal').classList.add('hidden');
+      appState.pendingDeleteBookId = null;
+    }
+
+    /* 6. PDF UPLOAD AND COVER PREFERENCE GENERATION */
+    async function handlePDFUpload(e) {
+      e.preventDefault();
+
+      const fileInput = document.getElementById('pdf-file-input');
+      const titleInput = document.getElementById('pdf-title-input');
+      const authorInput = document.getElementById('pdf-author-input');
+      const categorySelect = document.getElementById('pdf-category-select');
+      const newCategoryInput = document.getElementById('pdf-new-category-input');
+      const coverTypeSelect = document.getElementById('cover-type-select');
+      const customCoverFileInput = document.getElementById('custom-cover-file-input');
+      const coverBgColorPicker = document.getElementById('cover-bg-color-picker');
+      const statusBox = document.getElementById('upload-status-container');
+      const submitBtn = document.getElementById('save-book-submit-btn');
+
+      if (!fileInput.files || fileInput.files.length === 0) return;
+
+      const file = fileInput.files[0];
+      let category = newCategoryInput.value.trim() || categorySelect.value;
+      const title = titleInput.value.trim() || file.name.replace('.pdf', '');
+
+      if (newCategoryInput.value.trim()) {
+        await db.saveCategory(category);
+        await populateCategoryDropdowns();
+      }
+
+      statusBox.classList.remove('hidden');
+      submitBtn.disabled = true;
+
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        let coverDataUrl = '';
+        const coverType = coverTypeSelect.value;
+
+        if (coverType === 'custom_image' && customCoverFileInput.files.length > 0) {
+          const imgFile = customCoverFileInput.files[0];
+          coverDataUrl = await new Promise((res) => {
+            const reader = new FileReader();
+            reader.onload = (e) => res(e.target.result);
+            reader.readAsDataURL(imgFile);
+          });
+        } else if (coverType === 'color_title') {
+          const canvas = document.createElement('canvas');
+          canvas.width = 300;
+          canvas.height = 400;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = coverBgColorPicker.value;
+          ctx.fillRect(0, 0, 300, 400);
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'bold 20px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(title, 150, 200, 260);
+          coverDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        } else {
+          const pdfDoc = await pdfjsLib.getDocument({ 
+            data: arrayBuffer.slice(0),
+            disableWorker: typeof pdfjsWorker === 'undefined'
+          }).promise;
+          const page1 = await pdfDoc.getPage(1);
+          const viewport = page1.getViewport({ scale: 0.5, rotation: page1.rotate || 0 });
+          const canvas = document.getElementById('offscreen-cover-canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          await page1.render({ canvasContext: ctx, viewport: viewport }).promise;
+          coverDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        }
+
+        const pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+
+        const bookRecord = {
+          title: title,
+          author: authorInput.value.trim() || 'Unknown',
+          category: category,
+          pdfData: arrayBuffer,
+          coverDataUrl: coverDataUrl,
+          coverType: coverType,
+          coverBgColor: coverBgColorPicker.value,
+          totalPages: pdfDoc.numPages,
+          currentPage: 1,
+          bookmarks: [],
+          sortOrder: Date.now(),
+          lastRead: Date.now()
+        };
+
+        await db.saveBook(bookRecord);
+        await loadBooksFromDB();
+        updateStorageUsageDisplay();
+
+        document.getElementById('upload-form').reset();
+        document.getElementById('upload-modal').classList.add('hidden');
+        statusBox.classList.add('hidden');
+        submitBtn.disabled = false;
+
+      } catch (err) {
+        alert("PDF Processing error: " + err.message);
+        statusBox.classList.add('hidden');
+        submitBtn.disabled = false;
+      }
+    }
+
+    /* 7. ON-DEMAND READER ENGINE WITH HiDPI CANVAS & MEMORY MANAGEMENT */
+    async function openBookReader(bookId, targetPage = null) {
+      const book = await db.getBook(bookId);
+      if (!book) return;
+
+      recordReadingSession();
+
+      appState.currentReaderBook = book;
+      appState.manualRotationDegrees = 0;
+      
+      const modal = document.getElementById('reader-modal');
+      const loading = document.getElementById('reader-loading');
+
+      document.getElementById('reader-book-title').textContent = book.title;
+      document.getElementById('reader-book-author').textContent = book.author || 'Unknown';
+      
+      modal.classList.remove('hidden');
+      loading.classList.remove('hidden');
+
+      history.pushState({ readerOpen: true }, "");
+      await requestWakeLock();
+
+      try {
+        // Fetch and load PDF binary into memory ONLY when user explicitly reads
+        appState.pdfDocument = await pdfjsLib.getDocument({ 
+          data: book.pdfData.slice(0),
+          disableWorker: typeof pdfjsWorker === 'undefined'
+        }).promise;
+
+        const startPage = targetPage || book.currentPage || 1;
+        await initPageFlipEngine(startPage);
+        loading.classList.add('hidden');
+
+      } catch (err) {
+        alert("Error reading book: " + err.message);
+        closeReaderModal();
+      }
+    }
+
+    async function initPageFlipEngine(startPageNumber) {
+      const mountPoint = document.getElementById('flipbook-mount-point');
+
+      if (appState.pageFlipInstance) {
+        try { 
+          appState.pageFlipInstance.destroy(); 
+        } catch (e) {}
+        appState.pageFlipInstance = null;
+      }
+
+      if (mountPoint) {
+        mountPoint.innerHTML = '<div id="pageflip-container"></div>';
+      } else {
+        return;
+      }
+
+      const container = document.getElementById('pageflip-container');
+      const totalPages = appState.pdfDocument.numPages;
+
+      for (let i = 1; i <= totalPages; i++) {
+        const pageDiv = document.createElement('div');
+        pageDiv.className = `page-wrapper page-${i}`;
+        
+        const canvas = document.createElement('canvas');
+        canvas.id = `page-canvas-${i}`;
+        
+        pageDiv.appendChild(canvas);
+        container.appendChild(pageDiv);
+      }
+
+      const isMobile = window.innerWidth < 768;
+
+      const pageFlip = new St.PageFlip(container, {
+        width: isMobile ? window.innerWidth * 0.95 : 450,
+        height: isMobile ? window.innerHeight * 0.78 : 650,
+        size: "stretch",
+        minWidth: 280,
+        maxWidth: 700,
+        minHeight: 380,
+        maxHeight: 900,
+        maxShadowOpacity: 0.2,
+        showCover: true,
+        usePortrait: true,
+        mobileScrollSupport: false,
+        flippingTime: 350
+      });
+
+      pageFlip.loadFromHTML(document.querySelectorAll('.page-wrapper'));
+      appState.pageFlipInstance = pageFlip;
+
+      const renderPageOnDemand = async (pageNum) => {
+        if (pageNum < 1 || pageNum > totalPages) return;
+        const canvas = document.getElementById(`page-canvas-${pageNum}`);
+        if (!canvas || canvas.dataset.rendered === "true") return;
+
+        const pdfPage = await appState.pdfDocument.getPage(pageNum);
+        const finalRotation = (pdfPage.rotate + appState.manualRotationDegrees) % 360;
+        
+        const dpr = Math.max(window.devicePixelRatio || 2, 2.5);
+        const scale = appState.renderScale * dpr;
+        
+        const viewport = pdfPage.getViewport({ scale: scale, rotation: finalRotation });
+        
+        canvas.width = Math.floor(viewport.width);
+        canvas.height = Math.floor(viewport.height);
+        
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
+        await pdfPage.render({ canvasContext: ctx, viewport: viewport }).promise;
+        canvas.dataset.rendered = "true";
+      };
+
+      const updateRenderedWindow = (currentPage) => {
+        const start = Math.max(1, currentPage - 1);
+        const end = Math.min(totalPages, Math.max(5, currentPage + 1));
+        
+        for (let p = start; p <= end; p++) {
+          renderPageOnDemand(p);
+        }
+      };
+
+      pageFlip.flip(startPageNumber - 1);
+      updateRenderedWindow(startPageNumber);
+      updateReaderControlsUI(startPageNumber, totalPages);
+
+      pageFlip.on('changeState', (e) => {
+        if (e.data === 'flipping') {
+          soundEngine.playFlipSound();
+        }
+      });
+
+      pageFlip.on('flip', (e) => {
+        const pageNum = e.data + 1;
+        updateRenderedWindow(pageNum);
+        updateReaderControlsUI(pageNum, totalPages);
+        db.updateProgress(appState.currentReaderBook.id, pageNum, totalPages);
+      });
+    }
+
+    function updateReaderControlsUI(currentPage, totalPages) {
+      const pageIndicator = document.getElementById('reader-page-indicator');
+      if (pageIndicator) pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+
+      const slider = document.getElementById('reader-page-slider');
+      if (slider) {
+        slider.max = totalPages;
+        slider.value = currentPage;
+      }
+
+      const bookmarks = appState.currentReaderBook ? appState.currentReaderBook.bookmarks || [] : [];
+      const icon = document.getElementById('reader-bookmark-icon');
+      if (icon) {
+        icon.className = bookmarks.includes(currentPage) ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark';
+        icon.style.color = bookmarks.includes(currentPage) ? 'var(--amber-main)' : 'var(--text-muted)';
+      }
+    }
+
+    function toggleZenMode() {
+      appState.controlsVisible = !appState.controlsVisible;
+      const topBar = document.getElementById('reader-top-bar');
+      const bottomBar = document.getElementById('reader-bottom-bar');
+      const zenNavBar = document.getElementById('zen-nav-bar');
+
+      if (!appState.controlsVisible) {
+        topBar.classList.add('hidden');
+        bottomBar.classList.add('hidden');
+        zenNavBar.classList.remove('hidden');
+      } else {
+        topBar.classList.remove('hidden');
+        bottomBar.classList.remove('hidden');
+        zenNavBar.classList.add('hidden');
+      }
+    }
+
+    function closeReaderModal() {
+      releaseWakeLock();
+
+      // Free PDF document binary from memory
+      if (appState.pdfDocument) {
+        try { appState.pdfDocument.destroy(); } catch (e) {}
+        appState.pdfDocument = null;
+      }
+
+      // Destroy pageflip instance
+      if (appState.pageFlipInstance) {
+        try { appState.pageFlipInstance.destroy(); } catch (e) {}
+        appState.pageFlipInstance = null;
+      }
+
+      // Clear memory canvas elements
+      const mountPoint = document.getElementById('flipbook-mount-point');
+      if (mountPoint) {
+        mountPoint.innerHTML = '';
+      }
+
+      appState.currentReaderBook = null;
+
+      document.getElementById('reader-modal').classList.add('hidden');
+      document.getElementById('zen-nav-bar').classList.add('hidden');
+      loadBooksFromDB();
+    }
+
+    function startClearDataTimer() {
+      const modal = document.getElementById('clear-timer-modal');
+      const display = document.getElementById('timer-countdown-display');
+      const confirmBtn = document.getElementById('confirm-delete-data-btn');
+
+      modal.classList.remove('hidden');
+      confirmBtn.disabled = true;
+
+      let timeLeft = 180;
+
+      if (appState.clearTimerInterval) clearInterval(appState.clearTimerInterval);
+
+      appState.clearTimerInterval = setInterval(() => {
+        timeLeft--;
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        
+        display.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+        if (timeLeft <= 0) {
+          clearInterval(appState.clearTimerInterval);
+          display.textContent = "00:00";
+          confirmBtn.disabled = false;
+          confirmBtn.style.opacity = '1';
+          confirmBtn.style.cursor = 'pointer';
+          confirmBtn.style.backgroundColor = '#ef4444';
+          confirmBtn.style.color = '#ffffff';
+        }
+      }, 1000);
+    }
+
+    function cancelClearDataTimer() {
+      if (appState.clearTimerInterval) clearInterval(appState.clearTimerInterval);
+      document.getElementById('clear-timer-modal').classList.add('hidden');
+    }
+
+    async function updateStorageUsageDisplay() {
+      const display = document.getElementById('storage-usage-text');
+      if (!display) return;
+      if (navigator.storage && navigator.storage.estimate) {
+        try {
+          const estimate = await navigator.storage.estimate();
+          const usedMB = (estimate.usage / (1024 * 1024)).toFixed(1);
+          const quotaMB = (estimate.quota / (1024 * 1024 * 1024)).toFixed(1);
+          display.textContent = `${usedMB} MB used of ${quotaMB} GB`;
+        } catch (e) {
+          display.textContent = "Storage usage calculated";
+        }
+      } else {
+        display.textContent = "Storage API active";
+      }
+    }
+
+    /* 8. COMPLETE EVENT LISTENERS SETUP */
+    function setupEventListeners() {
+      // Navigation Tabs
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetTab = btn.dataset.tab;
+
+          ['view-shelf', 'view-categories', 'view-recent', 'view-settings'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
+          });
+
+          document.getElementById(targetTab).classList.remove('hidden');
+
+          document.querySelectorAll('.nav-tab-btn').forEach(b => {
+            b.classList.remove('active');
+          });
+          btn.classList.add('active');
+
+          if (targetTab === 'view-recent') renderRecentView();
+        });
+      });
+
+      document.getElementById('search-input').addEventListener('input', renderShelfView);
+
+      // Upload Cover Options Switcher
+      document.getElementById('cover-type-select').addEventListener('change', (e) => {
+        const val = e.target.value;
+        document.getElementById('custom-cover-image-group').classList.toggle('hidden', val !== 'custom_image');
+        document.getElementById('color-cover-group').classList.toggle('hidden', val !== 'color_title');
+      });
+
+      // Edit Cover Options Switcher
+      document.getElementById('edit-cover-type-select').addEventListener('change', (e) => {
+        const val = e.target.value;
+        document.getElementById('edit-custom-cover-image-group').classList.toggle('hidden', val !== 'custom_image');
+        document.getElementById('edit-color-cover-group').classList.toggle('hidden', val !== 'color_title');
+      });
+
+      // Upload Modal
+      document.getElementById('open-upload-modal-btn').addEventListener('click', () => {
+        document.getElementById('upload-modal').classList.remove('hidden');
+      });
+      document.getElementById('close-upload-modal-btn').addEventListener('click', () => {
+        document.getElementById('upload-modal').classList.add('hidden');
+      });
+      document.getElementById('cancel-upload-btn').addEventListener('click', () => {
+        document.getElementById('upload-modal').classList.add('hidden');
+      });
+      document.getElementById('upload-form').addEventListener('submit', handlePDFUpload);
+
+      // Edit Modal
+      document.getElementById('close-edit-modal-btn').addEventListener('click', () => {
+        document.getElementById('edit-modal').classList.add('hidden');
+      });
+      document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+        document.getElementById('edit-modal').classList.add('hidden');
+      });
+      document.getElementById('edit-form').addEventListener('submit', handleEditFormSubmit);
+
+      // Note Modal
+      document.getElementById('open-note-modal-btn').addEventListener('click', () => {
+        document.getElementById('page-note-input').value = '';
+        document.getElementById('note-modal').classList.remove('hidden');
+      });
+
+      document.getElementById('close-note-modal-btn').addEventListener('click', () => {
+        document.getElementById('note-modal').classList.add('hidden');
+      });
+
+      document.getElementById('cancel-note-btn').addEventListener('click', () => {
+        document.getElementById('note-modal').classList.add('hidden');
+      });
+
+      document.getElementById('save-note-submit-btn').addEventListener('click', async () => {
+        const text = document.getElementById('page-note-input').value.trim();
+        if (text && appState.currentReaderBook && appState.pageFlipInstance) {
+          const currentPage = appState.pageFlipInstance.getCurrentPageIndex() + 1;
+          await db.saveNote(appState.currentReaderBook.id, appState.currentReaderBook.title, currentPage, text);
+          document.getElementById('note-modal').classList.add('hidden');
+          renderRecentView();
+        }
+      });
+
+      // Delete All Notes Button
+      const deleteAllNotesBtn = document.getElementById('delete-all-notes-btn');
+      if (deleteAllNotesBtn) {
+        deleteAllNotesBtn.addEventListener('click', triggerDeleteAllNotes);
+      }
+
+      // Single Delete Timer Modal
+      document.getElementById('cancel-single-delete-btn').addEventListener('click', cancelSingleBookDeleteTimer);
+      document.getElementById('confirm-single-delete-btn').addEventListener('click', async () => {
+        if (appState.pendingDeleteBookId) {
+          await db.deleteBook(appState.pendingDeleteBookId);
+          cancelSingleBookDeleteTimer();
+          await loadBooksFromDB();
+          updateStorageUsageDisplay();
+        }
+      });
+
+      // Storage Clear Safety Timer Modal
+      document.getElementById('open-clear-timer-btn').addEventListener('click', startClearDataTimer);
+      document.getElementById('cancel-clear-timer-btn').addEventListener('click', cancelClearDataTimer);
+      document.getElementById('confirm-delete-data-btn').addEventListener('click', async () => {
+        await db.clearAll();
+        localStorage.clear();
+        cancelClearDataTimer();
+        await loadBooksFromDB();
+        updateStorageUsageDisplay();
+        checkStreakOnLoad();
+      });
+
+      // Custom MP3 Audio Uploader
+      document.getElementById('custom-audio-input').addEventListener('change', async (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          const file = e.target.files[0];
+          await db.saveCustomAudio(file);
+          const url = URL.createObjectURL(file);
+          soundEngine.setCustomAudioUrl(url);
+          document.getElementById('audio-status-text').textContent = "Custom MP3 audio active";
+        }
+      });
+
+      // Volume Slider
+      document.getElementById('sound-volume-slider').addEventListener('input', (e) => {
+        appState.settings.soundVolume = parseInt(e.target.value, 10);
+        document.getElementById('volume-val-display').textContent = `${appState.settings.soundVolume}%`;
+      });
+
+      // Text Clarity Slider
+      document.getElementById('clarity-slider').addEventListener('input', (e) => {
+        const val = e.target.value;
+        const container = document.getElementById('pageflip-container');
+        if (container) {
+          container.style.filter = `contrast(${val}%)`;
+        }
+      });
+
+      // Zoom Controls
+      document.getElementById('zoom-in-btn').addEventListener('click', () => {
+        appState.renderScale = Math.min(3.0, appState.renderScale + 0.2);
+        document.getElementById('zoom-level-text').textContent = `${Math.round((appState.renderScale / 1.8) * 100)}%`;
+      });
+
+      document.getElementById('zoom-out-btn').addEventListener('click', () => {
+        appState.renderScale = Math.max(1.0, appState.renderScale - 0.2);
+        document.getElementById('zoom-level-text').textContent = `${Math.round((appState.renderScale / 1.8) * 100)}%`;
+      });
+
+      // Reader Bookmark Toggle
+      document.getElementById('reader-bookmark-btn').addEventListener('click', async () => {
+        if (appState.currentReaderBook && appState.pageFlipInstance) {
+          const pageNum = appState.pageFlipInstance.getCurrentPageIndex() + 1;
+          const updated = await db.toggleBookmark(appState.currentReaderBook.id, pageNum);
+          appState.currentReaderBook.bookmarks = updated;
+          updateReaderControlsUI(pageNum, appState.pdfDocument.numPages);
+        }
+      });
+
+      // Reader Slider Jump
+      document.getElementById('reader-page-slider').addEventListener('change', (e) => {
+        const pageNum = parseInt(e.target.value, 10);
+        if (appState.pageFlipInstance) {
+          appState.pageFlipInstance.flip(pageNum - 1);
+        }
+      });
+
+      // Developer Profile Link
+      document.getElementById('open-dev-profile-btn').addEventListener('click', () => {
+        window.open('https://hikmah.net/@muhammedomor_official', '_blank');
+      });
+
+      // Floating Navigation
+      document.getElementById('zen-next-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (appState.pageFlipInstance) appState.pageFlipInstance.flipNext();
+      });
+
+      document.getElementById('zen-prev-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (appState.pageFlipInstance) appState.pageFlipInstance.flipPrev();
+      });
+
+      // Sound Setting Toggles
+      document.getElementById('setting-sound-toggle').addEventListener('change', (e) => {
+        appState.settings.soundEnabled = e.target.checked;
+        updateSoundIconUI();
+      });
+
+      document.getElementById('reader-sound-toggle-btn').addEventListener('click', () => {
+        appState.settings.soundEnabled = !appState.settings.soundEnabled;
+        document.getElementById('setting-sound-toggle').checked = appState.settings.soundEnabled;
+        updateSoundIconUI();
+      });
+
+      function updateSoundIconUI() {
+        const icon = document.getElementById('reader-sound-icon');
+        icon.className = appState.settings.soundEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+        icon.style.color = appState.settings.soundEnabled ? 'var(--amber-main)' : '#f87171';
+      }
+
+      // Rotate Button
+      document.getElementById('reader-rotate-btn').addEventListener('click', () => {
+        appState.manualRotationDegrees = (appState.manualRotationDegrees + 90) % 360;
+        
+        if (appState.pageFlipInstance) {
+          const totalPages = appState.pdfDocument.numPages;
+          for (let i = 1; i <= totalPages; i++) {
+            const canvas = document.getElementById(`page-canvas-${i}`);
+            if (canvas) canvas.dataset.rendered = "false";
+          }
+          const currentPage = appState.pageFlipInstance.getCurrentPageIndex() + 1;
+          
+          appState.pdfDocument.getPage(currentPage).then(pdfPage => {
+            const canvas = document.getElementById(`page-canvas-${currentPage}`);
+            const finalRotation = (pdfPage.rotate + appState.manualRotationDegrees) % 360;
+            const dpr = Math.max(window.devicePixelRatio || 2, 2.5);
+            const scale = appState.renderScale * dpr;
+            const viewport = pdfPage.getViewport({ scale: scale, rotation: finalRotation });
+            
+            canvas.width = Math.floor(viewport.width);
+            canvas.height = Math.floor(viewport.height);
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+
+            pdfPage.render({ canvasContext: ctx, viewport: viewport });
+            canvas.dataset.rendered = "true";
+          });
+        }
+      });
+
+      // Filter Mode Cycle
+      document.getElementById('reader-filter-cycle-btn').addEventListener('click', () => {
+        const modes = ['normal', 'sepia', 'night'];
+        const currentIdx = modes.indexOf(appState.currentFilterMode);
+        const nextMode = modes[(currentIdx + 1) % modes.length];
+        appState.currentFilterMode = nextMode;
+
+        const container = document.getElementById('pageflip-container');
+        if (container) {
+          container.classList.remove('filter-sepia', 'filter-night');
+          if (nextMode === 'sepia') container.classList.add('filter-sepia');
+          if (nextMode === 'night') container.classList.add('filter-night');
+        }
+      });
+
+      // Clean Zen Mode Toggle
+      document.getElementById('reader-zen-btn').addEventListener('click', toggleZenMode);
+
+      // Reader Modal Close
+      document.getElementById('close-reader-btn').addEventListener('click', closeReaderModal);
+
+      // Tap Screen Side Areas to Flip Pages
+      document.getElementById('right-tap-area').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (appState.pageFlipInstance) appState.pageFlipInstance.flipNext();
+      });
+
+      document.getElementById('left-tap-area').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (appState.pageFlipInstance) appState.pageFlipInstance.flipPrev();
+      });
+
+      // Stage Tap Toggle Zen Mode
+      document.getElementById('reader-stage').addEventListener('click', (e) => {
+        if (e.target.closest('#right-tap-area') || e.target.closest('#left-tap-area')) return;
+        toggleZenMode();
+      });
+    }
+  </script>
+</body>
+</html>
