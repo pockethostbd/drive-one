@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827"><title>BookReader Community</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d30;--panel2:#1a2940;--border:#2b3b54;--text:#f4f7fc;--muted:#a8b7cc;--accent:#f5b83d;--accentText:#172033;--danger:#ff9a9a;--shadow:0 12px 32px #0002}
+body.light{--bg:#f2f5fa;--panel:#fff;--panel2:#f0f4f9;--border:#dbe3ee;--text:#172033;--muted:#607087;--accent:#e9a51f;--accentText:#172033;--shadow:0 8px 24px #26365010}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;min-height:100vh;transition:background .2s,color .2s}
+a{color:inherit}.app{max-width:1120px;margin:auto}.topbar{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--panel) 92%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}.logo{width:42px;height:42px;display:grid;place-items:center;background:var(--accent);color:#172033;border-radius:14px;font-size:22px}.logo img{width:100%;height:100%;object-fit:contain;border-radius:inherit}.brand strong{display:block;font-size:17px}.brand small{display:block;color:var(--muted);font-size:11px}
+.tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap}button,.btn{font:inherit;font-size:13px;font-weight:750;border:1px solid transparent;border-radius:11px;padding:10px 12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}button:disabled{opacity:.55;cursor:wait}.primary{background:var(--accent);color:var(--accentText)}.secondary,.btn-secondary{background:var(--panel2);color:var(--text);border-color:var(--border)}.danger{background:transparent;color:var(--danger);border-color:#7d3545}.tiny{padding:7px 9px;font-size:12px}
+.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;padding:18px 16px}.sidebar{position:sticky;top:86px;align-self:start}.panel{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}h1,h2,h3,p{margin-top:0}h1{font-size:22px;margin-bottom:6px}h2{font-size:17px;margin-bottom:10px}h3{font-size:16px;margin-bottom:7px}.muted{color:var(--muted);font-size:13px;line-height:1.55}.navitem{width:100%;justify-content:flex-start;background:transparent;color:var(--text);border-color:transparent;margin:2px 0}.navitem:hover,.navitem.active{background:var(--panel2);border-color:var(--border)}
+input,textarea{width:100%;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:12px;padding:12px;font:inherit;outline:none}input:focus,textarea:focus{border-color:var(--accent)}label{display:block;color:var(--muted);font-size:12px;margin:12px 0 6px}textarea{min-height:85px;resize:vertical}.row{display:flex;gap:9px;flex-wrap:wrap}.row>*{flex:1}.hidden{display:none!important}.status{font-size:13px;line-height:1.6;margin:10px 0 0;white-space:pre-wrap}.error{color:var(--danger)}.ok{color:#4bd59b}.hero{background:linear-gradient(135deg,#253c5b,#18243a 68%,#5a421e);color:white;border-radius:20px;padding:20px;margin-bottom:14px}.hero p{color:#d8e3f2;margin:0;line-height:1.55}.hero .pill{background:#ffffff16;color:#fff;border-color:#ffffff2c}
+.pill{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border);border-radius:999px;padding:5px 9px;font-size:11px;color:var(--muted)}.profileline{display:flex;gap:11px;align-items:center}.avatar{width:44px;height:44px;flex:0 0 44px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,#f5b83d,#e87952);color:#172033;font-weight:900;font-size:17px;overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover}.feed-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:18px 0 10px}.post{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:16px;margin:12px 0;box-shadow:var(--shadow);overflow-wrap:anywhere}.posttop{display:flex;align-items:start;gap:10px}.postwho{flex:1;min-width:0}.postwho strong{display:block;font-size:14px}.postwho small{color:var(--muted);font-size:11px}.post-title{font-size:18px;margin:15px 0 7px}.post-desc{white-space:pre-wrap;font-size:14px;line-height:1.65;color:var(--text);margin-bottom:12px}.booklink{display:block;border:1px solid var(--border);background:var(--panel2);border-radius:13px;padding:13px;text-decoration:none;margin:10px 0}.booklink strong{display:block;margin-bottom:5px}.booklink span{display:block;color:var(--muted);font-size:12px;overflow-wrap:anywhere}.post-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}.empty{text-align:center;color:var(--muted);padding:28px 12px}.authwrap{max-width:480px;margin:35px auto;padding:0 14px}.footer{text-align:center;color:var(--muted);font-size:11px;padding:12px 16px 28px}.notice{border-left:3px solid var(--accent);background:var(--panel2);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);line-height:1.6}
+@media(max-width:720px){.layout{grid-template-columns:1fr;padding:12px}.sidebar{position:static;display:grid;grid-template-columns:1fr 1fr;gap:10px}.sidebar .panel{margin-bottom:0}.topbar{padding:10px 12px}.brand small{max-width:160px}.topbar .tools button{padding:8px 9px}.hero{padding:17px}.post{padding:14px}}
+
+.topbar { gap:10px; flex-wrap:nowrap; padding:9px 12px; }
+.brand { min-width:0; flex:1 1 180px; }
+.brand > div:last-child { min-width:0; }
+.brand strong { font-size:18px; letter-spacing:-.25px; }
+.brand small { max-width:260px; line-height:1.4; }
+.tools { flex:0 1 auto; justify-content:flex-end; }
+@media(max-width:520px) {
+  .topbar { align-items:center; padding:8px 10px; gap:8px; }
+  .brand { flex:1 1 auto; gap:8px; }
+  .brand .logo { width:36px; height:36px; border-radius:11px; }
+  .brand strong { font-size:16px; }
+  .brand small { display:none; }
+  .tools { width:auto; display:flex; gap:5px; }
+  .tools > * { min-height:36px; padding:7px 9px; font-size:12px; }
+  .tools a { display:none; }
+  .layout { padding:10px; padding-bottom:90px; }
+  .sidebar { display:none; }
+  .panel { padding:14px; border-radius:16px; }
+  .authwrap { padding:12px; }
+  #authForm .row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  #authForm .row button { min-width:0; padding:11px 8px; }
+}
+.app-bottom-nav{display:none}
+@media(max-width:720px){
+  .app-bottom-nav{position:fixed;z-index:30;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(18px);border-top:1px solid var(--border)}
+  .app-bottom-nav button{display:flex;flex-direction:column;gap:3px;min-height:52px;padding:7px 4px;background:transparent;color:var(--muted);border:1px solid transparent;font-size:11px}
+  .app-bottom-nav button .nav-ico{display:flex;align-items:center;justify-content:center}
+  .app-bottom-nav button.active{background:var(--panel2);color:var(--text);border-color:var(--border)}
+  .authwrap{margin:20px auto}
+}
+.nav-view.hidden{display:none!important}
+.verified-badge{display:inline-flex;vertical-align:middle;width:16px;height:16px;margin-left:4px}
+.verified-badge svg{width:100%;height:100%;display:block}
+.book-title-link{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #eab83c;background:linear-gradient(135deg,#fff4c7,#f5b83d);color:#182238;border-radius:14px;padding:14px 15px;margin:13px 0;text-decoration:none;font-weight:850;box-shadow:0 0 0 1px #f5b83d33,0 0 18px #f5b83d45;transition:transform .15s,box-shadow .15s}
+.book-title-link:active{transform:scale(.985);box-shadow:0 0 24px #f5b83d66}
+.book-title-link .linkhint{display:flex;align-items:center;gap:5px;font-size:11px;white-space:nowrap}
+.post-mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.post-mode-switch button{min-height:44px}
+.svg-icon { width: 16px; height: 16px; fill: currentColor; display: inline-block; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <a href="./index.html" class="brand"><div class="logo"><img src="https://pockethostbd.github.io/drive-one/picture/BookReader-logo.png" alt="BookReader logo"></div><div><strong>BookReader</strong><small data-i18n="tagline">বই শেয়ার করুন · পাঠকদের সঙ্গে যুক্ত থাকুন</small></div></a>
+  <div class="tools">
+    <button class="secondary" id="langBtn">English</button>
+    <button class="secondary" id="themeBtn">
+      <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zM7.05 18.36l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41s-1.02-.39-1.41 0zm12.37-12.37l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0z"/></svg> Light
+    </button>
+    <a class="btn btn-secondary" href="./index.html"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg> <span data-i18n="reader">Reader</span></a>
+  </div>
+</header>
+<div id="authArea" class="authwrap">
+  <section class="panel">
+    <h1 data-i18n="welcome">কমিউনিটিতে যোগ দিন</h1><p class="muted" data-i18n="authDesc">অ্যাকাউন্ট তৈরি করুন, নিজের পরিচিতি সেট করুন এবং বইয়ের লিংক সবার সঙ্গে শেয়ার করুন।</p>
+    <form id="authForm">
+      <label data-i18n="emailLabel" for="email">ইমেইল</label><input id="email" type="email" autocomplete="email" required maxlength="254" placeholder="name@example.com">
+      <label data-i18n="passwordLabel" for="password">পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)</label><input id="password" type="password" autocomplete="current-password" required minlength="6" maxlength="128">
+      <div id="confirmPasswordWrap" class="hidden"><label data-i18n="confirmPasswordLabel" for="confirmPassword">পাসওয়ার্ড নিশ্চিত করুন</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="6" maxlength="128"></div>
+      <div class="row" style="margin-top:14px"><button class="primary" type="submit" id="loginBtn" data-i18n="login">লগইন</button><button class="secondary" type="button" id="signupBtn" data-i18n="signup">অ্যাকাউন্ট তৈরি</button></div>
+    </form><p id="authStatus" class="status" role="status"></p>
+  </section>
+  <p class="muted" style="text-align:center" data-i18n="onlyLinks">এখানে PDF ফাইল আপলোড করা যায় না—শুধু বইয়ের লিংক শেয়ার করা যাবে।</p>
+</div>
+
+<div id="communityArea" class="layout hidden">
+  <aside class="sidebar">
+    <section class="panel">
+      <div class="profileline">
+        <div class="avatar" id="sideAvatar">
+          <svg class="svg-icon" style="width:24px;height:24px;" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
+        <div style="min-width:0"><strong id="sideName">Reader</strong><div class="muted" id="sideEmail" style="overflow-wrap:anywhere"></div></div>
+      </div>
+      <button class="navitem active" type="button">
+        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> <span data-i18n="homeNav">Community Feed</span>
+      </button>
+      <button class="navitem" type="button" id="profileEditBtn">
+        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> <span data-i18n="editProfile">প্রোফাইল সম্পাদনা</span>
+      </button>
+      <button class="navitem" type="button" id="logoutBtn">
+        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg> <span data-i18n="logout">লগআউট</span>
+      </button>
+    </section>
+    <section class="panel">
+      <h3><svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 9V4l1 1 1-1V3c0-.55-.45-1-1-1H7c-.55 0-1 .45-1 1v1L7 4l1-1v5c0 1.66 1.34 3 3 3v8l1 1 1-1v-8c1.66 0 3-1.34 3-3z"/></svg> <span data-i18n="communityRules">কমিউনিটি</span></h3>
+      <p class="muted" data-i18n="rulesDesc">শুধু টেক্সট ও বইয়ের লিংক। কপিরাইট ও নিরাপদ শেয়ারিংয়ের নিয়ম মেনে চলুন।</p>
+      <span class="pill"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4z"/></svg> <span data-i18n="adminOnly">Admin moderation</span></span>
+    </section>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <span class="pill"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> <span data-i18n="publicCommunity">Public Community</span></span>
+      <h1 style="margin-top:12px" data-i18n="heroTitle">আপনার পড়া বই সবার সঙ্গে ভাগ করুন</h1>
+      <p data-i18n="heroDesc">ভালো বইয়ের লিংক দিন, বিবরণ লিখুন, অন্য পাঠকদের নতুন বই খুঁজে পেতে সাহায্য করুন।</p>
+    </section>
+
+    <!-- Profile Panel Modal / Editor -->
+    <section class="panel hidden" id="profilePanel">
+      <h2 data-i18n="profileHeading">আপনার প্রোফাইল</h2>
+      <form id="profileForm">
+        <label data-i18n="displayName" for="displayName">নাম</label>
+        <input id="displayName" maxlength="60" required placeholder="আপনার নাম">
+        <label data-i18n="bioLabel" for="profileBio">নিজের পরিচিতি</label>
+        <textarea id="profileBio" maxlength="300" placeholder="নিজের সম্পর্কে লিখুন…"></textarea>
+        <input type="hidden" id="profileEmoji" value="📚">
+        <div class="row" style="margin-top:12px;">
+          <button class="primary" type="submit" data-i18n="saveProfile">প্রোফাইল সংরক্ষণ</button>
+          <button class="secondary" type="button" id="hideProfileBtn" data-i18n="cancel">বাতিল</button>
+        </div>
+      </form>
+      <p id="profileStatus" class="status"></p>
+    </section>
+
+    <section class="panel" id="composer">
+      <h2><svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> <span data-i18n="createPost">নতুন পোস্ট</span></h2>
+      <div class="post-mode-switch">
+        <button class="primary" type="button" id="textPostMode"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> <span data-i18n="textPostMode">Post</span></button>
+        <button class="secondary" type="button" id="bookPostMode"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg> <span data-i18n="bookPostMode">Book post</span></button>
+      </div>
+      <form id="postForm">
+        <label data-i18n="postTextLabel" for="postText">আপনার পোস্ট / মতামত</label><textarea id="postText" maxlength="5000" placeholder="বইটি কেন ভালো লেগেছে, লিখুন…"></textarea>
+        <div id="bookFields" class="hidden">
+          <label data-i18n="bookName" for="bookName">Book title</label><input id="bookName" maxlength="160" placeholder="Book title">
+          <label data-i18n="bookDesc" for="bookDesc">Book description (private to post card)</label><textarea id="bookDesc" maxlength="3000" placeholder="About the book…"></textarea>
+          <label data-i18n="bookUrl" for="bookUrl">Book link</label><input id="bookUrl" type="url" maxlength="2048" placeholder="https://..." >
+        </div>
+        <p class="muted" data-i18n="linkNote">শুধু http/https লিংক গ্রহণ করা হবে। কোনো ফাইল আপলোড হয় না।</p>
+        <div class="row">
+          <button class="primary" type="submit" id="publishBtn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> <span data-i18n="publish">পোস্ট প্রকাশ করুন</span></button>
+          <button class="secondary hidden" id="cancelEditBtn" type="button" data-i18n="cancelEdit">এডিট বাতিল</button>
+        </div>
+      </form><p id="postStatus" class="status"></p>
+    </section>
+    <div class="feed-head">
+      <div><h2 style="margin:0"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg> <span data-i18n="feedTitle">কমিউনিটির পোস্ট</span></h2><div class="muted" data-i18n="feedDesc">সব পাঠকের প্রকাশিত পোস্ট</div></div>
+      <button class="secondary" id="refreshBtn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg> <span data-i18n="refresh">রিফ্রেশ</span></button>
+    </div>
+    <div id="feedStatus" class="status"></div><div id="feed"><div class="empty" data-i18n="loading">কমিউনিটি পোস্ট লোড হচ্ছে…</div></div>
+  </main>
+</div>
+
+<nav class="app-bottom-nav" id="appBottomNav" aria-label="Main navigation">
+  <button type="button" class="active" data-view="feedView">
+    <span class="nav-ico"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></span>
+    <span data-i18n="feedNav">Feed</span>
+  </button>
+  <button type="button" data-view="profileView">
+    <span class="nav-ico"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span>
+    <span data-i18n="profileNav">Profile</span>
+  </button>
+  <button type="button" data-view="settingsView">
+    <span class="nav-ico"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></span>
+    <span data-i18n="settingsNav">Settings</span>
+  </button>
+</nav>
+</div>
+
+<script type="module">
+const ADMIN_EMAIL="mdomorfaruk2r@gmail.com";
+const cfg={apiKey:"AIzaSyACHNQ9fdhHQLoUZhRAi-g-hJo8w0NVgUo",authDomain:"ebookreader-bd.firebaseapp.com",projectId:"ebookreader-bd",storageBucket:"ebookreader-bd.firebasestorage.app",messagingSenderId:"1064087470895",appId:"1:1064087470895:web:ce6dc4d90bd0653bdc17da",measurementId:"G-4WQT36M9SM"};
+const $=id=>document.getElementById(id);
+const words={
+bn:{tagline:"বই ভাগাভাগির পাঠক কমিউনিটি",reader:"Reader",welcome:"কমিউনিটিতে যোগ দিন",authDesc:"অ্যাকাউন্ট তৈরি করুন, নিজের পরিচিতি সেট করুন এবং বইয়ের লিংক সবার সঙ্গে শেয়ার করুন।",emailLabel:"ইমেইল",passwordLabel:"পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)",confirmPasswordLabel:"পাসওয়ার্ড নিশ্চিত করুন",passwordMismatch:"দুটি পাসওয়ার্ড একই নয়।",login:"লগইন",signup:"অ্যাকাউন্ট তৈরি",createAccountNow:"তথ্য দিয়ে অ্যাকাউন্ট তৈরি করুন",switchToLogin:"লগইনে ফিরে যান",onlyLinks:"এখানে PDF ফাইল আপলোড করা যায় না—শুধু বইয়ের লিংক শেয়ার করা যাবে।",homeNav:"কমিউনিটি ফিড",editProfile:"প্রোফাইল সম্পাদনা",logout:"লগআউট",communityRules:"কমিউনিটি",rulesDesc:"শুধু টেক্সট ও বইয়ের লিংক। কপিরাইট ও নিরাপদ শেয়ারিংয়ের নিয়ম মেনে চলুন।",adminOnly:"অ্যাডমিন মডারেশন",publicCommunity:"সবার জন্য উন্মুক্ত",heroTitle:"আপনার পড়া বই সবার সঙ্গে ভাগ করুন",heroDesc:"ভালো বইয়ের লিংক দিন, বিবরণ লিখুন, অন্য পাঠকদের নতুন বই খুঁজে পেতে সাহায্য করুন।",feedNav:"ফিড",profileNav:"প্রোফাইল",settingsNav:"সেটিং",myProfileTitle:"আমার প্রোফাইল",profileEditHint:"নাম, ইমোজি ও পরিচিতি পরিবর্তন করুন।",settingsTitle:"সেটিংস",languageSetting:"ভাষা",themeSetting:"থিম",settingsNote:"সেটিংস এই ডিভাইসে সংরক্ষিত হয়।",textPostMode:"সাধারণ পোস্ট",bookPostMode:"বই পোস্ট",profileHeading:"আপনার প্রোফাইল",displayName:"নাম",avatarLabel:"প্রোফাইল ইমোজি",bioLabel:"নিজের পরিচিতি",saveProfile:"প্রোফাইল সংরক্ষণ",cancel:"বাতিল",createPost:"নতুন পোস্ট",postTextLabel:"আপনার পোস্ট / মতামত",bookName:"বইয়ের নাম (লিংক দিলে আবশ্যক)",bookDesc:"বই সম্পর্কে বিবরণ",bookUrl:"PDF / Google Drive / অন্য বইয়ের লিংক",linkNote:"শুধু http/https লিংক গ্রহণ করা হবে। কোনো ফাইল আপলোড হয় না।",publish:"পোস্ট প্রকাশ করুন",cancelEdit:"এডিট বাতিল",feedTitle:"কমিউনিটির পোস্ট",feedDesc:"সব পাঠকের প্রকাশিত পোস্ট",refresh:"রিফ্রেশ",loading:"কমিউনিটি পোস্ট লোড হচ্ছে…",adminEmail:"অ্যাডমিন: mdomorfaruk2r@gmail.com",noPosts:"এখনো কোনো পোস্ট নেই। প্রথম পোস্টটি আপনিই করুন!",offline:"কমিউনিটি ব্যবহার করতে ইন্টারনেট সংযুক্ত করুন। আপনার অফলাইন লাইব্রেরি এতে বন্ধ হবে না।",retry:"আবার চেষ্টা করুন",profileSaved:"প্রোফাইল সংরক্ষিত হয়েছে।",postSaved:"পোস্ট প্রকাশিত হয়েছে।",postUpdated:"পোস্ট আপডেট হয়েছে।",edit:"এডিট",delete:"ডিলিট",openLink:"বইয়ের লিংক খুলুন",confirmDelete:"এই পোস্টটি মুছে ফেলতে চান?",network:"ইন্টারনেট সংযোগ বা Firebase সেটআপ পরীক্ষা করুন।",requiredBook:"বইয়ের লিংক দিলে বইয়ের নামও লিখুন।",badUrl:"বৈধ http/https লিংক দিন।",account:"অ্যাকাউন্ট",anonymous:"পাঠক",profileMissing:"আপনার নাম লিখুন।",editTitle:"পোস্ট সম্পাদনা",profile:"প্রোফাইল",created:"প্রকাশিত",editSuccess:"পরিবর্তন সংরক্ষিত হয়েছে。"},
+en:{tagline:"A reader community to share books",reader:"Reader",welcome:"Join the community",authDesc:"Create an account, set up your profile, and share book links with readers.",emailLabel:"Email",passwordLabel:"Password (at least 6 characters)",confirmPasswordLabel:"Confirm password",passwordMismatch:"Passwords do not match.",login:"Log in",signup:"Create account",createAccountNow:"Create account now",switchToLogin:"Back to login",onlyLinks:"PDF files cannot be uploaded here—share links to books only.",homeNav:"Community Feed",editProfile:"Edit profile",logout:"Log out",communityRules:"Community",rulesDesc:"Text and book links only. Respect copyright and share safely.",adminOnly:"Admin moderation",publicCommunity:"Public Community",heroTitle:"Share the books you love",heroDesc:"Post book links and descriptions to help other readers discover something new.",feedNav:"Feed",profileNav:"Profile",settingsNav:"Settings",myProfileTitle:"My profile",profileEditHint:"Edit your name, emoji and bio below.",settingsTitle:"Settings",languageSetting:"Language",themeSetting:"Appearance",settingsNote:"Settings are saved on this device.",textPostMode:"Post",bookPostMode:"Book post",profileHeading:"Your profile",displayName:"Display name",avatarLabel:"Profile emoji",bioLabel:"About you",saveProfile:"Save profile",cancel:"Cancel",createPost:"Create a post",postTextLabel:"Your post / thoughts",bookName:"Book title (required when sharing a link)",bookDesc:"About this book",bookUrl:"PDF / Google Drive / other book link",linkNote:"Only http/https links are accepted. No file uploads.",publish:"Publish post",cancelEdit:"Cancel edit",feedTitle:"Community posts",feedDesc:"Posts shared by readers",refresh:"Refresh",loading:"Loading community posts…",adminEmail:"Admin: mdomorfaruk2r@gmail.com",noPosts:"No posts yet. Be the first to share!",offline:"Connect to the internet to use Community. Your offline library will remain available.",retry:"Try again",profileSaved:"Profile saved.",postSaved:"Post published.",postUpdated:"Post updated.",edit:"Edit",delete:"Delete",openLink:"Open book link",confirmDelete:"Delete this post?",network:"Check your internet connection or Firebase setup.",requiredBook:"Enter the book title when adding a link.",badUrl:"Enter a valid http/https URL.",account:"Account",anonymous:"Reader",profileMissing:"Enter your name.",editTitle:"Edit post",profile:"Profile",created:"Published",editSuccess:"Changes saved."}
+};
+let lang=localStorage.getItem("brCommunityLang")||"bn";
+let theme=localStorage.getItem("brCommunityTheme")||"dark";
+let user=null,dbFns=null,authFns=null,auth=null,app=null,db=null,editing=null,profiles={};
+function tr(k){return (words[lang]||words.bn)[k]||k}
+function applyLang(){document.documentElement.lang=lang;document.querySelectorAll("[data-i18n]").forEach(el=>{const key=el.dataset.i18n;if(words[lang][key])el.textContent=words[lang][key]});$("langBtn").textContent=lang==="bn"?"English":"বাংলা"}
+function applyTheme(){document.body.classList.toggle("light",theme==="light");document.querySelector('meta[name="theme-color"]').content=theme==="dark"?"#111827":"#f2f5fa"}
+$("langBtn").addEventListener("click",()=>{lang=lang==="bn"?"en":"bn";localStorage.setItem("brCommunityLang",lang);applyLang();if(user)loadFeed()});
+$("themeBtn").addEventListener("click",()=>{theme=theme==="dark"?"light":"dark";localStorage.setItem("brCommunityTheme",theme);applyTheme()});
+applyLang();applyTheme();
+
+function status(id,msg,type=""){const el=$(id);if(!el)return;el.textContent=msg;el.className="status "+type}
+function safeUrl(raw){try{const u=new URL(raw);return ["https:","http:"].includes(u.protocol)&&!!u.hostname?u.href:""}catch{return ""}}
+
+let authMode="login";
+function setAuthMode(mode){
+  authMode=mode;
+  $("confirmPasswordWrap").classList.toggle("hidden",mode!=="signup");
+  $("confirmPassword").required=mode==="signup";
+  $("password").autocomplete=mode==="signup"?"new-password":"current-password";
+  $("loginBtn").classList.toggle("primary",mode==="login");
+  $("loginBtn").classList.toggle("secondary",mode!=="login");
+  $("signupBtn").classList.toggle("primary",mode==="signup");
+  $("signupBtn").classList.toggle("secondary",mode!=="signup");
+  $("signupBtn").textContent=mode==="signup"?tr("createAccountNow"):tr("signup");
+  $("loginBtn").textContent=mode==="signup"?tr("switchToLogin"):tr("login");
+  status("authStatus","");
+}
+$("loginBtn").addEventListener("click",()=>{if(authMode!=="login"){setAuthMode("login")}});
+$("signupBtn").addEventListener("click",async()=>{
+  if(authMode!=="signup"){setAuthMode("signup");return;}
+  if(!$("authForm").reportValidity())return;
+  if($("password").value!==$("confirmPassword").value){status("authStatus",tr("passwordMismatch"),"error");return;}
+  if(!authFns||!auth){status("authStatus",tr("network"),"error");return;}
+  $("signupBtn").disabled=true;status("authStatus","…");
+  try{await authFns.createUserWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);status("authStatus",tr("account")+" created","ok")}
+  catch(err){
+    const messages={
+      "auth/email-already-in-use":"এই ইমেইল দিয়ে আগে থেকেই অ্যাকাউন্ট আছে। লগইন করুন।",
+      "auth/operation-not-allowed":"Firebase Console-এ Email/Password sign-in চালু করুন।",
+      "auth/weak-password":"আরও শক্তিশালী পাসওয়ার্ড দিন (কমপক্ষে ৬ অক্ষর)।",
+      "auth/invalid-email":"সঠিক ইমেইল ঠিকানা লিখুন।",
+      "auth/unauthorized-domain":"Firebase Authorized Domains-এ ডোমেইন সেট করুন।",
+      "auth/network-request-failed":"ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।"
+    };
+    status("authStatus",messages[err.code]||((err.code?err.code+": ":"")+err.message),"error")
+  }
+  finally{$("signupBtn").disabled=false}
+});
+$("authForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(authMode!=="login")return;
+  if(!authFns||!auth){status("authStatus",tr("network"),"error");return;}
+  $("loginBtn").disabled=true;status("authStatus","…");
+  try{await authFns.signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value)}
+  catch(err){
+    const messages={
+      "auth/invalid-credential":"ইমেইল বা পাসওয়ার্ড ভুল।",
+      "auth/unauthorized-domain":"Firebase Authorized domains-এ আপনার ডোমেইন অ্যাড করুন।",
+      "auth/operation-not-allowed":"Firebase Console-এ Email/Password sign-in চালু করুন।",
+      "auth/network-request-failed":"ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।"
+    };
+    status("authStatus",messages[err.code]||((err.code?err.code+": ":"")+err.message),"error")
+  }
+  finally{$("loginBtn").disabled=false}
+});
+setAuthMode("login");
+$("logoutBtn").addEventListener("click",()=>authFns&&authFns.signOut(auth));
+$("refreshBtn").addEventListener("click",loadFeed);
+
+$("profileEditBtn").addEventListener("click",()=>{$("profilePanel").classList.remove("hidden");$("profilePanel").scrollIntoView({behavior:"smooth"})});
+$("hideProfileBtn").addEventListener("click",()=>$("profilePanel").classList.add("hidden"));
+
+$("profileForm").addEventListener("submit",async e=>{
+  e.preventDefault();if(!user)return;
+  const name=$("displayName").value.trim(),bio=$("profileBio").value.trim();
+  if(!name)return status("profileStatus",tr("profileMissing"),"error");
+  try{
+    await dbFns.setDoc(dbFns.doc(db,"communityProfiles",user.uid),{displayName:name,bio,email:user.email||"",uid:user.uid,updatedAt:dbFns.serverTimestamp()},{merge:true});
+    profiles[user.uid]={...(profiles[user.uid]||{}),displayName:name,bio,email:user.email||""};
+    updateProfileUI();status("profileStatus",tr("profileSaved"),"ok");
+    $("profilePanel").classList.add("hidden");
+    await loadFeed();
+  }catch(err){status("profileStatus",err.message,"error")}
+});
+
+$("cancelEditBtn").addEventListener("click",()=>resetPostForm());
+$("postForm").addEventListener("submit",async e=>{
+  e.preventDefault();if(!user)return;
+  let text=$("postText").value.trim(),title=$("bookName").value.trim(),description=$("bookDesc").value.trim(),urlRaw=$("bookUrl").value.trim(),url=urlRaw?safeUrl(urlRaw):"";
+  if(postMode==="text"){title="";description="";url="";urlRaw="";if(!text)return status("postStatus",lang==="bn"?"পোস্টের লেখা লিখুন।":"Write some post text.", "error")}
+  else{if(urlRaw&&!url)return status("postStatus",tr("badUrl"),"error");if(!title||!url)return status("postStatus",lang==="bn"?"বইয়ের নাম ও বৈধ লিংক দিন।":"Enter a book title and valid link.","error");text=text||"";}
+  $("publishBtn").disabled=true;
+  try{
+    const payload={text,title,description,url,ownerUid:user.uid,ownerEmail:user.email||"",updatedAt:dbFns.serverTimestamp()};
+    if(editing){await dbFns.updateDoc(dbFns.doc(db,"communityPosts",editing),{text,title,description,url,updatedAt:dbFns.serverTimestamp()});status("postStatus",tr("postUpdated"),"ok")}
+    else{payload.createdAt=dbFns.serverTimestamp();await dbFns.addDoc(dbFns.collection(db,"communityPosts"),payload);status("postStatus",tr("postSaved"),"ok")}
+    resetPostForm();await loadFeed()
+  }catch(err){status("postStatus",err.message,"error")}finally{$("publishBtn").disabled=false}
+});
+
+function resetPostForm(){editing=null;$("postForm").reset();if(typeof setPostMode==="function")setPostMode("text");$("cancelEditBtn").classList.add("hidden")}
+function updateProfileUI(){
+  const p=profiles[user.uid]||{};
+  const name=p.displayName||user.email?.split("@")[0]||tr("anonymous");
+  $("sideName").textContent=name;
+  $("sideEmail").textContent=user.email||"";
+  $("displayName").value=p.displayName||"";
+  $("profileBio").value=p.bio||"";
+}
+
+async function loadFeed(){
+  if(!user||!dbFns)return;
+  const feed=$("feed");
+  feed.replaceChildren(Object.assign(document.createElement("div"),{className:"empty",textContent:tr("loading")}));
+  try{
+    const snap=await dbFns.getDocs(dbFns.query(dbFns.collection(db,"communityPosts"),dbFns.orderBy("createdAt","desc")));
+    profiles={};
+    const profileSnap=await dbFns.getDocs(dbFns.collection(db,"communityProfiles"));
+    profileSnap.forEach(d=>profiles[d.id]=d.data());
+    feed.replaceChildren();
+    if(snap.empty){feed.append(Object.assign(document.createElement("div"),{className:"empty",textContent:tr("noPosts")}));return}
+    snap.forEach(d=>feed.append(renderPost(d.id,d.data())));
+    status("feedStatus",snap.size+" posts","ok");
+  }catch(err){
+    feed.replaceChildren(Object.assign(document.createElement("div"),{className:"empty",textContent:tr("network")}));
+    status("feedStatus",(err.code?err.code+": ":"")+err.message,"error")
+  }
+}
+
+function renderPost(id,p){
+  const card=document.createElement("article");card.className="post";
+  const profile=profiles[p.ownerUid]||{};
+  const name=profile.displayName||p.ownerEmail||tr("anonymous");
+  const top=document.createElement("div");top.className="posttop";
+  const av=document.createElement("div");av.className="avatar";
+  av.innerHTML='<svg class="svg-icon" style="width:24px;height:24px" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  
+  const who=document.createElement("div");who.className="postwho";
+  const strong=document.createElement("strong");strong.textContent=name;
+
+  if((p.ownerEmail||"").toLowerCase()===ADMIN_EMAIL || (profile.email||"").toLowerCase()===ADMIN_EMAIL){
+    const badge=document.createElement("span");badge.className="verified-badge";badge.setAttribute("aria-label","Verified admin");
+    badge.innerHTML='<svg viewBox="0 0 24 24" role="img" aria-label="Verified"><path fill="#2589ff" d="M12 1.8 14.8 4l3.6-.1 1.2 3.4 3 2-1.2 3.4.5 3.5-3.2 1.7-1.6 3.2-3.5-.6-3.2 1.6-2.5-2.6-3.5-.5-.5-3.5-2.5-2.5 1.6-3.2-.6-3.5 3.2-1.6 1.7-3.2 3.5.5z"/><path d="m7.1 12.2 3.1 3.1 6.8-6.8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    strong.append(badge);
+  }
+  const small=document.createElement("small");small.textContent=(p.ownerEmail||"")+" · "+tr("created");
+  who.append(strong,small);top.append(av,who);card.append(top);
+
+  if(p.text){const text=document.createElement("p");text.className="post-desc";text.style.marginTop="13px";text.textContent=p.text;card.append(text)}
+  if(p.title && p.url){
+    const titleLink=document.createElement("a");titleLink.className="book-title-link";titleLink.href=p.url;titleLink.target="_blank";titleLink.rel="noopener noreferrer";
+    const title=document.createElement("strong");title.innerHTML='<svg class="svg-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg> '+p.title;
+    const hint=document.createElement("span");hint.className="linkhint";hint.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg><span>'+tr("openLink")+'</span>';
+    titleLink.append(title,hint);card.append(titleLink);
+  }
+  if(user&&(user.uid===p.ownerUid||(user.email||"").toLowerCase()===ADMIN_EMAIL)){
+    const actions=document.createElement("div");actions.className="post-actions";
+    const edit=document.createElement("button");edit.className="secondary tiny";
+    edit.innerHTML='<svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> '+tr("edit");
+    edit.onclick=()=>{$("postText").value=p.text||"";$("bookName").value=p.title||"";$("bookDesc").value=p.description||"";$("bookUrl").value=p.url||"";editing=id;setPostMode(p.url?"book":"text");$("publishBtn").textContent=tr("editSuccess");$("cancelEditBtn").classList.remove("hidden");$("composer").scrollIntoView({behavior:"smooth"})};
+    
+    const del=document.createElement("button");del.className="danger tiny";
+    del.innerHTML='<svg class="svg-icon" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg> '+tr("delete");
+    del.onclick=async()=>{if(!confirm(tr("confirmDelete")))return;try{await dbFns.deleteDoc(dbFns.doc(db,"communityPosts",id));loadFeed()}catch(err){status("feedStatus",err.message,"error")}};
+    actions.append(edit,del);card.append(actions)
+  }
+  return card;
+}
+
+async function start(){
+  if(!navigator.onLine){$("feed").replaceChildren(Object.assign(document.createElement("div"),{className:"empty",textContent:tr("offline")}));return}
+  try{
+    const [appFns,aFns,fFns]=await Promise.all([import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"),import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"),import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js")]);
+    app=appFns.initializeApp(cfg);authFns=aFns;dbFns=fFns;auth=aFns.getAuth(app);db=fFns.getFirestore(app);
+    aFns.onAuthStateChanged(auth,async u=>{
+      user=u;
+      $("authArea").classList.toggle("hidden",!!u);
+      $("communityArea").classList.toggle("hidden",!u);
+      if(u){
+        const ref=fFns.doc(db,"communityProfiles",u.uid);
+        try{
+          const d=await fFns.getDoc(ref);
+          profiles[u.uid]=d.exists()?d.data():{};
+          if(!profiles[u.uid].displayName){
+            profiles[u.uid]={displayName:u.email?.split("@")[0]||"Reader",bio:"",email:u.email||""};
+            $("profilePanel").classList.remove("hidden");
+          }
+          updateProfileUI();
+        }catch{}
+        await loadFeed();
+      }else{resetPostForm();}
+    });
+  }catch(e){status("authStatus",e?.message||tr("network"),"error");}
+}
+
+let postMode="text";
+function setPostMode(mode){
+  postMode=mode;
+  $("bookFields").classList.toggle("hidden",mode!=="book");
+  $("textPostMode").classList.toggle("primary",mode==="text");$("textPostMode").classList.toggle("secondary",mode!=="text");
+  $("bookPostMode").classList.toggle("primary",mode==="book");$("bookPostMode").classList.toggle("secondary",mode!=="book");
+  $("bookName").required=mode==="book";$("bookUrl").required=mode==="book";
+  $("postText").placeholder=mode==="book"?(lang==="bn"?"বই সম্পর্কে আপনার মতামত লিখুন…":"Write your thoughts about this book…"):(lang==="bn"?"আপনার পোস্ট লিখুন…":"Write your post…");
+}
+$("textPostMode").addEventListener("click",()=>setPostMode("text"));
+$("bookPostMode").addEventListener("click",()=>setPostMode("book"));
+setPostMode("text");
+
+window.addEventListener("online",()=>{if(!authFns)location.reload()});
+start();
+</script>
+</body>
+</html>
