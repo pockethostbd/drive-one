@@ -1,0 +1,1322 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>BookReader Community</title>
+<style>
+:root {
+  --bg: #090d16;
+  --glass-bg: rgba(22, 32, 50, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --panel: rgba(15, 23, 42, 0.85);
+  --panel2: rgba(255, 255, 255, 0.05);
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --accent: #f59e0b;
+  --accent-glow: rgba(245, 158, 11, 0.3);
+  --danger: #ef4444;
+  --success: #10b981;
+  --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  --blur: blur(16px);
+}
+
+body.light {
+  --bg: #f1f5f9;
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --panel: rgba(255, 255, 255, 0.95);
+  --panel2: rgba(0, 0, 0, 0.04);
+  --text: #0f172a;
+  --muted: #64748b;
+  --accent: #d97706;
+  --accent-glow: rgba(217, 119, 6, 0.2);
+  --shadow: 0 8px 24px 0 rgba(31, 38, 135, 0.08);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Noto Sans Bengali", sans-serif;
+  min-height: 100vh;
+  padding-bottom: 80px;
+  background-image: radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
+                    radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+}
+
+.app {
+  max-width: 680px;
+  margin: auto;
+  width: 100%;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px solid var(--glass-border);
+  border-radius: 0 0 16px 16px;
+  width: 100%;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.logo {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--accent), #f97316);
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brand strong {
+  font-size: 14px;
+  white-space: nowrap;
+  letter-spacing: -0.3px;
+}
+
+.brand small {
+  color: var(--muted);
+  font-size: 9.5px;
+  white-space: nowrap;
+}
+
+.tools {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+button, .btn {
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 6px 9px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text);
+  background: var(--panel2);
+  white-space: nowrap;
+}
+
+button:active { transform: scale(0.96); }
+
+.primary {
+  background: linear-gradient(135deg, var(--accent), #f97316);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+.danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.success-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.layout {
+  padding: 10px;
+  width: 100%;
+}
+
+.panel {
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.svg-icon {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Feed Creator Triggers */
+.feed-composer-trigger {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.trigger-btn {
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Search bar */
+.search-box {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.search-box input {
+  padding-left: 36px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+}
+
+input, textarea, select {
+  width: 100%;
+  border: 1px solid var(--glass-border);
+  background: var(--panel2);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+label { color: var(--muted); font-size: 11px; font-weight: 600; display: block; margin-top: 8px; margin-bottom: 4px; }
+textarea { min-height: 75px; resize: vertical; }
+
+.post {
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.posttop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.postwho { flex: 1; min-width: 0; }
+.postwho strong { display: flex; align-items: center; gap: 4px; font-size: 13.5px; }
+.postwho small { color: var(--muted); font-size: 10px; }
+
+.verified-badge { width: 14px; height: 14px; fill: #3b82f6; display: inline-block; flex-shrink: 0; }
+
+.post-desc { margin: 10px 0 8px; font-size: 13.5px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+
+.book-card {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(249, 115, 22, 0.08));
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 8px 0;
+}
+
+.book-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.book-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+  margin-top: 6px;
+  font-size: 11.5px;
+}
+
+.post-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--glass-border);
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  padding: 4px 6px;
+  color: var(--muted);
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-btn.active { color: var(--accent); }
+
+/* Comments Section */
+.comments-container {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--glass-border);
+  display: none;
+}
+
+.comments-container.show { display: block; }
+
+.comment-item {
+  background: var(--panel2);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.comment-item strong { display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: var(--accent); }
+.comment-item p { margin: 2px 0 0; color: var(--text); }
+
+.comment-input-group {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.comment-input-group input {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.app-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  border-radius: 16px 16px 0 0;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.app-bottom-nav button {
+  flex-direction: column;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  gap: 2px;
+  border-radius: 10px;
+  padding: 6px;
+}
+
+.app-bottom-nav button.active {
+  color: var(--accent);
+  background: var(--panel2);
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  overflow-y: auto;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg);
+  border-radius: 18px;
+}
+
+.user-admin-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  background: var(--panel2);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.hidden { display: none !important; }
+
+/* Interaction reliability: keep the main app controls clickable on touch devices. */
+button, [role="button"], .nav-item, .bottom-nav button {
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+.modal-overlay.hidden { display: none !important; pointer-events: none !important; }
+.modal-overlay:not(.hidden) { pointer-events: auto; }
+\n</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="topbar glass">
+    <a href="#" class="brand">
+      <div class="logo">
+        <svg class="svg-icon" style="width:18px;height:18px;" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+      </div>
+      <div class="brand-text">
+        <strong>BookReader</strong>
+        <small data-i18n="tagline">পাঠকদের প্রিয় কম্যুনিটি</small>
+      </div>
+    </a>
+    <div class="tools">
+      <button id="langBtn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2.1l1.1-3h4.6l1.1 3H23L18.5 10zm-2.62 7l1.62-4.41L19.12 17h-3.24z"/></svg><span id="langText">EN</span></button>
+      <button id="themeBtn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg></button>
+      <button id="authTriggerBtn" class="primary"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12H12v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg><span id="authBtnText" data-i18n="login">লগইন</span></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- FEED VIEW -->
+    <div id="feedView">
+      <div class="feed-composer-trigger">
+        <button class="trigger-btn primary" id="openTextPostBtn">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          <span data-i18n="textPost">Post</span>
+        </button>
+        <button class="trigger-btn glass" id="openBookPostBtn">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+          <span data-i18n="shareBook">Share Book</span>
+        </button>
+      </div>
+
+      <div class="search-box">
+        <svg class="svg-icon search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="searchInput" placeholder="খুঁজুন / Search...">
+      </div>
+
+      <div id="feedList"></div>
+    </div>
+
+    <!-- PROFILE VIEW -->
+    <div id="profileView" class="hidden">
+      <section class="panel glass">
+        <h3 style="margin-top:0;" data-i18n="profileTitle">প্রোফাইল ম্যানেজমেন্ট</h3>
+        <div style="display:flex; align-items:center; gap:12px; margin: 15px 0;">
+          <div class="avatar" id="profileAvatar">U</div>
+          <div>
+            <strong id="profName" style="display:flex; align-items:center; gap:4px;">ইউজার নেম</strong>
+            <div style="color:var(--muted); font-size:11px;" id="profEmail">user@example.com</div>
+          </div>
+        </div>
+        <form id="profileForm">
+          <label data-i18n="nameLabel">ডিসপ্লে নেম</label>
+          <input id="displayName" required>
+          <label data-i18n="bioLabel">বায়ো (Bio)</label>
+          <textarea id="profileBio" placeholder="নিজের সম্পর্কে লিখুন..."></textarea>
+          <button type="submit" class="primary" style="width:100%; margin-top:12px;" data-i18n="save">সংরক্ষণ করুন</button>
+        </form>
+      </section>
+
+      <section class="panel glass">
+        <h3 style="margin-top:0;" data-i18n="savedBooks">সেভ করা বইসমূহ</h3>
+        <div id="savedList" style="margin-top:10px; font-size:13px; color:var(--muted);">কোনো বই সেভ করা নেই।</div>
+      </section>
+    </div>
+
+    <!-- SETTINGS VIEW -->
+    <div id="settingsView" class="hidden">
+      <section class="panel glass">
+        <h3 style="margin-top:0;" data-i18n="settingsTitle">সেটিংস</h3>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-top:15px;">
+          <div id="adminSettingBox" class="hidden">
+            <button id="adminPanelSettingBtn" class="btn primary" style="width:100%; justify-content:center; background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; font-size:13px; padding:10px;">🛡️ অ্যাডমিন কন্ট্রোল প্যানেল</button>
+            <hr style="border:none; border-top:1px solid var(--glass-border); margin-top:12px;">
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span data-i18n="notifLabel">নোটিফিকেশন</span>
+            <input type="checkbox" checked style="width:auto;">
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span data-i18n="autoSaveLabel">অটো সেভ বুকমার্ক</span>
+            <input type="checkbox" checked style="width:auto;">
+          </div>
+          
+          <hr style="border:none; border-top:1px solid var(--glass-border);">
+          
+          <div>
+            <h4 style="margin:5px 0;" data-i18n="changePass">পাসওয়ার্ড পরিবর্তন</h4>
+            <input type="password" id="oldPass" placeholder="বর্তমান পাসওয়ার্ড" style="margin-bottom:6px;">
+            <input type="password" id="newPass" placeholder="নতুন পাসওয়ার্ড">
+            <button type="button" id="updatePassBtn" class="btn" style="margin-top:8px; width:100%;" data-i18n="updatePass">পাসওয়ার্ড আপডেট করুন</button>
+          </div>
+
+          <button id="logoutBtn" class="danger" style="width:100%; justify-content:center; margin-top:10px;" data-i18n="logout">লগআউট</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ADMIN PANEL VIEW -->
+    <div id="adminView" class="hidden">
+      <section class="panel glass">
+        <h3 style="color:var(--accent); margin-top:0;">🛡️ অ্যাডমিন কন্ট্রোল প্যানেল</h3>
+        <p style="font-size:12px; color:var(--muted);">এখান থেকে সম্পূর্ণ ইউজার ও পোস্ট ম্যানেজ করতে পারবেন।</p>
+        <div id="adminUserList" style="margin-top:12px;"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="app-bottom-nav glass">
+    <button class="active" id="navFeed">
+      <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+      <span data-i18n="feed">ফিড</span>
+    </button>
+    <button id="navProfile">
+      <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span data-i18n="profile">প্রোফাইল</span>
+    </button>
+    <button id="navSettings">
+      <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6 3.6z"/></svg>
+      <span data-i18n="settings">সেটিং</span>
+    </button>
+  </nav>
+</div>
+
+<!-- Create Post Modal -->
+<div id="postModal" class="modal-overlay hidden">
+  <div class="modal-card panel glass">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 id="postModalTitle" style="margin:0;">নতুন পোস্ট</h3>
+      <button id="closePostModal" style="padding:4px 8px;">✕</button>
+    </div>
+    <form id="postForm">
+      <textarea id="postText" placeholder="আজকে আপনার চিন্তাভাবনা লিখুন..."></textarea>
+      
+      <div id="bookFields" class="hidden">
+        <label data-i18n="bookName">বইয়ের নাম</label>
+        <input type="text" id="bookTitleInput" placeholder="বইয়ের নাম...">
+        
+        <label data-i18n="bookDesc">সংক্ষিপ্ত বিবরণ</label>
+        <textarea id="bookDescInput" style="min-height:50px;" placeholder="বইটি সম্পর্কে কিছু বলুন..."></textarea>
+        
+        <label data-i18n="bookLink">ডাউনলোড/পড়ার লিঙ্ক</label>
+        <input type="url" id="bookUrlInput" placeholder="https://...">
+      </div>
+
+      <button type="submit" class="primary" style="width:100%; margin-top:12px;" data-i18n="publish">পোস্ট করুন</button>
+    </form>
+  </div>
+</div>
+      
+<!-- Admin Actions Modal -->
+<div id="adminActionModal" class="modal-overlay hidden">
+  <div class="modal-card panel glass">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 style="margin:0; color:var(--accent);">🛡️ অ্যাডমিন অ্যাকশন</h3>
+      <button id="closeAdminActionModal" style="padding:4px 8px;">✕</button>
+    </div>
+    <div id="adminActionTarget" style="font-size:13px; font-weight:bold; margin-bottom:12px;"></div>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <button id="modalBadgeBtn" class="btn" style="width:100%; text-align:left; justify-content:flex-start;"></button>
+      <button id="modalDeletePostBtn" class="btn danger" style="width:100%; text-align:left; justify-content:flex-start;">🗑️ Delete Post</button>
+      <button id="modalDeleteUserBtn" class="danger" style="width:100%; text-align:left; justify-content:flex-start;">🚫 Delete User Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- Auth Modal -->
+<div id="authModal" class="modal-overlay hidden">
+  <div class="modal-card panel glass">
+    <h3 id="modalTitle" style="margin-top:0;">লগইন করুন</h3>
+    <p style="color:var(--muted); font-size:12px;" id="modalSub">কমিউনিটিতে যোগ দিতে অ্যাকাউন্ট খুলুন</p>
+    <form id="authForm">
+      <label>ইমেইল</label>
+      <input type="email" id="authEmail" required placeholder="example@gmail.com">
+      <label>পাসওয়ার্ড</label>
+      <input type="password" id="authPassword" required minlength="6" placeholder="******">
+      <div id="confirmPassGroup" class="hidden">
+        <label>পাসওয়ার্ড নিশ্চিত করুন</label>
+        <input type="password" id="authConfirmPassword">
+      </div>
+      <div style="margin-top:15px; display:flex; flex-direction:column; gap:8px;">
+        <button type="submit" class="primary" id="authSubmitBtn">লগইন</button>
+        <button type="button" id="toggleAuthModeBtn">নতুন আইডি তৈরি করুন (Sign Up)</button>
+        <button type="button" class="danger" id="closeAuthBtn">বন্ধ করুন</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { 
+    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, 
+    signOut, onAuthStateChanged, updatePassword, setPersistence, browserLocalPersistence 
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { 
+    getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, 
+    deleteDoc, addDoc, onSnapshot, query, orderBy, arrayUnion, arrayRemove, serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // Firebase Web App configuration supplied for ebookreader-bd
+  const firebaseConfig = {
+    apiKey: "AIzaSyACHNQ9fdhHQLoUZhRAi-g-hJo8w0NVgUo",
+    authDomain: "ebookreader-bd.firebaseapp.com",
+    projectId: "ebookreader-bd",
+    storageBucket: "ebookreader-bd.firebasestorage.app",
+    messagingSenderId: "1064087470895",
+    appId: "1:1064087470895:web:ce6dc4d90bd0653bdc17da",
+    measurementId: "G-4WQT36M9SM"
+  };
+
+  const firebaseConfigReady =
+    firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith("YOUR_") &&
+    firebaseConfig.projectId && !firebaseConfig.projectId.startsWith("YOUR_") &&
+    firebaseConfig.appId && !firebaseConfig.appId.startsWith("YOUR_");
+
+  if (!firebaseConfigReady) {
+    console.error("Firebase config is incomplete. Replace all YOUR_* placeholders with your Firebase Web App configuration.");
+  }
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // Start persistent auth setup without blocking the rest of the UI event handlers.
+  // Firebase keeps the user signed in across refreshes in this browser.
+  const persistenceReady = setPersistence(auth, browserLocalPersistence).catch((err) => {
+    console.error("Could not set browser-local auth persistence:", err);
+  });
+
+  function showFirebaseError(action, err) {
+    console.error(action + " failed:", err);
+    const code = err && err.code ? err.code : "";
+    let message = "সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+    if (!firebaseConfigReady) {
+      message = "Firebase Configuration পূরণ করা হয়নি। Firebase Console থেকে আসল Web App config বসান।";
+    } else if (code.includes("permission-denied")) {
+      message = "Firestore Rules অনুমতি দিচ্ছে না। Firebase Console-এর Firestore Rules পরীক্ষা করুন।";
+    } else if (code.includes("unauthenticated")) {
+      message = "আপনার সেশন শেষ হয়েছে। আবার লগইন করুন।";
+    } else if (code.includes("unavailable") || code.includes("network")) {
+      message = "ইন্টারনেট বা Firebase সার্ভারে সমস্যা। সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।";
+    } else if (err && err.message) {
+      message += "\\n" + err.message;
+    }
+    alert(message);
+  }
+
+  const ADMIN_EMAILS = ["mdomorfaruk2r@gmail.com", "muhammedomor.studio@gmail.com"];
+
+  let currentUser = null; 
+  let currentUserDoc = null;
+  let isAuthSignUp = false;
+  let currentPostType = 'text';
+  let lang = localStorage.getItem('brLang') || 'bn';
+
+  let userDb = {};
+  let posts = [];
+
+  const verifiedSVG = `<svg class="verified-badge" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`;
+
+  const i18n = {
+    bn: {
+      tagline: "পাঠকদের প্রিয় কম্যুনিটি",
+      login: "লগইন",
+      logout: "লগআউট",
+      textPost: "Post",
+      shareBook: "Share Book",
+      feed: "ফিড",
+      profile: "প্রোফাইল",
+      settings: "সেটিং",
+      profileTitle: "প্রোফাইল ম্যানেজমেন্ট",
+      nameLabel: "ডিসপ্লে নেম",
+      bioLabel: "বায়ো (Bio)",
+      save: "সংরক্ষণ করুন",
+      savedBooks: "সেভ করা বইসমূহ",
+      settingsTitle: "সেটিংস",
+      notifLabel: "নোটিফিকেশন",
+      autoSaveLabel: "অটো সেভ বুকমার্ক",
+      changePass: "পাসওয়ার্ড পরিবর্তন",
+      updatePass: "পাসওয়ার্ড আপডেট করুন",
+      adminDesc: "ইউজারদের ভেরিফাইড ব্যাজ অন/অফ করতে পারবেন।",
+      publish: "পোস্ট করুন",
+      bookName: "বইয়ের নাম",
+      bookLink: "ডাউনলোড/পড়ার লিঙ্ক",
+      bookDesc: "সংক্ষিপ্ত বিবরণ"
+    },
+    en: {
+      tagline: "A Readers Community",
+      login: "Login",
+      logout: "Logout",
+      textPost: "Post",
+      shareBook: "Share Book",
+      feed: "Feed",
+      profile: "Profile",
+      settings: "Settings",
+      profileTitle: "Profile Management",
+      nameLabel: "Display Name",
+      bioLabel: "Bio",
+      save: "Save Profile",
+      savedBooks: "Saved Books",
+      settingsTitle: "Settings",
+      notifLabel: "Notifications",
+      autoSaveLabel: "Auto-save Bookmarks",
+      changePass: "Change Password",
+      updatePass: "Update Password",
+      adminDesc: "Toggle verified status for registered users.",
+      publish: "Publish Post",
+      bookName: "Book Title",
+      bookLink: "Download/Reading Link",
+      bookDesc: "Short Description"
+    }
+  };
+
+  const $ = id => document.getElementById(id);
+
+  function isUserAdmin(email) {
+    return email && ADMIN_EMAILS.includes(email.toLowerCase());
+  }
+
+  function applyLanguage() {
+    $('langText').textContent = lang === 'bn' ? 'EN' : 'বাংলা';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if(i18n[lang][key]) el.textContent = i18n[lang][key];
+    });
+  }
+
+  $('langBtn').onclick = () => {
+    lang = lang === 'bn' ? 'en' : 'bn';
+    localStorage.setItem('brLang', lang);
+    applyLanguage();
+  };
+
+  // Firestore Realtime Listener for Users
+  onSnapshot(collection(db, "users"), (snapshot) => {
+    userDb = {};
+    snapshot.forEach((doc) => {
+      userDb[doc.id] = doc.data();
+    });
+    if(currentUser) updateUI();
+  }, (err) => {
+    console.error("Users listener failed:", err);
+  });
+
+  // Firestore Realtime Listener for Posts
+  const postsQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+  onSnapshot(postsQuery, (snapshot) => {
+    posts = [];
+    snapshot.forEach((doc) => {
+      posts.push({ id: doc.id, ...doc.data() });
+    });
+    renderFeed();
+  }, (err) => {
+    console.error("Posts listener failed:", err);
+    $('feedList').innerHTML = '<div class="panel glass">পোস্ট লোড করা যাচ্ছে না। Firebase Configuration ও Firestore Rules পরীক্ষা করুন।</div>';
+  });
+
+  // Auth State Listener
+  onAuthStateChanged(auth, async (user) => {
+    try {
+    await persistenceReady;
+    if (user) {
+      currentUser = user;
+      const userRef = doc(db, "users", user.email);
+      const userSnap = await getDoc(userRef);
+      
+      if (userSnap.exists()) {
+        currentUserDoc = userSnap.data();
+      } else {
+        const initialData = {
+          name: user.displayName || user.email.split('@')[0],
+          isVerified: isUserAdmin(user.email),
+          bio: "",
+          email: user.email
+        };
+        await setDoc(userRef, initialData);
+        currentUserDoc = initialData;
+      }
+    } else {
+      currentUser = null;
+      currentUserDoc = null;
+    }
+    updateUI();
+    } catch (err) {
+      showFirebaseError("Authentication/profile initialization", err);
+    }
+  });
+
+  function switchView(view) {
+    $('feedView').classList.add('hidden');
+    $('profileView').classList.add('hidden');
+    $('settingsView').classList.add('hidden');
+    $('adminView').classList.add('hidden');
+    
+    $('navFeed').classList.remove('active');
+    $('navProfile').classList.remove('active');
+    $('navSettings').classList.remove('active');
+
+    if(view === 'feed') { $('feedView').classList.remove('hidden'); $('navFeed').classList.add('active'); }
+    if(view === 'profile') {
+      if(!currentUser) return openAuthModal();
+      $('profileView').classList.remove('hidden'); $('navProfile').classList.add('active');
+    }
+    if(view === 'settings') {
+      if(!currentUser) return openAuthModal();
+      $('settingsView').classList.remove('hidden'); $('navSettings').classList.add('active');
+    }
+    if(view === 'admin') {
+      if(!currentUser || !isUserAdmin(currentUser.email)) return;
+      $('adminView').classList.remove('hidden');
+      renderAdminUserList();
+    }
+  }
+
+  $('navFeed').onclick = () => switchView('feed');
+  $('navProfile').onclick = () => switchView('profile');
+  $('navSettings').onclick = () => switchView('settings');
+  $('adminPanelSettingBtn').onclick = () => switchView('admin');
+
+  function openAuthModal() {
+    $('authModal').classList.remove('hidden');
+  }
+
+  function closeAuthModal() {
+    $('authModal').classList.add('hidden');
+  }
+
+  $('authTriggerBtn').onclick = () => {
+    if(currentUser) {
+      signOut(auth);
+    } else {
+      openAuthModal();
+    }
+  };
+
+  $('closeAuthBtn').onclick = closeAuthModal;
+
+  $('toggleAuthModeBtn').onclick = () => {
+    isAuthSignUp = !isAuthSignUp;
+    if(isAuthSignUp) {
+      $('modalTitle').textContent = "নতুন অ্যাকাউন্ট তৈরি করুন";
+      $('modalSub').textContent = "তথ্য দিয়ে ফর্ম পূরণ করুন";
+      $('authSubmitBtn').textContent = "সাইন আপ (Sign Up)";
+      $('confirmPassGroup').classList.remove('hidden');
+      $('toggleAuthModeBtn').textContent = "আগের আইডি থাকলে লগইন করুন";
+    } else {
+      $('modalTitle').textContent = "লগইন করুন";
+      $('modalSub').textContent = "কমিউনিটিতে যোগ দিতে অ্যাকাউন্ট খুলুন";
+      $('authSubmitBtn').textContent = "লগইন";
+      $('confirmPassGroup').classList.add('hidden');
+      $('toggleAuthModeBtn').textContent = "নতুন আইডি তৈরি করুন (Sign Up)";
+    }
+  };
+
+  $('authForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const email = $('authEmail').value.trim();
+    const password = $('authPassword').value;
+
+    try {
+      if(isAuthSignUp) {
+        const confirmPass = $('authConfirmPassword').value;
+        if(password !== confirmPass) {
+          alert("পাসওয়ার্ড দুটি মিলছে না!");
+          return;
+        }
+        await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+      closeAuthModal();
+    } catch(err) {
+      alert("Error: " + err.message);
+    }
+  };
+
+  $('closeAdminActionModal').onclick = () => $('adminActionModal').classList.add('hidden');
+
+  let selectedAdminPostId = null;
+  let selectedAdminEmail = null;
+
+  window.openAdminActionMenu = function(postId, email) {
+    if(!currentUser || !isUserAdmin(currentUser.email)) return;
+    selectedAdminPostId = postId;
+    selectedAdminEmail = email;
+
+    const targetUser = userDb[email];
+    const userName = targetUser ? targetUser.name : email;
+    const isVerified = targetUser ? targetUser.isVerified : false;
+
+    $('adminActionTarget').textContent = `Target User: ${userName} (${email})`;
+    $('modalBadgeBtn').textContent = isVerified ? "❌ Remove Verified Badge" : "✅ Give Verified Badge";
+    
+    $('adminActionModal').classList.remove('hidden');
+  };
+
+  async function toggleUserBadge(email) {
+    if(userDb[email]) {
+      const userRef = doc(db, "users", email);
+      await updateDoc(userRef, {
+        isVerified: !userDb[email].isVerified
+      });
+      renderFeed();
+      renderAdminUserList();
+    }
+  }
+
+  $('modalBadgeBtn').onclick = () => {
+    if(selectedAdminEmail) {
+      toggleUserBadge(selectedAdminEmail);
+      $('adminActionModal').classList.add('hidden');
+    }
+  };
+
+  $('modalDeletePostBtn').onclick = async () => {
+    if(selectedAdminPostId) {
+      await deleteDoc(doc(db, "posts", selectedAdminPostId));
+      $('adminActionModal').classList.add('hidden');
+    }
+  };
+
+  $('modalDeleteUserBtn').onclick = () => {
+    if(selectedAdminEmail) {
+      deleteUserAccount(selectedAdminEmail);
+      $('adminActionModal').classList.add('hidden');
+    }
+  };
+
+  async function deleteUserAccount(email) {
+    if(!currentUser || !isUserAdmin(currentUser.email)) return;
+    if(confirm(`Are you sure you want to delete user account: ${email}?`)) {
+      await deleteDoc(doc(db, "users", email));
+      renderAdminUserList();
+    }
+  }
+
+  function openPostModal(type) {
+    if(!currentUser) return openAuthModal();
+    currentPostType = type;
+    if(type === 'book') {
+      $('postModalTitle').textContent = "বই শেয়ার করুন";
+      $('bookFields').classList.remove('hidden');
+    } else {
+      $('postModalTitle').textContent = "নতুন পোস্ট";
+      $('bookFields').classList.add('hidden');
+    }
+    $('postModal').classList.remove('hidden');
+  }
+
+  $('openTextPostBtn').onclick = () => openPostModal('text');
+  $('openBookPostBtn').onclick = () => openPostModal('book');
+  $('closePostModal').onclick = () => $('postModal').classList.add('hidden');
+
+  $('postForm').onsubmit = async (e) => {
+    e.preventDefault();
+    if(!currentUser) return;
+
+    const text = $('postText').value.trim();
+    const title = $('bookTitleInput').value.trim();
+    const description = $('bookDescInput').value.trim();
+    const url = $('bookUrlInput').value.trim();
+
+    if(currentPostType === 'text' && !text) return;
+    if(currentPostType === 'book' && !title) return;
+
+    const newPost = {
+      ownerEmail: currentUser.email,
+      ownerName: currentUserDoc ? currentUserDoc.name : currentUser.email.split('@')[0],
+      text: text,
+      title: currentPostType === 'book' ? title : '',
+      description: currentPostType === 'book' ? description : '',
+      url: currentPostType === 'book' ? url : '',
+      likedBy: [],
+      date: "এখনই",
+      createdAt: serverTimestamp(),
+      comments: []
+    };
+
+    const publishBtn = $('postForm').querySelector('button[type="submit"]');
+    if (publishBtn.disabled) return;
+    publishBtn.disabled = true;
+    publishBtn.textContent = "সেভ হচ্ছে...";
+
+    try {
+      if (!firebaseConfigReady) {
+        throw new Error("Firebase Configuration পূরণ করা হয়নি। firebaseConfig-এ আসল Firebase Web App config বসান।");
+      }
+      await addDoc(collection(db, "posts"), newPost);
+      $('postForm').reset();
+      $('postModal').classList.add('hidden');
+      alert("পোস্ট সফলভাবে প্রকাশ করা হয়েছে।");
+    } catch (err) {
+      showFirebaseError("Post save", err);
+    } finally {
+      publishBtn.disabled = false;
+      publishBtn.textContent = i18n[lang].publish;
+    }
+  };
+
+  window.toggleLike = async function(id) {
+    if(!currentUser) return openAuthModal();
+    const postRef = doc(db, "posts", id);
+    const post = posts.find(p => p.id === id);
+
+    if(post) {
+      const likedBy = post.likedBy || [];
+      if(likedBy.includes(currentUser.email)) {
+        await updateDoc(postRef, {
+          likedBy: arrayRemove(currentUser.email)
+        });
+      } else {
+        await updateDoc(postRef, {
+          likedBy: arrayUnion(currentUser.email)
+        });
+      }
+    }
+  };
+
+  window.toggleCommentsView = function(id) {
+    const container = $(`comments-${id}`);
+    if(container) {
+      container.classList.toggle('show');
+    }
+  };
+
+  window.addComment = async function(id) {
+    if(!currentUser) return openAuthModal();
+    const input = $(`commentInput-${id}`);
+    const text = input.value.trim();
+    if(!text) return;
+
+    const postRef = doc(db, "posts", id);
+    const newComment = {
+      sender: currentUserDoc ? currentUserDoc.name : currentUser.email.split('@')[0],
+      text: text
+    };
+
+    await updateDoc(postRef, {
+      comments: arrayUnion(newComment)
+    });
+
+    input.value = '';
+    const container = $(`comments-${id}`);
+    if(container) container.classList.add('show');
+  };
+
+  $('searchInput').oninput = () => {
+    renderFeed($('searchInput').value);
+  };
+
+  function renderFeed(filterText = '') {
+    const feed = $('feedList');
+    feed.innerHTML = '';
+
+    const filteredPosts = posts.filter(p => 
+      (p.text && p.text.toLowerCase().includes(filterText.toLowerCase())) || 
+      (p.title && p.title.toLowerCase().includes(filterText.toLowerCase()))
+    );
+
+    filteredPosts.forEach(p => {
+      const isOwner = currentUser && currentUser.email === p.ownerEmail;
+      const adminMode = currentUser && isUserAdmin(currentUser.email);
+      const ownerVerified = userDb[p.ownerEmail] ? userDb[p.ownerEmail].isVerified : false;
+      
+      const likedBy = p.likedBy || [];
+      const isLiked = currentUser && likedBy.includes(currentUser.email);
+      const comments = p.comments || [];
+
+      const card = document.createElement('div');
+      card.className = 'post glass';
+      
+      const commentsListHtml = comments.map(c => `
+        <div class="comment-item">
+          <strong>${c.sender}</strong>
+          <p>${c.text}</p>
+        </div>
+      `).join('');
+
+      card.innerHTML = `
+        <div class="posttop">
+          <div class="avatar">${p.ownerName ? p.ownerName[0] : 'U'}</div>
+          <div class="postwho">
+            <strong>${p.ownerName || 'ইউজার'} ${ownerVerified ? verifiedSVG : ''}</strong>
+            <small>${p.date || ''}</small>
+          </div>
+          ${adminMode ? `
+            <button class="btn primary" style="padding:3px 8px; font-size:10px;" onclick="openAdminActionMenu('${p.id}', '${p.ownerEmail}')">
+              🛡️ Admin Options
+            </button>
+          ` : ''}
+        </div>
+        <div ${adminMode ? `onclick="openAdminActionMenu('${p.id}', '${p.ownerEmail}')" style="cursor:pointer;"` : ''}>
+          ${p.text ? `<div class="post-desc">${p.text}</div>` : ''}
+          ${p.title ? `
+            <div class="book-card">
+              <div class="book-title">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+                ${p.title}
+              </div>
+              <div style="font-size:12px; margin-top:4px;">${p.description || ''}</div>
+              <a href="${p.url}" target="_blank" class="book-link" onclick="event.stopPropagation();">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                বইয়ের লিঙ্ক খুলুন
+              </a>
+            </div>
+          ` : ''}
+        </div>
+        <div class="post-actions">
+          <button class="action-btn ${isLiked ? 'active' : ''}" onclick="toggleLike('${p.id}')">
+            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            ${likedBy.length}
+          </button>
+          <button class="action-btn" onclick="toggleCommentsView('${p.id}')">
+            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+            ${comments.length}
+          </button>
+          ${isOwner ? `
+            <button class="action-btn danger" onclick="deletePost('${p.id}')">
+              <svg class="svg-icon" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </button>
+          ` : ''}
+        </div>
+
+        <!-- Comment Section -->
+        <div class="comments-container" id="comments-${p.id}">
+          <div id="commentList-${p.id}">${commentsListHtml}</div>
+          <div class="comment-input-group">
+            <input type="text" id="commentInput-${p.id}" placeholder="কমেন্ট লিখুন...">
+            <button class="primary" onclick="addComment('${p.id}')">Send</button>
+          </div>
+        </div>
+      `;
+      feed.appendChild(card);
+    });
+  }
+
+  function renderAdminUserList() {
+    const container = $('adminUserList');
+    if(!container) return;
+    container.innerHTML = '';
+
+    Object.keys(userDb).forEach(email => {
+      const u = userDb[email];
+      const div = document.createElement('div');
+      div.className = 'user-admin-row';
+      div.innerHTML = `
+        <div style="min-width:0; flex:1;">
+          <strong>${u.name || email.split('@')[0]}</strong> <small style="display:block; color:var(--muted); font-size:10px;">${email}</small>
+          ${u.isVerified ? verifiedSVG : ''}
+        </div>
+        <div style="display:flex; gap:4px;">
+          <button class="btn" style="font-size:10px; padding:3px 6px;" onclick="toggleUserBadge('${email}')">
+            ${u.isVerified ? 'Remove Badge' : 'Give Badge'}
+          </button>
+          <button class="btn danger" style="font-size:10px; padding:3px 6px;" onclick="deleteUserAccount('${email}')">
+            Delete User
+          </button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function updateUI() {
+    if(currentUser) {
+      const uDoc = userDb[currentUser.email] || {};
+      const isVerified = uDoc.isVerified || false;
+      const userName = uDoc.name || currentUser.email.split('@')[0];
+
+      $('authBtnText').textContent = i18n[lang].logout;
+      $('authTriggerBtn').classList.replace('primary', 'danger');
+      
+      $('profileAvatar').textContent = userName ? userName[0].toUpperCase() : 'U';
+      $('profName').innerHTML = `${userName} ${isVerified ? verifiedSVG : ''}`;
+      $('profEmail').textContent = currentUser.email;
+      $('displayName').value = userName;
+      if(uDoc.bio) $('profileBio').value = uDoc.bio;
+      
+      if(isUserAdmin(currentUser.email)) {
+        $('adminSettingBox').classList.remove('hidden');
+        renderAdminUserList();
+      } else {
+        $('adminSettingBox').classList.add('hidden');
+      }
+    } else {
+      $('authBtnText').textContent = i18n[lang].login;
+      $('authTriggerBtn').classList.replace('danger', 'primary');
+      $('adminSettingBox').classList.add('hidden');
+      switchView('feed');
+    }
+    renderFeed();
+  }
+
+  window.deletePost = async (id) => {
+    if(confirm("পোস্টটি মুছে ফেলতে চান?")) {
+      await deleteDoc(doc(db, "posts", id));
+    }
+  };
+
+  $('profileForm').onsubmit = async (e) => {
+    e.preventDefault();
+    if(!currentUser) return;
+    const newName = $('displayName').value.trim();
+    const newBio = $('profileBio').value.trim();
+    
+    if(newName) {
+      const userRef = doc(db, "users", currentUser.email);
+      await updateDoc(userRef, {
+        name: newName,
+        bio: newBio
+      });
+      alert("প্রোফাইল তথ্য আপডেট করা হয়েছে!");
+    }
+  };
+
+  $('logoutBtn').onclick = () => {
+    signOut(auth);
+  };
+
+  $('updatePassBtn').onclick = async () => {
+    const newPass = $('newPass').value;
+    if(currentUser && newPass) {
+      try {
+        await updatePassword(currentUser, newPass);
+        alert("পাসওয়ার্ড সফলভাবে আপডেট হয়েছে!");
+        $('oldPass').value = '';
+        $('newPass').value = '';
+      } catch(err) {
+        alert("ত্রুটি: " + err.message);
+      }
+    }
+  };
+
+  $('themeBtn').onclick = () => {
+    document.body.classList.toggle('light');
+  };
+
+  applyLanguage();
+  renderFeed();
+</script>
+
+<!-- Mobile pull-to-refresh indicator -->
+<div id="pullRefreshIndicator" aria-live="polite" style="position:fixed;z-index:9999;top:8px;left:50%;transform:translate(-50%,-150%);padding:10px 16px;border-radius:999px;background:#1f2937;color:#fff;font:500 13px system-ui,sans-serif;box-shadow:0 5px 18px #0002;transition:transform .18s ease;pointer-events:none;white-space:nowrap;">
+  ↓ রিফ্রেশ করতে ছেড়ে দিন
+</div>
+<script>
+(() => {
+  const indicator = document.getElementById('pullRefreshIndicator');
+  let startX = 0, startY = 0, pulling = false, refreshing = false;
+  const threshold = 95;
+  function show(text, visible) {
+    indicator.textContent = text;
+    indicator.style.transform = visible ? 'translate(-50%,0)' : 'translate(-50%,-150%)';
+  }
+  window.addEventListener('touchstart', (e) => {
+    if (refreshing || !e.touches || e.touches.length !== 1 || window.scrollY > 0) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    pulling = true;
+  }, {passive:true});
+  window.addEventListener('touchmove', (e) => {
+    if (!pulling || refreshing || !e.touches || e.touches.length !== 1) return;
+    const dx = e.touches[0].clientX - startX;
+    const dy = e.touches[0].clientY - startY;
+    if (dy > 12 && Math.abs(dy) > Math.abs(dx) && window.scrollY <= 0) {
+      show(dy >= threshold ? '↑ ছেড়ে দিন, রিফ্রেশ হবে' : '↓ রিফ্রেশ করতে নিচে টানুন', true);
+    } else if (dy < 0 || Math.abs(dx) > Math.abs(dy)) {
+      show('', false);
+    }
+  }, {passive:true});
+  window.addEventListener('touchend', (e) => {
+    if (!pulling || refreshing) return;
+    pulling = false;
+    const touch = e.changedTouches && e.changedTouches[0];
+    if (touch && touch.clientY - startY >= threshold && window.scrollY <= 0) {
+      refreshing = true;
+      show('↻ রিফ্রেশ হচ্ছে…', true);
+      // Firebase browser-local persistence keeps the current login on reload.
+      setTimeout(() => window.location.reload(), 180);
+    } else {
+      show('', false);
+    }
+  }, {passive:true});
+  window.addEventListener('touchcancel', () => { pulling = false; show('', false); }, {passive:true});
+})();
+</script>
+</body>
+</html>
