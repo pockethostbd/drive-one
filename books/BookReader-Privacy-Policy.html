@@ -3,471 +3,814 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="BookReader অ্যাপের গোপনীয়তা নীতি — বাংলা ও ইংরেজি সংস্করণ।">
-  <meta name="theme-color" content="#f4f7fb">
-  <title>গোপনীয়তা নীতি | BookReader</title>
+  <meta name="description" content="BookReader-এর বই পড়ার লিংক ও গোপনীয়তা নীতি।">
+  <meta name="theme-color" content="#f5f7ff">
+  <title>BookReader | বই পড়ুন ও গোপনীয়তা নীতি</title>
 
   <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #68758c;
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --border: rgba(148, 163, 184, 0.24);
+      --glass: rgba(255, 255, 255, 0.75);
+      --shadow: 0 18px 55px rgba(31, 41, 80, 0.075);
+      --soft-shadow: 0 8px 28px rgba(31, 41, 80, 0.055);
+    }
+
     * {
       box-sizing: border-box;
     }
 
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      line-height: 1.85;
-      color: #1f2937;
-      background: #f4f7fb;
+    html {
+      scroll-behavior: smooth;
     }
 
-    .container {
-      max-width: 850px;
+    body {
+      margin: 0;
+      padding: 24px;
+      color: var(--ink);
+      background:
+        radial-gradient(
+          ellipse at 8% 0%,
+          rgba(199, 210, 254, 0.34),
+          transparent 35%
+        ),
+        radial-gradient(
+          ellipse at 100% 22%,
+          rgba(224, 231, 255, 0.35),
+          transparent 32%
+        ),
+        #ffffff;
+      font-family:
+        Inter, "Noto Sans Bengali", ui-sans-serif, system-ui,
+        -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .shell {
+      width: min(960px, 100%);
       margin: 0 auto;
     }
 
+    /* Top navigation */
     .topbar {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 18px;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 12px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: 0 8px 30px rgba(31, 41, 80, 0.045);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
 
     .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
       font-size: 20px;
-      font-weight: 800;
-      color: #1d4ed8;
+      font-weight: 850;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      color: #ffffff;
+      background: linear-gradient(145deg, #818cf8, #4f46e5 72%);
+      box-shadow: 0 8px 18px rgba(79, 70, 229, 0.2);
+      font-size: 22px;
     }
 
     .language-switch {
       display: flex;
-      gap: 8px;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(248, 250, 252, 0.85);
     }
 
     .language-switch button {
-      min-height: 42px;
-      padding: 9px 17px;
-      border: 1px solid #d1d5db;
+      min-height: 36px;
+      padding: 7px 13px;
+      border: 0;
       border-radius: 10px;
-      background: white;
-      color: #374151;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
+      color: var(--muted);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 800;
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
     .language-switch button.active {
-      color: white;
-      background: #2563eb;
-      border-color: #2563eb;
+      color: #ffffff;
+      background: var(--primary);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
     }
 
-    main {
-      padding: clamp(20px, 5vw, 40px);
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 18px;
-      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
+    /* Hero section */
+    .hero {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      margin-bottom: 22px;
+      padding: clamp(27px, 5.5vw, 48px);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 30px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.96),
+        rgba(245, 247, 255, 0.82)
+      );
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
     }
 
-    h1 {
-      margin-top: 0;
-      color: #172554;
-      font-size: clamp(26px, 5vw, 36px);
-      line-height: 1.35;
+    .hero::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: -145px;
+      right: -100px;
+      width: 290px;
+      height: 290px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(165, 180, 252, 0.32),
+        rgba(199, 210, 254, 0.05) 68%,
+        transparent 70%
+      );
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid rgba(99, 102, 241, 0.13);
+      border-radius: 999px;
+      color: var(--primary-dark);
+      background: rgba(238, 242, 255, 0.85);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 1px;
+    }
+
+    .hero h1 {
+      margin: 17px 0 9px;
+      font-size: clamp(29px, 5vw, 43px);
+      line-height: 1.3;
+      letter-spacing: -0.8px;
+    }
+
+    .hero p {
+      max-width: 670px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(14px, 2vw, 16px);
+    }
+
+    /* Glass panels */
+    .panel {
+      margin-bottom: 22px;
+      padding: clamp(21px, 4.5vw, 34px);
+      border: 1px solid rgba(226, 232, 240, 0.82);
+      border-radius: 26px;
+      background: var(--glass);
+      box-shadow: var(--soft-shadow);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .section-icon {
+      display: grid;
+      flex: 0 0 47px;
+      place-items: center;
+      height: 47px;
+      border: 1px solid rgba(99, 102, 241, 0.1);
+      border-radius: 16px;
+      background: linear-gradient(145deg, #f5f7ff, #e9edff);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      font-size: 22px;
     }
 
     h2 {
-      margin-top: 30px;
-      margin-bottom: 8px;
-      color: #1d4ed8;
-      font-size: 19px;
+      margin: 0;
+      color: #202b49;
+      font-size: clamp(20px, 3.5vw, 25px);
+      line-height: 1.45;
     }
 
-    p {
-      margin-top: 8px;
-      margin-bottom: 12px;
+    .section-heading p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    /* External book websites */
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .book-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+      padding: 18px;
+      border: 1px solid rgba(203, 213, 225, 0.7);
+      border-radius: 19px;
+      color: var(--ink);
+      background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.96),
+        rgba(250, 251, 255, 0.8)
+      );
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        0 5px 16px rgba(31, 41, 80, 0.025);
+      text-align: left;
+      text-decoration: none;
+      transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .book-link:hover {
+      transform: translateY(-3px);
+      border-color: rgba(129, 140, 248, 0.65);
+      box-shadow: 0 14px 30px rgba(79, 70, 229, 0.09);
+    }
+
+    .book-cover {
+      display: grid;
+      flex: 0 0 51px;
+      place-items: center;
+      height: 56px;
+      border-radius: 15px;
+      background: linear-gradient(145deg, #f3f5ff, #e8ecff);
+      font-size: 25px;
+    }
+
+    .book-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .book-info strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 850;
+    }
+
+    .book-info small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .arrow {
+      display: grid;
+      flex: 0 0 33px;
+      place-items: center;
+      width: 33px;
+      height: 33px;
+      border-radius: 11px;
+      color: var(--primary);
+      background: rgba(238, 242, 255, 0.95);
+      font-size: 20px;
+    }
+
+    /* Privacy policy */
+    .policy {
+      background: rgba(255, 255, 255, 0.86);
+    }
+
+    .policy h1 {
+      margin: 0 0 8px;
+      color: #202b49;
+      font-size: clamp(28px, 5vw, 36px);
+      line-height: 1.35;
     }
 
     .effective-date {
-      color: #64748b;
-      font-size: 14px;
-    }
-
-    a {
-      color: #2563eb;
-      overflow-wrap: anywhere;
-    }
-
-    footer {
-      padding: 22px 8px 8px;
-      text-align: center;
-      color: #64748b;
+      margin: 0 0 22px;
+      color: var(--muted);
       font-size: 13px;
     }
 
-    [hidden] {
-      display: none !important;
+    .policy h2 {
+      margin: 28px 0 8px;
+      padding-left: 12px;
+      border-left: 3px solid #818cf8;
+      color: var(--primary-dark);
+      font-size: 18px;
     }
 
-    @media (max-width: 480px) {
+    .policy p {
+      margin: 8px 0 13px;
+      color: #46536b;
+    }
+
+    .policy a {
+      color: var(--primary);
+      overflow-wrap: anywhere;
+    }
+
+    .policy-intro {
+      padding: 17px 19px;
+      border: 1px solid rgba(165, 180, 252, 0.25);
+      border-left: 4px solid #818cf8;
+      border-radius: 0 15px 15px 0;
+      color: #3e4a65 !important;
+      background: rgba(245, 247, 255, 0.85);
+    }
+
+    footer {
+      padding: 12px 10px 7px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .book-link:focus-visible,
+    .language-switch button:focus-visible {
+      outline: 3px solid rgba(99, 102, 241, 0.4);
+      outline-offset: 3px;
+    }
+
+    /* Mobile responsive design */
+    @media (max-width: 620px) {
       body {
         padding: 12px;
       }
 
       .topbar {
-        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 17px;
       }
 
       .brand {
+        gap: 8px;
         font-size: 18px;
       }
 
-      main {
-        padding: 20px 17px;
+      .brand-mark {
+        width: 39px;
+        height: 39px;
+        border-radius: 13px;
       }
 
-      h2 {
-        font-size: 18px;
+      .language-switch button {
+        min-height: 34px;
+        padding: 6px 9px;
+        font-size: 12px;
+      }
+
+      .hero {
+        margin-bottom: 15px;
+        padding: 25px 21px;
+        border-radius: 23px;
+      }
+
+      .panel {
+        margin-bottom: 15px;
+        padding: 21px 17px;
+        border-radius: 21px;
+      }
+
+      .book-grid {
+        grid-template-columns: 1fr;
+        gap: 11px;
+      }
+
+      .book-link {
+        padding: 14px;
+        border-radius: 16px;
+      }
+
+      .section-heading {
+        gap: 11px;
+        margin-bottom: 17px;
+      }
+
+      .section-icon {
+        flex-basis: 42px;
+        height: 42px;
+        border-radius: 14px;
+      }
+
+      .policy h2 {
+        margin-top: 24px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
       }
     }
   </style>
 </head>
 
 <body>
-<div class="container">
+  <div class="shell">
 
-  <header class="topbar">
-    <div class="brand">BookReader</div>
+    <!-- Header and language buttons -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">▤</span>
+        <span>BookReader</span>
+      </div>
 
-    <div class="language-switch" aria-label="Language selection">
-      <button type="button"
-              id="bnBtn"
-              class="active"
-              aria-pressed="true"
-              onclick="setLanguage('bn')">
-        বাংলা
-      </button>
+      <div class="language-switch" aria-label="Language selection">
+        <button
+          type="button"
+          id="bnBtn"
+          class="active"
+          aria-pressed="true"
+          onclick="setLanguage('bn')">
+          বাংলা
+        </button>
 
-      <button type="button"
-              id="enBtn"
-              aria-pressed="false"
-              onclick="setLanguage('en')">
-        English
-      </button>
-    </div>
-  </header>
+        <button
+          type="button"
+          id="enBtn"
+          aria-pressed="false"
+          onclick="setLanguage('en')">
+          English
+        </button>
+      </div>
+    </header>
 
-  <!-- BANGLA VERSION: DEFAULT -->
-  <main id="bnPolicy" lang="bn">
-    <h1>গোপনীয়তা নীতি</h1>
-    <p class="effective-date">
-      কার্যকর তারিখ: ১৬ অক্টোবর ২০২৬
-    </p>
+    <!-- Hero section -->
+    <section class="hero">
+      <span class="eyebrow">📚 BookReader Library</span>
+      <h1 id="heroTitle">আপনার পছন্দের বই পড়ুন</h1>
+      <p id="heroText">
+        বিনামূল্যে PDF বই খুঁজে ডাউনলোড করুন, তারপর আপনার ডাউনলোড করা বই BookReader-এ পড়ুন।
+      </p>
+    </section>
 
-    <p>
-      BookReader-এ স্বাগতম। এই গোপনীয়তা নীতিতে ব্যাখ্যা করা হয়েছে,
-      অ্যাপটি কীভাবে তথ্য সংরক্ষণ ও ব্যবহার করে এবং আপনার তথ্যের
-      গোপনীয়তা কীভাবে পরিচালিত হয়। অ্যাপ ব্যবহার করার আগে
-      অনুগ্রহ করে নীতিটি পড়ুন।
-    </p>
+    <!-- Free PDF websites -->
+    <section class="panel" id="booksSection">
+      <div class="section-heading">
+        <div class="section-icon" aria-hidden="true">📖</div>
+        <div>
+          <h2 id="booksHeading">বিনামূল্যে PDF বই ডাউনলোড করুন</h2>
+          <p id="booksSubheading">
+            এই লিংকগুলো ব্যবহার করে বিনামূল্যে PDF বই খুঁজে ডাউনলোড করুন,
+            এরপর BookReader-এ ডাউনলোড করা বই খুলে পড়ুন।
+          </p>
+        </div>
+      </div>
 
-    <h2>১. অ্যাপ সম্পর্কে</h2>
-    <p>
-      BookReader একটি ডিজিটাল বই পড়ার অ্যাপ। এর মাধ্যমে আপনি PDF
-      বই পরিচালনা, ক্যাটাগরি তৈরি, বুকমার্ক ও নোট সংরক্ষণ এবং
-      পড়ার অগ্রগতি বজায় রাখতে পারেন। অ্যাপটির ঐচ্ছিক কমিউনিটি
-      অংশে অ্যাকাউন্ট তৈরি করে বইয়ের লিংক ও পাঠ-আলোচনা শেয়ার
-      করা যায়।
-    </p>
+      <div class="book-grid">
+        <a
+          class="book-link"
+          href="https://boimate.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open Boimate in a new tab">
 
-    <h2>২. ডিভাইসে সংরক্ষিত তথ্য</h2>
-    <p>
-      অ্যাপের মূল লাইব্রেরির বই, বইয়ের তথ্য, ক্যাটাগরি, বুকমার্ক,
-      নোট এবং কাস্টম অডিও আপনার ডিভাইসের IndexedDB-তে সংরক্ষিত হয়।
-      কিছু সেটিংস ও পড়ার ধারাবাহিকতার তথ্য ব্রাউজারের localStorage-এ
-      রাখা হয়।
-    </p>
-    <p>
-      এই তথ্য স্থানীয়ভাবে সংরক্ষণ করা হয়। বর্তমান সংস্করণে
-      এই ডেটার স্বয়ংক্রিয় ক্লাউড ব্যাকআপ বা ডিভাইসের মধ্যে
-      সিঙ্ক নিশ্চিত করা হয় না। ব্রাউজার ডেটা মুছে ফেললে,
-      অ্যাপের ডেটা পরিষ্কার করলে বা ডিভাইস হারালে তথ্য হারাতে পারেন।
-    </p>
+          <span class="book-cover" aria-hidden="true">📘</span>
 
-    <h2>৩. অ্যাকাউন্ট ও কমিউনিটির তথ্য</h2>
-    <p>
-      কমিউনিটি ব্যবহার করতে Firebase Authentication-এর মাধ্যমে
-      অ্যাকাউন্ট তৈরি বা লগইন করা হয়। এতে আপনার ইমেইল ঠিকানা,
-      অ্যাকাউন্টের পরিচয় এবং আপনার দেওয়া পাসওয়ার্ড ব্যবহৃত হয়।
-      পাসওয়ার্ড ব্যবস্থাপনা Firebase Authentication-এর মাধ্যমে হয়।
-    </p>
-    <p>
-      কমিউনিটিতে আপনি প্রদর্শিত নাম, সংক্ষিপ্ত পরিচিতি, পোস্টের লেখা,
-      বইয়ের নাম, বিবরণ এবং বইয়ের URL দিতে পারেন। বর্তমান অ্যাপের
-      বাস্তবায়ন অনুযায়ী প্রোফাইল ও পোস্টের তথ্য Firebase Cloud
-      Firestore-এ সংরক্ষিত হয়।
-    </p>
+          <span class="book-info">
+            <strong>Boimate</strong>
+            <small id="boimateDescription">বিনামূল্যে PDF বই খুঁজুন</small>
+          </span>
 
-    <h2>৪. প্রকাশ্য প্রোফাইল ও পোস্ট</h2>
-    <p>
-      বর্তমান Firestore Rules-এ কমিউনিটির প্রোফাইল ও পোস্ট পড়ার
-      অনুমতি সবার জন্য উন্মুক্ত। তাই প্রোফাইলে সংরক্ষিত ইমেইল
-      ঠিকানাসহ প্রোফাইলের তথ্য এবং পোস্ট অন্যরা পড়তে পারেন।
-      এই আচরণ পরিবর্তন না করা পর্যন্ত কমিউনিটিতে এমন তথ্য দেবেন না,
-      যা আপনি অন্যদের সঙ্গে প্রকাশ করতে চান না।
-    </p>
-    <p>
-      পোস্টের মালিক নিজের পোস্ট সম্পাদনা বা মুছতে পারেন।
-      নির্ধারিত যাচাইকৃত অ্যাডমিনও পোস্ট সম্পাদনা বা মুছতে পারেন।
-      অ্যাকাউন্ট মুছে ফেললেই সংশ্লিষ্ট পোস্ট ও প্রোফাইল স্বয়ংক্রিয়ভাবে
-      মুছে যাবে—এমন নিশ্চয়তা বর্তমান কোডে নেই।
-    </p>
+          <span class="arrow" aria-hidden="true">↗</span>
+        </a>
 
-    <h2>৫. বইয়ের লিংক ও বাহ্যিক ওয়েবসাইট</h2>
-    <p>
-      কমিউনিটিতে ব্যবহারকারীরা HTTP বা HTTPS বইয়ের লিংক শেয়ার
-      করতে পারেন। বাহ্যিক ওয়েবসাইটে গেলে তাদের নিজস্ব গোপনীয়তা নীতি,
-      কুকি ও তথ্য সংগ্রহের নিয়ম প্রযোজ্য হতে পারে। এসব ওয়েবসাইটের
-      নিরাপত্তা, বিষয়বস্তু বা কপিরাইট নীতি BookReader নিয়ন্ত্রণ করে না।
-    </p>
+        <a
+          class="book-link"
+          href="https://bengaliebook.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open Bengali Ebook in a new tab">
 
-    <h2>৬. তৃতীয় পক্ষের প্রযুক্তি</h2>
-    <p>
-      কমিউনিটি Firebase Authentication ও Cloud Firestore ব্যবহার করে।
-      অ্যাপের বর্তমান সংস্করণে PDF.js, PageFlip এবং Font Awesome-এর
-      মতো কিছু লাইব্রেরি বাহ্যিক CDN থেকে লোড করা হয়।
-    </p>
-    <p>
-      এসব পরিষেবা ব্যবহার করার সময় সংশ্লিষ্ট প্রদানকারীরা তাদের
-      নিজস্ব নীতি অনুযায়ী IP ঠিকানা, ব্রাউজার-সংক্রান্ত তথ্য বা
-      প্রযুক্তিগত লগ প্রক্রিয়াকরণ করতে পারেন। বিস্তারিত জানতে
-      সংশ্লিষ্ট পরিষেবার গোপনীয়তা নীতি পড়ুন।
-    </p>
+          <span class="book-cover" aria-hidden="true">📗</span>
 
-    <h2>৭. তথ্যের নিরাপত্তা</h2>
-    <p>
-      Firestore Security Rules কমিউনিটির তথ্যের প্রবেশাধিকার
-      নিয়ন্ত্রণে সহায়তা করে। তবে কোনো অনলাইন পরিষেবাকে সম্পূর্ণ
-      নিরাপদ বলে নিশ্চয়তা দেওয়া যায় না। আপনার পাসওয়ার্ড
-      গোপন রাখুন এবং অপ্রয়োজনীয় ব্যক্তিগত তথ্য প্রকাশ করবেন না।
-    </p>
+          <span class="book-info">
+            <strong>Bengali Ebook</strong>
+            <small id="ebookDescription">বিনামূল্যে PDF বই খুঁজুন</small>
+          </span>
 
-    <h2>৮. তথ্য মুছে ফেলা ও নিয়ন্ত্রণ</h2>
-    <p>
-      ডিভাইসে সংরক্ষিত তথ্য অ্যাপের Clear Data সুবিধা অথবা উপযুক্ত
-      ব্রাউজার ও ডিভাইস স্টোরেজ ব্যবস্থাপনার মাধ্যমে মুছে ফেলা যেতে পারে।
-      এই কাজের ফলে সংশ্লিষ্ট স্থানীয় তথ্য স্থায়ীভাবে হারিয়ে যেতে পারে।
-    </p>
-    <p>
-      কমিউনিটির প্রোফাইল বা পোস্ট মুছে ফেলার অনুরোধের জন্য
-      ডেভেলপারের সঙ্গে যোগাযোগ করুন। অনুরোধ প্রক্রিয়াকরণের আগে
-      অ্যাকাউন্টের মালিকানা যাচাই করা হতে পারে। ব্যাকআপ বা
-      তৃতীয় পক্ষের সিস্টেমে থাকা তথ্য মুছে ফেলার সময়সীমা
-      তাদের নিয়মের ওপর নির্ভর করতে পারে।
-    </p>
+          <span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
 
-    <h2>৯. শিশু ও কিশোর ব্যবহারকারী</h2>
-    <p>
-      অপ্রাপ্তবয়স্ক ব্যবহারকারীদের ক্ষেত্রে প্রযোজ্য আইন ও
-      অভিভাবকের সম্মতি-সংক্রান্ত নিয়ম অনুসরণ করা উচিত।
-      প্রয়োজনীয় অনুমতি ছাড়া ব্যক্তিগত বা সংবেদনশীল তথ্য
-      প্রকাশ করবেন না।
-    </p>
+    <!-- Privacy policy -->
+    <main class="panel policy" id="policySection">
+      <h1 id="policyTitle">গোপনীয়তা নীতি</h1>
 
-    <h2>১০. নীতির পরিবর্তন</h2>
-    <p>
-      অ্যাপের ফিচার, প্রযুক্তি বা আইনি প্রয়োজন পরিবর্তিত হলে
-      এই গোপনীয়তা নীতি সংশোধন করা হতে পারে। নতুন সংস্করণ প্রকাশিত
-      হলে কার্যকর তারিখ আপডেট করা হবে।
-    </p>
+      <p class="effective-date" id="effectiveDate">
+        কার্যকর তারিখ: ১৯ অক্টোবর ২০২৬
+      </p>
 
-    <h2>১১. যোগাযোগ</h2>
-    <p>
-      ডেভেলপার: Muhammed Omor
-    </p>
-    <p>
-      ইমেইল:
-      <a href="mailto:mdomorfaruk2r@gmail.com">
-        mdomorfaruk2r@gmail.com
-      </a>
-    </p>
-  </main>
+      <p class="policy-intro" id="policyIntro">
+        BookReader-এ স্বাগতম। এই নীতিতে BookReader-এর মূল বই পড়ার
+        ফিচার ব্যবহার করার সময় আপনার তথ্য কীভাবে পরিচালিত হয় তা ব্যাখ্যা করা হয়েছে।
+      </p>
 
-  <!-- ENGLISH VERSION -->
-  <main id="enPolicy" lang="en" hidden>
-    <h1>Privacy Policy</h1>
-    <p class="effective-date">
-      Effective date: October 16, 2026
-    </p>
+      <h2 id="p1h">১. অ্যাপ সম্পর্কে</h2>
+      <p id="p1">
+        BookReader একটি ডিজিটাল বই পড়ার অ্যাপ। এটি ব্যবহার করে আপনি
+        বই পড়ার অভিজ্ঞতা সাজাতে এবং সমর্থিত ফিচারগুলো ব্যবহার করতে পারেন।
+      </p>
 
-    <p>
-      Welcome to BookReader. This Privacy Policy explains how
-      information is stored and used by the app and how privacy
-      is handled. Please read this policy before using the app.
-    </p>
+      <h2 id="p2h">২. ডিভাইসে সংরক্ষিত তথ্য</h2>
+      <p id="p2">
+        অ্যাপের মূল লাইব্রেরির বই, বইয়ের তথ্য, ক্যাটাগরি, বুকমার্ক,
+        নোট এবং কাস্টম অডিও আপনার ডিভাইসের IndexedDB-তে সংরক্ষিত হতে পারে।
+        কিছু সেটিংস ও পড়ার ধারাবাহিকতার তথ্য ব্রাউজারের localStorage-এ রাখা হতে পারে।
+      </p>
+      <p id="p2b">
+        এই তথ্য স্থানীয়ভাবে সংরক্ষিত হলে ব্রাউজারের ডেটা মুছে ফেলা,
+        অ্যাপের ডেটা পরিষ্কার করা বা ডিভাইস হারানোর কারণে তথ্য হারাতে পারেন।
+        স্বয়ংক্রিয় ক্লাউড ব্যাকআপ বা একাধিক ডিভাইসে সিঙ্কের নিশ্চয়তা দেওয়া হয় না।
+      </p>
 
-    <h2>1. About the App</h2>
-    <p>
-      BookReader is a digital reading application. You can manage
-      PDF books, create categories, save bookmarks and notes, and
-      maintain reading progress. Its optional community feature
-      allows users to create accounts and share book links and
-      reading discussions.
-    </p>
+      <h2 id="p3h">৩. বাহ্যিক ওয়েবসাইট</h2>
+      <p id="p3">
+        এই পেজ থেকে Boimate এবং Bengali Ebook-এর মতো তৃতীয় পক্ষের ওয়েবসাইট
+        খোলা যেতে পারে। এসব সাইট তাদের নিজস্ব গোপনীয়তা নীতি, কুকি ও তথ্য
+        সংগ্রহের নিয়ম অনুসরণ করে। তাদের সাইটে আপনার কার্যকলাপ, নিরাপত্তা,
+        বিষয়বস্তু বা তথ্য ব্যবস্থাপনা BookReader নিয়ন্ত্রণ করে না।
+      </p>
+      <p id="p3b">
+        বাহ্যিক সাইটে গেলে সেই সাইট নিজস্ব নিয়ম অনুযায়ী আপনার IP ঠিকানা,
+        ব্রাউজার-সংক্রান্ত তথ্য বা কুকি প্রক্রিয়া করতে পারে। বিস্তারিত জানতে
+        সংশ্লিষ্ট সাইটের গোপনীয়তা নীতি পড়ুন।
+      </p>
 
-    <h2>2. Information Stored on Your Device</h2>
-    <p>
-      The main library stores books, book metadata, categories,
-      bookmarks, notes, and custom audio in IndexedDB on your device.
-      Some settings and reading-streak information are stored in
-      browser localStorage.
-    </p>
-    <p>
-      This information is stored locally. The current version does
-      not guarantee automatic cloud backup or synchronization across
-      devices. Data may be lost if browser data is cleared, app data
-      is erased, or the device is lost.
-    </p>
+      <h2 id="p4h">৪. তৃতীয় পক্ষের প্রযুক্তি</h2>
+      <p id="p4">
+        অ্যাপের ফিচার অনুযায়ী কিছু লাইব্রেরি বা রিসোর্স বাহ্যিক সার্ভার/CDN
+        থেকে লোড হতে পারে। সংশ্লিষ্ট পরিষেবার প্রদানকারীরা তাদের নিজস্ব
+        নীতি অনুযায়ী প্রযুক্তিগত তথ্য প্রক্রিয়া করতে পারেন।
+      </p>
 
-    <h2>3. Account and Community Information</h2>
-    <p>
-      The community uses Firebase Authentication for account creation
-      and sign-in. This involves your email address, account identity,
-      and chosen password. Password handling is managed through
-      Firebase Authentication.
-    </p>
-    <p>
-      You may provide a display name, short biography, post text,
-      book title, description, and book URL. Under the current
-      implementation, profile and post information is stored in
-      Firebase Cloud Firestore.
-    </p>
+      <h2 id="p5h">৫. তথ্যের নিরাপত্তা</h2>
+      <p id="p5">
+        আপনার ডিভাইস ও ব্রাউজার নিরাপদ রাখুন এবং প্রয়োজন ছাড়া ব্যক্তিগত
+        বা সংবেদনশীল তথ্য শেয়ার করবেন না। কোনো ওয়েবসাইট বা অনলাইন পরিষেবার
+        নিরাপত্তা শতভাগ নিশ্চিত করা সম্ভব নয়।
+      </p>
 
-    <h2>4. Public Profiles and Posts</h2>
-    <p>
-      The current Firestore Rules allow anyone to read community
-      profiles and posts. Other people may therefore read profile
-      information, including stored email addresses, as well as
-      published posts. Until this behavior is changed, do not submit
-      information that you do not want to share publicly.
-    </p>
-    <p>
-      Post owners can edit or delete their own posts. The designated
-      verified administrator can also edit or delete posts.
-      The current code does not guarantee that deleting an account
-      automatically deletes its associated profile and posts.
-    </p>
+      <h2 id="p6h">৬. তথ্য মুছে ফেলা ও নিয়ন্ত্রণ</h2>
+      <p id="p6">
+        ডিভাইসে সংরক্ষিত তথ্য অ্যাপের Clear Data সুবিধা অথবা ব্রাউজার ও
+        ডিভাইসের স্টোরেজ সেটিংস থেকে মুছে ফেলা যেতে পারে। এতে সংশ্লিষ্ট
+        স্থানীয় তথ্য স্থায়ীভাবে হারিয়ে যেতে পারে। বাহ্যিক সাইটে দেওয়া তথ্য
+        মুছতে হলে সেই সাইটের পরিচালকের সঙ্গে যোগাযোগ করতে হবে।
+      </p>
 
-    <h2>5. Book Links and External Websites</h2>
-    <p>
-      Users may share HTTP or HTTPS book links in the community.
-      External websites may apply their own privacy policies, cookies,
-      and data collection practices. BookReader does not control
-      the security, content, or copyright practices of those websites.
-    </p>
+      <h2 id="p7h">৭. শিশু ও কিশোর ব্যবহারকারী</h2>
+      <p id="p7">
+        অপ্রাপ্তবয়স্ক ব্যবহারকারীদের ক্ষেত্রে প্রযোজ্য আইন ও অভিভাবকের
+        সম্মতি-সংক্রান্ত নিয়ম অনুসরণ করা উচিত। প্রয়োজনীয় অনুমতি ছাড়া
+        ব্যক্তিগত বা সংবেদনশীল তথ্য প্রকাশ করবেন না।
+      </p>
 
-    <h2>6. Third-Party Technologies</h2>
-    <p>
-      The community uses Firebase Authentication and Cloud Firestore.
-      The current app also loads certain libraries, including PDF.js,
-      PageFlip, and Font Awesome, from external CDNs.
-    </p>
-    <p>
-      When these services are used, their providers may process IP
-      addresses, browser-related information, or technical logs
-      according to their own policies. Please review the privacy
-      policies of the relevant providers for more information.
-    </p>
+      <h2 id="p8h">৮. নীতির পরিবর্তন</h2>
+      <p id="p8">
+        অ্যাপের ফিচার, প্রযুক্তি বা আইনি প্রয়োজন পরিবর্তিত হলে এই
+        গোপনীয়তা নীতি সংশোধন করা হতে পারে। নতুন সংস্করণ প্রকাশিত হলে
+        কার্যকর তারিখ আপডেট করা হবে।
+      </p>
 
-    <h2>7. Information Security</h2>
-    <p>
-      Firestore Security Rules help control access to community data.
-      However, no online service can be guaranteed to be completely
-      secure. Keep your password confidential and avoid publishing
-      unnecessary personal information.
-    </p>
+      <h2 id="p9h">৯. যোগাযোগ</h2>
+      <p id="p9">ডেভেলপার: Muhammed Omor</p>
+      <p>
+        <span id="emailLabel">ইমেইল:</span>
+        <a href="mailto:mdomorfaruk2r@gmail.com">
+          mdomorfaruk2r@gmail.com
+        </a>
+      </p>
+    </main>
 
-    <h2>8. Data Deletion and Control</h2>
-    <p>
-      Locally stored information may be deleted using the app's
-      Clear Data feature or appropriate browser and device storage
-      controls. This may permanently remove the relevant local data.
-    </p>
-    <p>
-      To request deletion of a community profile or post, contact
-      the developer. Account ownership may be verified before a
-      request is processed. The timing of deletion from backups or
-      third-party systems may depend on their respective policies.
-    </p>
+    <footer id="footerText">
+      BookReader · সহজে পড়ুন, নিজের তথ্যের যত্ন নিন
+    </footer>
 
-    <h2>9. Children and Teen Users</h2>
-    <p>
-      Users under the age of majority should follow applicable laws
-      and parental-consent requirements. Do not publish personal
-      or sensitive information without the required permission.
-    </p>
+  </div>
 
-    <h2>10. Changes to This Policy</h2>
-    <p>
-      This Privacy Policy may be revised when app features,
-      technologies, or legal requirements change. The effective
-      date will be updated when a new version is published.
-    </p>
+  <script>
+    /*
+      Language switch:
+      বাংলা বোতামে ক্লিক করলে বাংলা,
+      English বোতামে ক্লিক করলে ইংরেজি দেখাবে।
+    */
 
-    <h2>11. Contact</h2>
-    <p>
-      Developer: Muhammed Omor
-    </p>
-    <p>
-      Email:
-      <a href="mailto:mdomorfaruk2r@gmail.com">
-        mdomorfaruk2r@gmail.com
-      </a>
-    </p>
-  </main>
+    const translations = {
+      bn: {
+        heroTitle: "আপনার পছন্দের বই পড়ুন",
+        heroText:
+          "বিনামূল্যে PDF বই খুঁজে ডাউনলোড করুন, তারপর আপনার ডাউনলোড করা বই BookReader-এ পড়ুন।",
 
-  <footer>
-    <span id="footerBn">BookReader — গোপনীয়তা নীতি</span>
-    <span id="footerEn" hidden>BookReader — Privacy Policy</span>
-  </footer>
-</div>
+        booksHeading: "বিনামূল্যে PDF বই ডাউনলোড করুন",
+        booksSubheading:
+          "এই লিংকগুলো ব্যবহার করে বিনামূল্যে PDF বই খুঁজে ডাউনলোড করুন, এরপর BookReader-এ ডাউনলোড করা বই খুলে পড়ুন।",
+        boimateDescription: "বিনামূল্যে PDF বই খুঁজুন",
+        ebookDescription: "বিনামূল্যে PDF বই খুঁজুন",
 
-<script>
-  function setLanguage(language) {
-    const isBangla = language === 'bn';
+        policyTitle: "গোপনীয়তা নীতি",
+        effectiveDate: "কার্যকর তারিখ: ১৯ অক্টোবর ২০২৬",
+        policyIntro:
+          "BookReader-এ স্বাগতম। এই নীতিতে BookReader-এর মূল বই পড়ার ফিচার ব্যবহার করার সময় আপনার তথ্য কীভাবে পরিচালিত হয় তা ব্যাখ্যা করা হয়েছে।",
 
-    document.documentElement.lang = language;
+        p1h: "১. অ্যাপ সম্পর্কে",
+        p1:
+          "BookReader একটি ডিজিটাল বই পড়ার অ্যাপ। এটি ব্যবহার করে আপনি বই পড়ার অভিজ্ঞতা সাজাতে এবং সমর্থিত ফিচারগুলো ব্যবহার করতে পারেন।",
 
-    document.getElementById('bnPolicy').hidden = !isBangla;
-    document.getElementById('enPolicy').hidden = isBangla;
+        p2h: "২. ডিভাইসে সংরক্ষিত তথ্য",
+        p2:
+          "অ্যাপের মূল লাইব্রেরির বই, বইয়ের তথ্য, ক্যাটাগরি, বুকমার্ক, নোট এবং কাস্টম অডিও আপনার ডিভাইসের IndexedDB-তে সংরক্ষিত হতে পারে। কিছু সেটিংস ও পড়ার ধারাবাহিকতার তথ্য ব্রাউজারের localStorage-এ রাখা হতে পারে।",
+        p2b:
+          "এই তথ্য স্থানীয়ভাবে সংরক্ষিত হলে ব্রাউজারের ডেটা মুছে ফেলা, অ্যাপের ডেটা পরিষ্কার করা বা ডিভাইস হারানোর কারণে তথ্য হারাতে পারেন। স্বয়ংক্রিয় ক্লাউড ব্যাকআপ বা একাধিক ডিভাইসে সিঙ্কের নিশ্চয়তা দেওয়া হয় না।",
 
-    document.getElementById('bnBtn').classList.toggle(
-      'active', isBangla
-    );
-    document.getElementById('enBtn').classList.toggle(
-      'active', !isBangla
-    );
+        p3h: "৩. বাহ্যিক ওয়েবসাইট",
+        p3:
+          "এই পেজ থেকে Boimate এবং Bengali Ebook-এর মতো তৃতীয় পক্ষের ওয়েবসাইট খোলা যেতে পারে। এসব সাইট তাদের নিজস্ব গোপনীয়তা নীতি, কুকি ও তথ্য সংগ্রহের নিয়ম অনুসরণ করে। তাদের সাইটে আপনার কার্যকলাপ, নিরাপত্তা, বিষয়বস্তু বা তথ্য ব্যবস্থাপনা BookReader নিয়ন্ত্রণ করে না।",
+        p3b:
+          "বাহ্যিক সাইটে গেলে সেই সাইট নিজস্ব নিয়ম অনুযায়ী আপনার IP ঠিকানা, ব্রাউজার-সংক্রান্ত তথ্য বা কুকি প্রক্রিয়া করতে পারে। বিস্তারিত জানতে সংশ্লিষ্ট সাইটের গোপনীয়তা নীতি পড়ুন।",
 
-    document.getElementById('bnBtn').setAttribute(
-      'aria-pressed', String(isBangla)
-    );
-    document.getElementById('enBtn').setAttribute(
-      'aria-pressed', String(!isBangla)
-    );
+        p4h: "৪. তৃতীয় পক্ষের প্রযুক্তি",
+        p4:
+          "অ্যাপের ফিচার অনুযায়ী কিছু লাইব্রেরি বা রিসোর্স বাহ্যিক সার্ভার/CDN থেকে লোড হতে পারে। সংশ্লিষ্ট পরিষেবার প্রদানকারীরা তাদের নিজস্ব নীতি অনুযায়ী প্রযুক্তিগত তথ্য প্রক্রিয়া করতে পারেন।",
 
-    document.getElementById('footerBn').hidden = !isBangla;
-    document.getElementById('footerEn').hidden = isBangla;
+        p5h: "৫. তথ্যের নিরাপত্তা",
+        p5:
+          "আপনার ডিভাইস ও ব্রাউজার নিরাপদ রাখুন এবং প্রয়োজন ছাড়া ব্যক্তিগত বা সংবেদনশীল তথ্য শেয়ার করবেন না। কোনো ওয়েবসাইট বা অনলাইন পরিষেবার নিরাপত্তা শতভাগ নিশ্চিত করা সম্ভব নয়।",
 
-    document.title = isBangla
-      ? 'গোপনীয়তা নীতি | BookReader'
-      : 'Privacy Policy | BookReader';
-  }
+        p6h: "৬. তথ্য মুছে ফেলা ও নিয়ন্ত্রণ",
+        p6:
+          "ডিভাইসে সংরক্ষিত তথ্য অ্যাপের Clear Data সুবিধা অথবা ব্রাউজার ও ডিভাইসের স্টোরেজ সেটিংস থেকে মুছে ফেলা যেতে পারে। এতে সংশ্লিষ্ট স্থানীয় তথ্য স্থায়ীভাবে হারিয়ে যেতে পারে। বাহ্যিক সাইটে দেওয়া তথ্য মুছতে হলে সেই সাইটের পরিচালকের সঙ্গে যোগাযোগ করতে হবে।",
 
-  // Default language: Bangla
-  setLanguage('bn');
-</script>
+        p7h: "৭. শিশু ও কিশোর ব্যবহারকারী",
+        p7:
+          "অপ্রাপ্তবয়স্ক ব্যবহারকারীদের ক্ষেত্রে প্রযোজ্য আইন ও অভিভাবকের সম্মতি-সংক্রান্ত নিয়ম অনুসরণ করা উচিত। প্রয়োজনীয় অনুমতি ছাড়া ব্যক্তিগত বা সংবেদনশীল তথ্য প্রকাশ করবেন না।",
+
+        p8h: "৮. নীতির পরিবর্তন",
+        p8:
+          "অ্যাপের ফিচার, প্রযুক্তি বা আইনি প্রয়োজন পরিবর্তিত হলে এই গোপনীয়তা নীতি সংশোধন করা হতে পারে। নতুন সংস্করণ প্রকাশিত হলে কার্যকর তারিখ আপডেট করা হবে।",
+
+        p9h: "৯. যোগাযোগ",
+        p9: "ডেভেলপার: Muhammed Omor",
+        emailLabel: "ইমেইল:",
+        footerText: "BookReader · সহজে পড়ুন, নিজের তথ্যের যত্ন নিন"
+      },
+
+      en: {
+        heroTitle: "Read the Books You Love",
+        heroText:
+          "Find and download free PDF books, then read your downloaded books in BookReader.",
+
+        booksHeading: "Download Free PDF Books",
+        booksSubheading:
+          "Use these links to find and download free PDF books, then open and read your downloaded files in BookReader.",
+        boimateDescription: "Find free PDF books",
+        ebookDescription: "Find free PDF books",
+
+        policyTitle: "Privacy Policy",
+        effectiveDate: "Effective date: October 19, 2026",
+        policyIntro:
+          "Welcome to BookReader. This policy explains how information is handled when you use BookReader's core reading features.",
+
+        p1h: "1. About the App",
+        p1:
+          "BookReader is a digital reading app. You can use it to organize your reading experience and access supported features.",
+
+        p2h: "2. Information Stored on Your Device",
+        p2:
+          "Books in the main library, book details, categories, bookmarks, notes, and custom audio may be stored in IndexedDB on your device. Some settings and reading continuity information may be stored in browser localStorage.",
+        p2b:
+          "Locally stored information may be lost if browser data is cleared, app data is erased, or your device is lost. Automatic cloud backup or synchronization across multiple devices is not guaranteed.",
+
+        p3h: "3. External Websites",
+        p3:
+          "This page may open third-party websites such as Boimate and Bengali Ebook. Those websites follow their own privacy policies, cookie practices, and data-collection rules. BookReader does not control your activity on those sites, their security, content, or data handling.",
+        p3b:
+          "When you visit an external website, that site may process your IP address, browser-related information, or cookies under its own policies. Please review the relevant website's privacy policy for details.",
+
+        p4h: "4. Third-Party Technologies",
+        p4:
+          "Depending on app features, some libraries or resources may load from external servers or CDNs. Providers may process technical information under their own policies.",
+
+        p5h: "5. Information Security",
+        p5:
+          "Keep your device and browser secure, and do not share personal or sensitive information unless necessary. No website or online service can guarantee absolute security.",
+
+        p6h: "6. Data Deletion and Control",
+        p6:
+          "Locally stored information may be deleted through the app's Clear Data feature or browser/device storage settings. This may permanently remove local information. To delete information submitted to an external site, contact that site's operator.",
+
+        p7h: "7. Children and Teen Users",
+        p7:
+          "Minors should follow applicable laws and parental-consent requirements. Do not publish personal or sensitive information without the required permission.",
+
+        p8h: "8. Changes to This Policy",
+        p8:
+          "This Privacy Policy may be revised when app features, technologies, or legal requirements change. The effective date will be updated when a new version is published.",
+
+        p9h: "9. Contact",
+        p9: "Developer: Muhammed Omor",
+        emailLabel: "Email:",
+        footerText: "BookReader · Read with ease, protect your information"
+      }
+    };
+
+    function setLanguage(language) {
+      const selectedLanguage = translations[language];
+
+      // Unknown language হলে ফাংশন বন্ধ হবে।
+      if (!selectedLanguage) {
+        return;
+      }
+
+      const isBangla = language === "bn";
+
+      // Page-এর language attribute আপডেট।
+      document.documentElement.lang = language;
+
+      // Active button এবং screen-reader state আপডেট।
+      const bnButton = document.getElementById("bnBtn");
+      const enButton = document.getElementById("enBtn");
+
+      bnButton.classList.toggle("active", isBangla);
+      enButton.classList.toggle("active", !isBangla);
+
+      bnButton.setAttribute("aria-pressed", String(isBangla));
+      enButton.setAttribute("aria-pressed", String(!isBangla));
+
+      // অনুবাদের সব text সংশ্লিষ্ট HTML element-এ বসানো।
+      Object.entries(selectedLanguage).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+
+        if (element) {
+          element.textContent = value;
+        }
+      });
+
+      // Browser tab-এর title পরিবর্তন।
+      document.title = isBangla
+        ? "BookReader | বই পড়ুন ও গোপনীয়তা নীতি"
+        : "BookReader | Read Books & Privacy Policy";
+    }
+
+    // Page প্রথমবার খোলার সময় বাংলা দেখাবে।
+    document.addEventListener("DOMContentLoaded", function () {
+      setLanguage("bn");
+    });
+  </script>
 </body>
 </html>
