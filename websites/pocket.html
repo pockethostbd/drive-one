@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pocket GitHub ZIP Manager Pro</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#64708a;--border:#dbe1ec;--input:#f8faff;--accent:#3867ff;--danger:#d9365b;--soft:#eef2ff}
+:root.dark{--bg:#090e1b;--card:#131a2c;--text:#eef3ff;--muted:#a6b0c7;--border:#293552;--input:#0d1424;--accent:#5d80ff;--danger:#e64d70;--soft:#202b49}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.wrap{max-width:1050px;margin:auto;padding:16px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:17px;margin:12px 0;box-shadow:0 2px 12px #00000009}h1{font-size:24px;margin:0}h2{font-size:18px;margin:0 0 12px}.muted{color:var(--muted);font-size:14px}label{display:block;margin:10px 0 5px;font-weight:650}input[type=text],input[type=password]{width:100%;padding:11px;border:1px solid var(--border);border-radius:10px;background:var(--input);color:var(--text);outline:none}button{border:0;border-radius:10px;padding:10px 14px;margin:6px 5px 0 0;background:var(--accent);color:#fff;font-weight:700;cursor:pointer}button.secondary{background:var(--soft);color:var(--text)}button.danger{background:var(--danger)}button:disabled{opacity:.45;cursor:not-allowed}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.drop{border:2px dashed var(--border);padding:22px;border-radius:14px;text-align:center}.bar{height:9px;background:var(--soft);border-radius:9px;overflow:hidden;margin:10px 0}.bar>div{height:100%;width:0;background:var(--accent)}#status{background:var(--input);padding:11px;border-radius:10px;white-space:pre-wrap;min-height:50px}.tree,.repo{max-height:430px;overflow:auto;border:1px solid var(--border);border-radius:12px}.item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border)}.item:last-child{border-bottom:0}.item .name{flex:1;word-break:break-all}.folder{font-weight:700}.crumb{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}.crumb button{margin:0;padding:6px 9px}.badge{font-size:11px;padding:3px 7px;border-radius:999px;background:var(--soft);color:var(--muted)}.hist{font-size:14px;padding:9px 0;border-bottom:1px solid var(--border)}.hist:last-child{border:0}.switch{white-space:nowrap}@media(max-width:700px){.grid{grid-template-columns:1fr}.top{align-items:flex-start}.switch{font-size:13px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><h1>📦 Pocket GitHub ZIP Manager Pro</h1><div class="muted">ZIP upload • repository browser • folder management</div></div>
+    <button id="theme" class="secondary switch">☀️ Light</button>
+  </div>
+
+  <div class="card">
+    <h2>⚙️ GitHub Settings</h2>
+    <div class="grid">
+      <div><label>GitHub Username</label><input id="owner" value="pockethostbd" type="text"></div>
+      <div><label>Repository Name</label><input id="repo" placeholder="MyProject" type="text"></div>
+    </div>
+    <label>GitHub Personal Access Token</label>
+    <input id="token" type="password" placeholder="github_pat_...">
+    <button id="save" class="secondary">Save Settings</button>
+    <button id="clear" class="secondary">Clear Saved Settings</button>
+    <p class="muted">Fine-grained token ব্যবহার করুন এবং প্রয়োজনীয় repository-তে Contents: Read and write permission দিন। Token কাউকে দেবেন না।</p>
+  </div>
+
+  <div class="card">
+    <h2>⬆️ ZIP Upload</h2>
+    <div class="drop">
+      <input id="zip" type="file" accept=".zip,application/zip">
+      <p class="muted">ZIP নির্বাচন করলে upload-এর আগে সম্পূর্ণ file tree এখানে দেখা যাবে।</p>
+    </div>
+    <div id="zipTree" class="tree" style="margin-top:12px">ZIP নির্বাচন করা হয়নি।</div>
+    <button id="upload" disabled>Upload ZIP</button>
+    <button id="clearZip" class="secondary">Clear Preview</button>
+    <div class="bar"><div id="bar"></div></div>
+    <div id="status">Ready.</div>
+  </div>
+
+  <div class="card">
+    <h2>🗂️ Repository Browser</h2>
+    <button id="loadRepo">Open Repository</button>
+    <button id="refresh" class="secondary">Refresh</button>
+    <div id="crumb" class="crumb"></div>
+    <div id="repoView" class="repo">Repository not loaded.</div>
+    <div style="margin-top:10px">
+      <button id="deleteFolder" class="danger" disabled>Delete Current Folder</button>
+      <button id="deleteSelected" class="danger" disabled>Delete Selected Files</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🕘 Upload History</h2>
+    <button id="clearHistory" class="secondary">Clear History</button>
+    <div id="history" class="muted">No upload history.</div>
+  </div>
+</div>
+
+<script>
+const JSZIP_URL='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+const API='https://api.github.com'; let zipFile=null, zipEntries=[], branch='main', repoTree=[], currentPath='';
+const $=x=>document.getElementById(x);
+
+function saveTheme(){localStorage.setItem('pghm-theme',document.documentElement.classList.contains('dark')?'dark':'light')}
+function initTheme(){if(localStorage.getItem('pghm-theme')==='dark')document.documentElement.classList.add('dark');updateTheme()}
+function updateTheme(){$('theme').textContent=document.documentElement.classList.contains('dark')?'☀️ Light':'🌙 Dark'}
+$('theme').onclick=()=>{document.documentElement.classList.toggle('dark');saveTheme();updateTheme()};initTheme();
+
+function status(s){$('status').textContent=s}
+function cfg(){let owner=$('owner').value.trim(),repo=$('repo').value.trim(),token=$('token').value.trim();if(!owner||!repo||!token)throw Error('Username, Repository Name এবং Token পূরণ করুন।');return{owner,repo,token}}
+function headers(){return {'Accept':'application/vnd.github+json','Authorization':'Bearer '+$('token').value.trim(),'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'}}
+async function api(path,opt={}){let r=await fetch(API+path,{...opt,headers:{...headers(),...(opt.headers||{})}}),d={};try{d=await r.json()}catch{}if(!r.ok)throw Error(d.message||('GitHub API error '+r.status));return d}
+function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function pathParts(p){return p?p.split('/').filter(Boolean):[]}
+function encPath(p){return pathParts(p).map(encodeURIComponent).join('/')}
+
+function loadSaved(){try{let x=JSON.parse(localStorage.getItem('pghm')||'null');if(x){$('owner').value=x.owner||'pockethostbd';$('repo').value=x.repo||'';$('token').value=x.token||''}}catch{}}
+$('save').onclick=()=>{localStorage.setItem('pghm',JSON.stringify({owner:$('owner').value,repo:$('repo').value,token:$('token').value}));status('Settings saved on this device.')}
+$('clear').onclick=()=>{localStorage.removeItem('pghm');$('token').value='';status('Saved settings cleared.')}
+
+async function loadJSZip(){if(window.JSZip)return;await new Promise((res,rej)=>{let s=document.createElement('script');s.src=JSZIP_URL;s.onload=res;s.onerror=()=>rej(Error('ZIP library load হয়নি। প্রথমবার internet লাগবে।'));document.head.appendChild(s)})}
+function renderZipTree(){
+ let root={dirs:{},files:[]};
+ for(let e of zipEntries){let parts=pathParts(e.path),node=root;parts.forEach((p,i)=>{if(i===parts.length-1)node.files.push({name:p,path:e.path,size:e.size});else node=node.dirs[p]||(node.dirs[p]={dirs:{},files:[]})})}
+ function walk(n,prefix=''){let out='';Object.keys(n.dirs).sort().forEach(d=>{out+=`<div class="item folder">📁 <span class="name">${esc(prefix+d)}/</span></div>`;out+=walk(n.dirs[d],prefix+d+'/')});n.files.sort((a,b)=>a.path.localeCompare(b.path)).forEach(f=>out+=`<div class="item">📄 <span class="name">${esc(prefix+f.name)}</span><span class="badge">${Math.round(f.size/1024*10)/10} KB</span></div>`);return out}
+ $('zipTree').innerHTML=walk(root)||'<div class="item muted">ZIP empty.</div>';
+}
+$('zip').onchange=async()=>{zipFile=$('zip').files[0]||null;if(!zipFile){$('upload').disabled=true;return}try{await loadJSZip();let z=await JSZip.loadAsync(zipFile);zipEntries=[];z.forEach((p,o)=>{if(!o.dir)zipEntries.push({path:p,size:o._data?.uncompressedSize||0,obj:o})});renderZipTree();$('upload').disabled=!zipEntries.length;status(`Preview ready: ${zipEntries.length} files.`)}catch(e){status('❌ '+e.message);$('upload').disabled=true}}
+$('clearZip').onclick=()=>{$('zip').value='';zipFile=null;zipEntries=[];$('zipTree').textContent='ZIP নির্বাচন করা হয়নি।';$('upload').disabled=true}
+
+function b64(buf){let a=new Uint8Array(buf),s='',n=0x8000;for(let i=0;i<a.length;i+=n)s+=String.fromCharCode(...a.subarray(i,i+n));return btoa(s)}
+async function defaultBranch(c){let r=await api(`/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}`);return r.default_branch||'main'}
+async function uploadZip(){
+ let c=cfg();await loadJSZip();branch=await defaultBranch(c);
+ let ref=await api(`/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/git/ref/heads/${encodeURIComponent(branch)}`);
+ let commit=await api(`/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/git/commits/${ref.object.sha}`);
+ let tree=[];
+ for(let i=0;i<zipEntries.length;i++){let e=zipEntries[i];status(`Uploading ${i+1}/${zipEntries.length}\\n${e.path}`);let blob=await api(`/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/git/blobs`,{method:'POST',body:JSON.stringify({content:b64(await e.obj.async('arraybuffer')),encoding:'base64'})});tree.push({path:pathParts(e.path).join('/'),mode:'100644',type:'blob',sha:blob.sha});$('bar').style.width=((i+1)/zipEntries.length*70)+'%'}
+ let nt=await api(`/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/git/trees`,{method:'POST',body:JSON.stringify({base_tree:commit.tree.sha,tree})});
+ let nc=await api(`/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/git/commits`,{method:'POST',body:JSON.stringify({message:`Upload ZIP: ${zipFile.name}`,tree:nt.sha,parents:[ref.object.sha]})});
+ await api(`/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/git/refs/heads/${encodeURIComponent(branch)}`,{method:'PATCH',body:JSON.stringify({sha:nc.sha,force:false})});
+ $('bar').style.width='100%';status(`✅ Uploaded ${zipEntries.length} files to ${c.owner}/${c.repo}`);addHistory(c,zipFile.name,zipEntries.length);await loadRepo()
+}
+$('upload').onclick=async()=>{try{$('upload').disabled=true;await uploadZip()}catch(e){status('❌ '+e.message)}finally{$('upload').disabled=!zipEntries.length}}
+
+async function loadRepo(){
+ try{let c=cfg();branch=await defaultBranch(c);status('Loading repository…');let r=await api(`/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/git/trees/${encodeURIComponent(branch)}?recursive=1`);repoTree=(r.tree||[]).filter(x=>x.type==='blob'||x.type==='tree');currentPath='';renderRepo();status(`Loaded repository • ${repoTree.length} entries.`)}catch(e){status('❌ '+e.message)}
+}
+function renderRepo(){
+ let prefix=currentPath?currentPath+'/':'';let map={};
+ repoTree.filter(x=>x.path.startsWith(prefix)).forEach(x=>{let rest=x.path.slice(prefix.length);if(!rest)return;let p=rest.split('/')[0];if(!map[p])map[p]={dir:rest.includes('/'),items:[]};map[p].items.push(x)});
+ let keys=Object.keys(map).sort((a,b)=>Number(map[b].dir)-Number(map[a].dir)||a.localeCompare(b));
+ $('crumb').innerHTML=`<button class="secondary" onclick="go('')">🏠 root</button>`+pathParts(currentPath).map((p,i)=>`<button class="secondary" onclick="go('${pathParts(currentPath).slice(0,i+1).join('/').replace(/'/g,"\\'")}')">${esc(p)}</button>`).join('');
+ let out='';if(currentPath)out+=`<div class="item"><button class="secondary" onclick="go('${pathParts(currentPath).slice(0,-1).join('/').replace(/'/g,"\\'")}')">⬆️ Back</button></div>`;
+ for(let k of keys){let m=map[k];if(m.dir)out+=`<div class="item folder"><span>📁</span><button class="secondary name" onclick="go('${(prefix+k).replace(/'/g,"\\'")}')">${esc(k)}</button><span class="badge">${m.items.length}+</span></div>`;
+ else {let x=m.items[0];out+=`<div class="item"><input type="checkbox" class="repoChk" data-path="${esc(x.path)}"><span>📄</span><span class="name">${esc(k)}</span><span class="badge">${Math.round((x.size||0)/1024*10)/10} KB</span></div>`}}
+ $('repoView').innerHTML=out||'<div class="item muted">Empty folder.</div>';$('deleteFolder').disabled=!currentPath;$('deleteSelected').disabled=!document.querySelectorAll('.repoChk').length
+}
+window.go=p=>{currentPath=p;renderRepo()}
+$('loadRepo').onclick=loadRepo;$('refresh').onclick=loadRepo;
+
+async function deletePaths(paths){
+ let c=cfg();if(!paths.length)return;if(!confirm(`Delete ${paths.length} item(s)?`))return;let b=await defaultBranch(c);
+ for(let i=0;i<paths.length;i++){let p=paths[i];status(`Deleting ${i+1}/${paths.length}\\n${p}`);let info=await api(`/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/contents/${encPath(p)}?ref=${encodeURIComponent(b)}`);await api(`/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/contents/${encPath(p)}`,{method:'DELETE',body:JSON.stringify({message:`Delete ${p}`,sha:info.sha,branch:b})})}
+ status(`✅ Deleted ${paths.length} item(s).`);await loadRepo()
+}
+$('deleteSelected').onclick=async()=>{try{let p=[...document.querySelectorAll('.repoChk:checked')].map(x=>x.dataset.path);await deletePaths(p)}catch(e){status('❌ '+e.message)}}
+$('deleteFolder').onclick=async()=>{try{let pref=currentPath+'/';let p=repoTree.filter(x=>x.type==='blob'&&x.path.startsWith(pref)).map(x=>x.path);await deletePaths(p)}catch(e){status('❌ '+e.message)}}
+
+function addHistory(c,file,count){let h=JSON.parse(localStorage.getItem('pghm-history')||'[]');h.unshift({when:new Date().toLocaleString(),repo:`${c.owner}/${c.repo}`,file,count});localStorage.setItem('pghm-history',JSON.stringify(h.slice(0,30)));renderHistory()}
+function renderHistory(){let h=JSON.parse(localStorage.getItem('pghm-history')||'[]');$('history').innerHTML=h.length?h.map(x=>`<div class="hist">📦 <b>${esc(x.file)}</b> → ${esc(x.repo)}<br><span class="muted">${x.count} files • ${esc(x.when)}</span></div>`).join(''):'<span class="muted">No upload history.</span>'}
+$('clearHistory').onclick=()=>{localStorage.removeItem('pghm-history');renderHistory()};loadSaved();renderHistory();
+</script>
+</body>
+</html>
