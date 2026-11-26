@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05080e">
+<title>Pipra — Browse. Block. Stay Private.</title>
+<style>
+:root{--bg:#05080e;--panel:#101721;--panel2:#0b111a;--line:rgba(174,201,232,.22);--text:#f2f6fc;--muted:#91a0b3;--blue:#35a7ff;--cyan:#40e0ff;--silver:#c7d2df;--r:22px}
+*{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 50% 0%,rgba(31,117,210,.16),transparent 40%),radial-gradient(ellipse at 50% 100%,rgba(13,98,186,.12),transparent 36%),var(--bg);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit}button{cursor:pointer;color:inherit}.shell{width:min(100%,1040px);margin:auto;position:relative;min-height:100vh;padding:0 22px 105px}
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 0 12px;gap:14px}.brand{display:flex;align-items:center;gap:11px}.brand-logo{width:43px;height:43px;display:grid;place-items:center;border-radius:50%;border:1px solid rgba(75,171,255,.7);background:linear-gradient(145deg,#dfe8f4,#65788f 52%,#111a27);box-shadow:0 0 0 4px rgba(52,158,255,.07),0 0 24px rgba(36,145,255,.28);overflow:hidden}.brand-logo svg{width:31px;height:31px}.brand-title{font-weight:850;letter-spacing:.16em;font-size:17px}.brand-caption{font-size:9px;color:#8da1b9;letter-spacing:.2em;text-transform:uppercase;margin-top:3px}.header-actions{display:flex;gap:9px}.icon-btn{width:40px;height:40px;border-radius:14px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.015));display:grid;place-items:center}.icon-btn svg{width:19px;height:19px;color:#b9c9db}.icon-btn:active{transform:scale(.96)}
+.hero{padding:clamp(42px,9vh,88px) 0 0;text-align:center;position:relative}.hero:before,.hero:after{content:"";position:absolute;pointer-events:none;width:70vw;height:220px;max-width:780px;border:1px solid rgba(69,157,255,.22);border-color:rgba(65,163,255,.22) transparent transparent transparent;border-radius:50%;transform:rotate(-9deg);top:20px;left:50%;translate:-50% 0;z-index:0}.hero:after{width:90vw;top:47px;border-top-color:rgba(199,211,227,.11);transform:rotate(8deg)}.hero>*{position:relative;z-index:1}.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(70,160,255,.24);background:rgba(30,106,180,.09);border-radius:999px;padding:7px 12px;color:#a8c7e8;font-size:10px;letter-spacing:.17em;text-transform:uppercase}.dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 11px var(--cyan)}
+h1{font-size:clamp(43px,10vw,78px);line-height:.98;letter-spacing:-.075em;margin:24px 0 13px;font-weight:850}.metal{background:linear-gradient(180deg,#fff 5%,#d6e1ee 45%,#8394a9 100%);-webkit-background-clip:text;background-clip:text;color:transparent}.tagline{margin:0;color:#a1afc1;font-size:13px;letter-spacing:.17em;text-transform:uppercase}.tagline b{color:var(--cyan);font-weight:600;margin:0 7px}
+.search-area{max-width:760px;margin:36px auto 0}.searchbox{display:flex;align-items:center;gap:11px;border:1px solid rgba(67,174,255,.62);border-radius:19px;padding:6px 7px 6px 17px;background:linear-gradient(120deg,rgba(24,35,49,.96),rgba(8,13,21,.98));box-shadow:0 0 0 4px rgba(38,150,255,.055),0 13px 45px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.05);transition:box-shadow .2s,border-color .2s}.searchbox:focus-within{border-color:var(--cyan);box-shadow:0 0 0 4px rgba(64,224,255,.1),0 13px 45px rgba(0,0,0,.28)}.search-symbol{display:grid;place-items:center;color:#8cb9e6;flex:0 0 24px}.search-symbol svg{width:22px;height:22px}#query{border:0;outline:0;background:transparent;color:var(--text);width:100%;min-width:0;padding:13px 0;font-size:14px}#query::placeholder{color:#8795a8}.search-engine{width:38px;flex:0 0 38px;display:grid;place-items:center;border:0;border-left:1px solid var(--line);background:transparent;color:#9eb1c7}.search-engine svg{width:20px;height:20px}.go{height:45px;width:48px;flex:0 0 48px;border:1px solid rgba(114,205,255,.8);border-radius:15px;background:linear-gradient(145deg,#36b7ff,#1673e5);color:white;display:grid;place-items:center;box-shadow:0 0 22px rgba(34,144,255,.27)}.go svg{width:22px;height:22px}.hint{font-size:10px;color:#6f8298;margin-top:11px}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:36px 0 14px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#a8b8ca}.section-title small{font-size:10px;letter-spacing:0;text-transform:none;color:#65788e}
+.shortcuts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.shortcut{min-width:0;border:1px solid rgba(163,189,220,.16);border-radius:19px;padding:14px 5px 13px;background:linear-gradient(145deg,rgba(26,36,50,.92),rgba(10,15,23,.94));display:flex;flex-direction:column;align-items:center;gap:9px;text-decoration:none;color:var(--text);transition:transform .18s,border-color .18s,background .18s;box-shadow:inset 0 1px rgba(255,255,255,.035)}.shortcut:hover{transform:translateY(-3px);border-color:rgba(62,172,255,.6);background:linear-gradient(145deg,rgba(30,51,74,.95),rgba(10,15,23,.96))}.shortcut:active{transform:scale(.97)}.site-icon{width:47px;height:47px;border-radius:15px;background:linear-gradient(145deg,#222f40,#0e1622);border:1px solid rgba(183,206,234,.12);display:grid;place-items:center;color:#e1eaf5}.site-icon svg{width:24px;height:24px}.site-name{font-size:11px;color:#d0dbe8;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.shortcut.add .site-icon{border-style:dashed;color:#63bdff;background:rgba(36,129,213,.08)}
+.security-strip{margin-top:30px;border:1px solid rgba(149,181,216,.2);border-radius:21px;background:linear-gradient(115deg,rgba(17,26,38,.94),rgba(7,12,20,.94));display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:15px 4px;box-shadow:0 13px 36px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.04)}.security-item{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:5px 3px;border-right:1px solid rgba(164,190,221,.16)}.security-item:last-child{border:0}.security-icon{color:#4db8ff;filter:drop-shadow(0 0 8px rgba(42,154,255,.25))}.security-icon svg{width:22px;height:22px}.security-label{font-size:10px;line-height:1.45;color:#b7c6d8}
+.earth-glow{height:70px;position:absolute;left:-20%;right:-20%;bottom:65px;pointer-events:none;overflow:hidden;opacity:.7}.earth-glow:before{content:"";position:absolute;width:125%;height:180px;left:-12%;top:35px;border-radius:50%;border-top:2px solid #5fcaff;background:radial-gradient(ellipse at 50% 0%,rgba(26,119,219,.27),transparent 65%);box-shadow:0 -5px 23px rgba(26,145,255,.28)}
+footer{position:absolute;bottom:0;left:22px;right:22px;min-height:76px;border:1px solid rgba(156,183,214,.22);border-bottom:0;border-radius:28px 28px 0 0;background:rgba(5,9,15,.96);backdrop-filter:blur(16px);display:grid;grid-template-columns:repeat(5,1fr);padding:10px 5px calc(9px + env(safe-area-inset-bottom));box-shadow:0 -10px 35px rgba(0,0,0,.24)}.nav-item{border:0;background:transparent;color:#8293a8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:9px}.nav-item svg{width:21px;height:21px}.nav-item.active{color:#45b7ff;text-shadow:0 0 12px rgba(42,154,255,.5)}.nav-item.active svg{filter:drop-shadow(0 0 6px rgba(46,164,255,.45))}
+dialog{width:min(410px,calc(100vw - 28px));border:1px solid rgba(143,184,228,.25);border-radius:22px;padding:22px;background:#101721;color:var(--text);box-shadow:0 30px 90px #000b}dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(5px)}.dlg-title{margin:0 0 7px;font-size:19px}.dlg-copy{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 18px}.field-label{display:block;font-size:11px;color:#b5c6d9;margin:12px 0 7px}.field{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:#080d14;color:var(--text);outline:0;font-size:13px}.field:focus{border-color:var(--blue)}.actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.btn{border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:12px;font-weight:650}.btn.secondary{background:transparent;color:#c0cede}.btn.primary{background:linear-gradient(135deg,#45c1ff,#2584ee);color:#06111e;border:0}.toast{position:fixed;z-index:10;bottom:92px;left:50%;translate:-50% 15px;opacity:0;pointer-events:none;background:#eaf4ff;color:#0b1725;padding:11px 15px;border-radius:12px;font-size:12px;max-width:calc(100vw - 32px);text-align:center;box-shadow:0 10px 35px #0008;transition:.2s}.toast.show{translate:-50% 0;opacity:1}
+@media(min-width:760px){.shell{padding-bottom:35px}.hero{padding-top:65px}.search-area{margin-top:38px}.shortcuts{max-width:680px;margin:auto}.security-strip{max-width:700px;margin:32px auto 0}.earth-glow{display:none}footer{position:static;margin:45px auto 0;max-width:720px;border-bottom:1px solid rgba(156,183,214,.22);border-radius:20px;min-height:68px}}
+@media(max-width:420px){.shell{padding-left:15px;padding-right:15px}.hero{padding-top:45px}.hero:before{top:5px}.hero:after{top:27px}.tagline{font-size:10px;letter-spacing:.13em}.search-area{margin-top:29px}.searchbox{gap:8px;padding-left:12px}.go{width:43px;flex-basis:43px}.shortcuts{gap:7px}.shortcut{border-radius:16px;padding:11px 3px}.site-icon{width:41px;height:41px;border-radius:13px}.site-name{font-size:10px}.security-strip{margin-top:24px;padding:12px 2px}.security-label{font-size:9px}.security-icon svg{width:20px;height:20px}footer{left:10px;right:10px}.brand-caption{letter-spacing:.13em}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+  <div class="brand">
+    <div class="brand-logo" aria-hidden="true">
+      <!-- Replace this illustrative ant with the official Pipra logo asset when available. -->
+      <svg viewBox="0 0 40 40" fill="none">
+        <g stroke="#0a111b" stroke-width="2.1" stroke-linecap="round"><path d="M15 16 9 10M25 16l6-6M13 21 5 20M27 21l8-1M15 27l-6 6M25 27l6 6M16 10 13 5M24 10l3-5"/></g>
+        <circle cx="20" cy="10" r="4.2" fill="#07101a"/><ellipse cx="20" cy="20" rx="5.6" ry="6.4" fill="#07101a"/><ellipse cx="20" cy="30" rx="6.5" ry="5.1" fill="#07101a"/>
+        <path d="M17 19h6M17 30h6" stroke="#b9d9f7" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div><div class="brand-title">PIPRA</div><div class="brand-caption">Browse · Block · Stay Private</div></div>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" id="addTop" aria-label="Add website" title="Add website"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+    <button class="icon-btn" id="openSettings" aria-label="Home settings" title="Home settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="m19 13.5 1.3 1-1.8 3.1-1.6-.6a7.6 7.6 0 0 1-1.7 1l-.3 1.7h-3.6l-.3-1.7a7.6 7.6 0 0 1-1.7-1l-1.6.6-1.8-3.1 1.3-1a7.5 7.5 0 0 1 0-2l-1.3-1 1.8-3.1 1.6.6a7.6 7.6 0 0 1 1.7-1l.3-1.7h3.6l.3 1.7a7.6 7.6 0 0 1 1.7 1l1.6-.6 1.8 3.1-1.3 1a7.5 7.5 0 0 1 0 2Z"/></svg></button>
+  </div>
+</header>
+<main>
+<section class="hero">
+  <div class="eyebrow"><span class="dot"></span> A calmer way to browse</div>
+  <h1><span class="metal">Browse with</span><br><span class="metal">purpose.</span></h1>
+  <p class="tagline">Browse <b>•</b> Block <b>•</b> Stay Private</p>
+</section>
+<section class="search-area">
+  <form class="searchbox" id="searchForm" role="search">
+    <span class="search-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg></span>
+    <input id="query" type="search" placeholder="Search or enter address…" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Search or enter website address">
+    <button class="search-engine" id="engineButton" type="button" title="Choose search engine" aria-label="Choose search engine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></button>
+    <button class="go" type="submit" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4.2 4.2"/></svg></button>
+  </form>
+  <div class="hint">Search the web or enter a URL directly</div>
+</section>
+<section>
+  <div class="section-title"><span>Quick access</span><small>Tap a tile to open</small></div>
+  <nav class="shortcuts" id="shortcuts" aria-label="Website shortcuts"></nav>
+</section>
+<section class="security-strip" aria-label="Pipra features">
+  <div class="security-item"><span class="security-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3 20 6v5c0 5-3.4 8-8 10-4.6-2-8-5-8-10V6l8-3Z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg></span><span class="security-label">Ad blocker<br>settings</span></div>
+  <div class="security-item"><span class="security-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3"/></svg></span><span class="security-label">Privacy<br>controls</span></div>
+  <div class="security-item"><span class="security-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-9 12h7l-1 8 10-13h-7l0-7Z"/></svg></span><span class="security-label">Lightweight<br>design</span></div>
+  <div class="security-item"><span class="security-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6l2 2"/><path d="M20 3v5h-5M21 12a9 9 0 0 1-15 6l-2-2"/><path d="M4 21v-5h5"/></svg></span><span class="security-label">Your settings,<br>your choice</span></div>
+</section>
+<div class="earth-glow" aria-hidden="true"></div>
+</main>
+<footer aria-label="Browser navigation">
+  <button class="nav-item active" data-nav="Home" aria-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1V10Z"/></svg><span>Home</span></button>
+  <button class="nav-item" data-nav="Bookmarks" aria-label="Bookmarks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21l-6-4-6 4V4.5Z"/></svg><span>Bookmarks</span></button>
+  <button class="nav-item" data-nav="History" aria-label="History"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2M3 5v4h4"/></svg><span>History</span></button>
+  <button class="nav-item" data-nav="Downloads" aria-label="Downloads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m-5-5 5 5 5-5M4 18v3h16v-3"/></svg><span>Downloads</span></button>
+  <button class="nav-item" data-nav="Settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="m19 13.5 1.3 1-1.8 3.1-1.6-.6a7.6 7.6 0 0 1-1.7 1l-.3 1.7h-3.6l-.3-1.7a7.6 7.6 0 0 1-1.7-1l-1.6.6-1.8-3.1 1.3-1a7.5 7.5 0 0 1 0-2l-1.3-1 1.8-3.1 1.6.6a7.6 7.6 0 0 1 1.7-1l.3-1.7h3.6l.3 1.7a7.6 7.6 0 0 1 1.7 1l1.6-.6 1.8 3.1-1.3 1a7.5 7.5 0 0 1 0 2Z"/></svg><span>Settings</span></button>
+</footer>
+</div>
+<dialog id="shortcutDialog">
+  <h2 class="dlg-title">Add a website</h2><p class="dlg-copy">Create a shortcut on this device for quick access.</p>
+  <form id="shortcutForm">
+    <label class="field-label" for="siteName">Website name</label><input class="field" id="siteName" maxlength="22" placeholder="e.g. Reddit" required>
+    <label class="field-label" for="siteUrl">Website address</label><input class="field" id="siteUrl" placeholder="https://example.com" autocapitalize="none" required>
+    <div class="actions"><button class="btn secondary" type="button" id="cancelShortcut">Cancel</button><button class="btn primary" type="submit">Save shortcut</button></div>
+  </form>
+</dialog>
+<dialog id="settingsDialog">
+  <h2 class="dlg-title">Home settings</h2><p class="dlg-copy">Choose the search engine used when you type a search phrase.</p>
+  <label class="field-label" for="engineSelect">Search engine</label><select class="field" id="engineSelect"><option value="https://www.google.com/search?q=">Google</option><option value="https://www.bing.com/search?q=">Bing</option><option value="https://duckduckgo.com/?q=">DuckDuckGo</option><option value="https://search.brave.com/search?q=">Brave Search</option></select>
+  <div class="actions"><button class="btn secondary" type="button" id="cancelSettings">Cancel</button><button class="btn primary" type="button" id="saveSettings">Save settings</button></div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(()=>{'use strict';
+const defaults=[
+{name:'YouTube',url:'https://m.youtube.com/',icon:'play'},
+{name:'Wikipedia',url:'https://www.wikipedia.org/',icon:'wiki'},
+{name:'GitHub',url:'https://github.com/',icon:'code'},
+{name:'DuckDuckGo',url:'https://duckduckgo.com/',icon:'duck'}
+];
+const svg={
+play:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="4"/><path d="m10 8.5 5.5 3.5-5.5 3.5v-7Z" fill="currentColor" stroke="none"/></svg>',
+wiki:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m6 8 2 8 3-6 2.5 6 4-8M5 8h3m5 0h3m1 0h2"/></svg>',
+code:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4m8-8 4 4-4 4m-3-11-2 14"/></svg>',
+duck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M7 14c0-4 2-6 5-6 2 0 4 2 4 5l3 1-3 2H9c-1 0-2-1-2-2Z"/><circle cx="14" cy="10" r=".7" fill="currentColor"/></svg>',
+globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
+plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
+};
+const $=id=>document.getElementById(id);
+function get(key,fallback){try{const v=localStorage.getItem(key);return v===null?fallback:JSON.parse(v)}catch{return fallback}}
+function set(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch{notify('Could not save this setting on your device.');return false}}
+let sites=get('pipra.home.sites.v2',defaults);if(!Array.isArray(sites))sites=defaults.slice();
+let engine=get('pipra.home.engine.v2','https://www.google.com/search?q=');
+function notify(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(notify.t);notify.t=setTimeout(()=>$('toast').classList.remove('show'),2300)}
+function normalize(raw){let v=String(raw||'').trim();if(!v||/^(javascript|data|file|intent|content):/i.test(v))return null;let c=/^[a-z][a-z0-9+.-]*:/i.test(v)?v:'https://'+v;try{let u=new URL(c);if(!['http:','https:'].includes(u.protocol)||!u.hostname.includes('.'))return null;return u.href}catch{return null}}
+function go(url){let u=normalize(url);if(!u){notify('Enter a valid website address.');return}location.href=u}
+function render(){const root=$('shortcuts');root.replaceChildren();sites.slice(0,10).forEach(site=>{if(!site||typeof site.name!=='string'||typeof site.url!=='string')return;let a=document.createElement('a');a.className='shortcut';a.href=normalize(site.url)||'#';a.innerHTML='<span class="site-icon">'+(svg[site.icon]||svg.globe)+'</span><span class="site-name"></span>';a.querySelector('.site-name').textContent=site.name;a.addEventListener('click',e=>{e.preventDefault();go(site.url)});root.appendChild(a)});let b=document.createElement('button');b.className='shortcut add';b.type='button';b.innerHTML='<span class="site-icon">'+svg.plus+'</span><span class="site-name">Add site</span>';b.onclick=addSite;root.appendChild(b)}
+function addSite(){if(sites.length>=10){notify('You can save up to 10 shortcuts.');return}$('siteName').value='';$('siteUrl').value='';$('shortcutDialog').showModal()}
+$('searchForm').addEventListener('submit',e=>{e.preventDefault();let q=$('query').value.trim();if(!q){$('query').focus();return}let looks=/^[a-z][a-z0-9+.-]*:/i.test(q)||(/^[^\s]+\.[a-z]{2,}([/:?#]|$)/i.test(q)&&!/\s/.test(q));let url=normalize(q);if(looks&&url){go(url);return}location.href=engine+encodeURIComponent(q)});
+$('addTop').onclick=addSite;$('cancelShortcut').onclick=()=>$('shortcutDialog').close();
+$('shortcutForm').addEventListener('submit',e=>{e.preventDefault();let name=$('siteName').value.trim(),url=normalize($('siteUrl').value);if(!name||!url){notify('Enter a name and a valid web address.');return}if(sites.some(s=>s.name.toLowerCase()===name.toLowerCase())){notify('That shortcut name already exists.');return}sites.push({name,url,icon:'globe'});sites=sites.slice(0,10);set('pipra.home.sites.v2',sites);render();$('shortcutDialog').close();notify('Shortcut saved on this device.')});
+function openSettings(){$('engineSelect').value=engine;$('settingsDialog').showModal()}
+$('openSettings').onclick=openSettings;$('engineButton').onclick=openSettings;$('cancelSettings').onclick=()=>$('settingsDialog').close();
+$('saveSettings').onclick=()=>{engine=$('engineSelect').value;set('pipra.home.engine.v2',engine);$('settingsDialog').close();notify('Search engine saved.')};
+document.querySelectorAll('.nav-item').forEach(btn=>btn.addEventListener('click',()=>{const name=btn.dataset.nav;if(name==='Home'){document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n===btn));window.scrollTo({top:0,behavior:'smooth'});return}if(name==='Settings'){openSettings();return}notify(name+' is handled by the Pipra browser app.')}));
+render();
+})();
+</script>
+</body>
+</html>
